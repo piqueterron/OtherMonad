@@ -3,11 +3,11 @@
 public static partial class Maybe
 {
     /// <inheritdoc cref="Enumerable.SelectMany"/>
-    public static IEnumerable<TResult> SelectMany<TSource, TCollection, TResult>(this IEnumerable<TSource> source, Func<TSource, IEnumerable<TCollection>> collectionSelector, Func<TSource, TCollection, TResult> resultSelector)
+    public static IEnumerable<Maybe<TResult>> SelectMany<TSource, TCollection, TResult>(this IEnumerable<Maybe<TSource>> source, Func<TSource, IEnumerable<TCollection>> collectionSelector, Func<TSource, TCollection, TResult> resultSelector)
     {
         foreach (var src in source)
         {
-            var maybe = (Maybe<TSource>)src;
+            var maybe = src;
 
             if (maybe.HasValue)
             {
@@ -20,14 +20,14 @@ public static partial class Maybe
     }
 
     /// <inheritdoc cref="Enumerable.SelectMany"/>
-    public static IEnumerable<TResult> SelectMany<TSource, TCollection, TResult>(this IEnumerable<TSource> source, Func<TSource, int, IEnumerable<TCollection>> collectionSelector, Func<TSource, TCollection, TResult> resultSelector)
+    public static IEnumerable<Maybe<TResult>> SelectMany<TSource, TCollection, TResult>(this IEnumerable<Maybe<TSource>> source, Func<TSource, int, IEnumerable<TCollection>> collectionSelector, Func<TSource, TCollection, TResult> resultSelector)
     {
         var index = -1;
         using var enumerator = source.GetEnumerator();
 
         while (enumerator.MoveNext())
         {
-            var current = (Maybe<TSource>)enumerator.Current;
+            var current = enumerator.Current;
 
             if (current.HasValue)
             {
@@ -40,15 +40,13 @@ public static partial class Maybe
     }
 
     /// <inheritdoc cref="Enumerable.SelectMany"/>
-    public static IEnumerable<TResult> SelectMany<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, IEnumerable<TResult>> selector)
+    public static IEnumerable<Maybe<TResult>> SelectMany<TSource, TResult>(this IEnumerable<Maybe<TSource>> source, Func<TSource, IEnumerable<TResult>> selector)
     {
         foreach (var src in source)
         {
-            var maybe = (Maybe<TSource>)src;
-
-            if (maybe.HasValue)
+            if (src.HasValue)
             {
-                foreach (var element in selector(maybe.Value))
+                foreach (var element in selector(src.Value))
                 {
                     yield return element;
                 }
@@ -57,14 +55,14 @@ public static partial class Maybe
     }
 
     /// <inheritdoc cref="Enumerable.SelectMany"/>
-    public static IEnumerable<TResult> SelectMany<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, int, IEnumerable<TResult>> selector)
+    public static IEnumerable<Maybe<TResult>> SelectMany<TSource, TResult>(this IEnumerable<Maybe<TSource>> source, Func<TSource, int, IEnumerable<TResult>> selector)
     {
         var index = -1;
         using var enumerator = source.GetEnumerator();
 
         while (enumerator.MoveNext())
         {
-            var current = (Maybe<TSource>)enumerator.Current;
+            var current = enumerator.Current;
 
             if (current.HasValue)
             {
