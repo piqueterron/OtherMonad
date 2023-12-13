@@ -8,9 +8,9 @@ public static partial class Maybe
     /// <summary>
     /// <para>Check if has value and return value otherwise return default <typeparamref name="TSource"/></para>
     /// </summary>
-    /// <typeparam name="TSource">Generic type</typeparam>
-    /// <param name="source"><typeparamref name="TSource"/></param>
-    /// <param name="default"><typeparamref name="TSource"/> default value</param>
+    /// <typeparam name="TSource">The type of the element of source</typeparam>
+    /// <param name="source">A value to invoke to check if has value</param>
+    /// <param name="default">Default value to return if dont has value</param>
     /// <returns><see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>]]></see></returns>
     public static Maybe<TSource> OrElse<TSource>(this Maybe<TSource> source, TSource @default)
     {
@@ -25,10 +25,10 @@ public static partial class Maybe
     /// <summary>
     /// <para>Check if has value and return value otherwise return default <typeparamref name="TSource"/></para>
     /// </summary>
-    /// <typeparam name="TSource">Generic type</typeparam>
-    /// <param name="source"><typeparamref name="TSource"/></param>
-    /// <param name="default"><typeparamref name="TSource"/> default value</param>
-    /// <returns><see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>]]></see></returns>
+    /// <typeparam name="TSource">The type of the element of source</typeparam>
+    /// <param name="source">A value to invoke to check if has value</param>
+    /// <param name="default">Default value to return if dont has value</param>
+    /// <returns><see cref="Maybe{TSource}"><![CDATA[Task<Maybe<]]><typeparamref name="TSource"/><![CDATA[>>]]></see></returns>
     public static async Task<Maybe<TSource>> OrElse<TSource>(this Task<Maybe<TSource>> source, TSource @default)
     {
         var maybe = await source;
@@ -44,10 +44,10 @@ public static partial class Maybe
     /// <summary>
     /// <para>Check if has value and return value otherwise return default <typeparamref name="TSource"/></para>
     /// </summary>
-    /// <typeparam name="TSource">Generic type</typeparam>
-    /// <param name="source"><typeparamref name="TSource"/></param>
-    /// <param name="default"><typeparamref name="TSource"/> default value</param>
-    /// <returns><see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>]]></see></returns>
+    /// <typeparam name="TSource">The type of the element of source</typeparam>
+    /// <param name="source">A value to invoke to check if has value</param>
+    /// <param name="default">Default value to return if dont has value</param>
+    /// <returns><see cref="Maybe{TSource}"><![CDATA[ValueTask<Maybe<]]><typeparamref name="TSource"/><![CDATA[>>]]></see></returns>
     public static async ValueTask<Maybe<TSource>> OrElse<TSource>(this ValueTask<Maybe<TSource>> source, TSource @default)
     {
         var maybe = await source;

@@ -6,7 +6,7 @@
 public static partial class Result
 {
     /// <summary>
-    /// <para>Method to combine two Results into one object. If have errors return <see cref="AggregateException"/> with list of exceptions</para>
+    /// <para>Method to combine two Results into one struct. If have errors return <see cref="AggregateException"/> with list of exceptions</para>
     /// </summary>
     /// <typeparam name="TLeft1">Generic type</typeparam>
     /// <typeparam name="TLeft2">Generic type</typeparam>
@@ -31,7 +31,7 @@ public static partial class Result
     }
 
     /// <summary>
-    /// <para>Method to combine three Results into one object. If have errors return <see cref="AggregateException"/> with list of exceptions</para>
+    /// <para>Method to combine three Results into one struct. If have errors return <see cref="AggregateException"/> with list of exceptions</para>
     /// </summary>
     /// <typeparam name="TLeft1"><see cref="Result{TLeft1}"/></typeparam>
     /// <typeparam name="TLeft2"><see cref="Result{TLeft2}"/></typeparam>
@@ -60,7 +60,7 @@ public static partial class Result
     }
 
     /// <summary>
-    /// <para>Method to combine four Results into one object. If have errors return <see cref="AggregateException"/> with list of exceptions</para>
+    /// <para>Method to combine four Results into one struct. If have errors return <see cref="AggregateException"/> with list of exceptions</para>
     /// </summary>
     /// <typeparam name="TLeft1"><see cref="Result{TLeft1}"/></typeparam>
     /// <typeparam name="TLeft2"><see cref="Result{TLeft2}"/></typeparam>
@@ -93,7 +93,7 @@ public static partial class Result
     }
 
     /// <summary>
-    /// <para>Method to combine five Results into one object. If have errors return <see cref="AggregateException"/> with list of exceptions</para>
+    /// <para>Method to combine five Results into one struct. If have errors return <see cref="AggregateException"/> with list of exceptions</para>
     /// </summary>
     /// <typeparam name="TLeft1"><see cref="Result{TLeft1}"/></typeparam>
     /// <typeparam name="TLeft2"><see cref="Result{TLeft2}"/></typeparam>
@@ -130,7 +130,7 @@ public static partial class Result
     }
 
     /// <summary>
-    /// <para>Method to combine six Results into one object. If have errors return <see cref="AggregateException"/> with list of exceptions</para>
+    /// <para>Method to combine six Results into one struct. If have errors return <see cref="AggregateException"/> with list of exceptions</para>
     /// </summary>
     /// <typeparam name="TLeft1"><see cref="Result{TLeft1}"/></typeparam>
     /// <typeparam name="TLeft2"><see cref="Result{TLeft2}"/></typeparam>

@@ -6,7 +6,7 @@
 public static partial class Either
 {
     /// <summary>
-    /// <para>Method to combine two Either into one object</para>
+    /// <para>Method to combine two Either into one struct</para>
     /// </summary>
     /// <typeparam name="TLeft1">Generic type</typeparam>
     /// <typeparam name="TRight1">Generic type</typeparam>
@@ -35,7 +35,7 @@ public static partial class Either
     }
 
     /// <summary>
-    /// <para>Method to combine three Either into one object</para>
+    /// <para>Method to combine three Either into one struct</para>
     /// </summary>
     /// <typeparam name="TLeft1">Generic type</typeparam>
     /// <typeparam name="TRight1">Generic type</typeparam>
@@ -69,7 +69,7 @@ public static partial class Either
     }
 
     /// <summary>
-    /// <para>Method to combine four Either into one object</para>
+    /// <para>Method to combine four Either into one struct</para>
     /// </summary>
     /// <typeparam name="TLeft1">Generic type</typeparam>
     /// <typeparam name="TRight1">Generic type</typeparam>
@@ -108,7 +108,7 @@ public static partial class Either
     }
 
     /// <summary>
-    /// <para>Method to combine five Either into one object</para>
+    /// <para>Method to combine five Either into one struct</para>
     /// </summary>
     /// <typeparam name="TLeft1">Generic type</typeparam>
     /// <typeparam name="TRight1">Generic type</typeparam>
@@ -152,7 +152,7 @@ public static partial class Either
     }
 
     /// <summary>
-    /// <para>Method to combine six Either into one object</para>
+    /// <para>Method to combine six Either into one struct</para>
     /// </summary>
     /// <typeparam name="TLeft1">Generic type</typeparam>
     /// <typeparam name="TRight1">Generic type</typeparam>

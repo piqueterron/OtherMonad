@@ -6,40 +6,52 @@
 public static partial class Maybe
 {
     /// <summary>
-    /// <para>If has value apply <see cref="Delegate"/> to create new <see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[> ]]></see> 
-    /// with value, else <see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[> ]]></see> of None</para>
+    /// <para>If element has value apply <see cref="Func{TSource, TResult}"/> to create new <see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[> ]]></see> otherwise <see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[>.None ]]></see></para>
     /// </summary>
-    /// <typeparam name="TSource"></typeparam>
-    /// <typeparam name="TResult"></typeparam>
-    /// <param name="source">List of <see cref="Maybe{TSource}"/> where <c>TSource</c> is a <typeparamref name="TSource"/></param>
-    /// <param name="selector">Filter</param>
-    /// <returns><see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[> ]]></see> or <see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[> ]]></see> of None</returns>
-    public static Maybe<TResult> Bind<TSource, TResult>(this Maybe<TSource> source, Func<TSource, TResult> selector) =>
-        source.HasValue ? selector(source.Value) : Maybe<TResult>.None;
+    /// <typeparam name="TSource">The type of the element of source</typeparam>
+    /// <typeparam name="TResult">The type of the value returned by selector</typeparam>
+    /// <param name="source">A value to invoke a transform function on</param>
+    /// <param name="selector">A transform function to apply to source element</param>
+    /// <returns><see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[> ]]></see> or <see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[>.None ]]></see></returns>
+    /// <exception cref="ArgumentNullException">selector is null</exception>
+    public static Maybe<TResult> Bind<TSource, TResult>(this Maybe<TSource> source, Func<TSource, TResult> selector)
+    {
+        ArgumentNullException.ThrowIfNull(selector, nameof(selector));
+
+        return source.HasValue ? selector(source.Value) : Maybe<TResult>.None;
+    }
 
     /// <summary>
-    /// <para>If has value apply <see cref="Delegate"/> async to create new <see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>]]></see> 
-    /// with value, else <see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>]]></see> of None</para>
+    /// <para>If element has value apply <see cref="Func{TSource, CancellationToken, TResult}"/> to create new <see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[> ]]></see> otherwise <see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[>.None ]]></see></para>
     /// </summary>
-    /// <typeparam name="TSource">Generic type</typeparam>
-    /// <typeparam name="TResult">Generic type</typeparam>
-    /// <param name="source">List of <see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TResult"/><![CDATA[>]]></see></param>
-    /// <param name="selector">Filter</param>
+    /// <typeparam name="TSource">The type of the element of source</typeparam>
+    /// <typeparam name="TResult">The type of the value returned by selector</typeparam>
+    /// <param name="source">A value to invoke a transform function on</param>
+    /// <param name="selector">A transform function to apply to source element</param>
     /// <param name="cancellation">A CancellationToken enables cooperative cancellation between threads, thread pool work items, or Task objects</param>
-    /// <returns><see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TResult"/><![CDATA[>]]></see> or <see cref="Maybe{TResult}"><![CDATA[Maybe<]]><typeparamref name="TResult"/><![CDATA[>]]></see> of None</returns>
-    public static async Task<Maybe<TResult>> Bind<TSource, TResult>(this Maybe<TSource> source, Func<TSource, CancellationToken, Task<TResult>> selector, CancellationToken cancellation = default) =>
-        source.HasValue ? await selector(source.Value, cancellation).ConfigureAwait(false) : Maybe<TResult>.None;
+    /// <returns><see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TResult"/><![CDATA[>]]></see> or <see cref="Maybe{TResult}"><![CDATA[Maybe<]]><typeparamref name="TResult"/><![CDATA[>.None]]></see></returns>
+    /// <exception cref="ArgumentNullException">selector is null</exception>
+    public static async Task<Maybe<TResult>> Bind<TSource, TResult>(this Maybe<TSource> source, Func<TSource, CancellationToken, Task<TResult>> selector, CancellationToken cancellation = default)
+    {
+        ArgumentNullException.ThrowIfNull(selector, nameof(selector));
+
+        return source.HasValue ? await selector(source.Value, cancellation).ConfigureAwait(false) : Maybe<TResult>.None;
+    }
 
     /// <summary>
-    /// <para>If has value apply <see cref="Delegate"/> async to create new <see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>]]></see> 
-    /// with value, else <see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>]]></see> of None</para>
+    /// <para>If element has value apply <see cref="Func{TSource, CancellationToken, TResult}"/> to create new <see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[> ]]></see> otherwise <see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[>.None ]]></see></para>
     /// </summary>
-    /// <typeparam name="TSource">Generic type</typeparam>
-    /// <typeparam name="TResult">Generic type</typeparam>
-    /// <param name="source">List of <see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TResult"/><![CDATA[>]]></see></param>
-    /// <param name="selector">Filter</param>
+    /// <typeparam name="TSource">The type of the element of source</typeparam>
+    /// <typeparam name="TResult">The type of the value returned by selector</typeparam>
+    /// <param name="source">A value to invoke a transform function on</param>
+    /// <param name="selector">A transform function to apply to source element</param>
     /// <param name="cancellation">A CancellationToken enables cooperative cancellation between threads, thread pool work items, or Task objects</param>
-    /// <returns><see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TResult"/><![CDATA[>]]></see> or <see cref="Maybe{TResult}"><![CDATA[Maybe<]]><typeparamref name="TResult"/><![CDATA[>]]></see> of None</returns>
-    public static async ValueTask<Maybe<TResult>> Bind<TSource, TResult>(this Maybe<TSource> source, Func<TSource, CancellationToken, ValueTask<TResult>> selector, CancellationToken cancellation = default) =>
-        source.HasValue ? await selector(source.Value, cancellation).ConfigureAwait(false) : Maybe<TResult>.None;
+    /// <returns><see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TResult"/><![CDATA[>]]></see> or <see cref="Maybe{TResult}"><![CDATA[Maybe<]]><typeparamref name="TResult"/><![CDATA[>.None]]></see></returns>
+    /// <exception cref="ArgumentNullException">selector is null</exception>
+    public static async ValueTask<Maybe<TResult>> Bind<TSource, TResult>(this Maybe<TSource> source, Func<TSource, CancellationToken, ValueTask<TResult>> selector, CancellationToken cancellation = default)
+    {
+        ArgumentNullException.ThrowIfNull(selector, nameof(selector));
+
+        return source.HasValue ? await selector(source.Value, cancellation).ConfigureAwait(false) : Maybe<TResult>.None;
+    }
 }
