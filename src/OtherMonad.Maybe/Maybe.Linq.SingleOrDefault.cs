@@ -1,5 +1,8 @@
 ﻿namespace OtherMonad;
 
+/// <summary>
+/// Extension methods to Maybe Monad
+/// </summary>
 public static partial class Maybe
 {
     /// <inheritdoc cref="Enumerable.SingleOrDefault"/>

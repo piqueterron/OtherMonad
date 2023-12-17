@@ -11,7 +11,7 @@ public static partial class Maybe
     /// <typeparam name="TResult">The type to cast the element of source to</typeparam>
     /// <param name="source">Contains the element to be cast to type <see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TResult"/><![CDATA[>]]></see></param>
     /// <returns><see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TResult"/><![CDATA[>]]></see></returns>
-    /// <exception cref="InvalidCastException"/>
+    /// <exception cref="InvalidCastException">invalid cast object.</exception>
     public static Maybe<TResult> Cast<TResult>(this object source) => (TResult)source;
 
     /// <summary>

@@ -14,7 +14,7 @@ public static partial class Maybe
     /// <param name="source">List of <see cref="Maybe{TResult}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>]]></see></param>
     /// <param name="left">Execute <see cref="Func{TSource, TResult}"/> when <see cref="Maybe{TResult}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>]]></see> has value</param>
     /// <param name="right">Execute <see cref="Func{TResult}"/> when <see cref="Maybe{TResult}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>]]></see> has not value</param>
-    /// <returns><typeparamref name="TResult"/></returns>
+    /// <returns>The type of the value returned <typeparamref name="TResult"/></returns>
     /// <exception cref="ArgumentNullException">Left or right condition is null</exception>
     public static TResult Match<TSource, TResult>(this Maybe<TSource> source, Func<TSource, TResult> left, Func<TResult> right)
     {
@@ -39,7 +39,7 @@ public static partial class Maybe
     /// <param name="left">Execute <see cref="Func{TSource, TResult}"/> when <see cref="Maybe{TResult}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>]]></see> has value</param>
     /// <param name="right">Execute <see cref="Func{TResult}"/> when <see cref="Maybe{TResult}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>]]></see> has not value</param>
     /// <param name="cancellation">A CancellationToken enables cooperative cancellation between threads, thread pool work items, or Task objects</param>
-    /// <returns><see cref="Task{TResult}"/></returns>
+    /// <returns>The type of the value returned <see cref="Task{TResult}"/></returns>
     /// <exception cref="ArgumentNullException">Left or right condition is null</exception>
     public static async Task<TResult> Match<TSource, TResult>(this Maybe<TSource> source, Func<TSource, CancellationToken, Task<TResult>> left, Func<CancellationToken, Task<TResult>> right, CancellationToken cancellation = default)
     {
@@ -64,7 +64,7 @@ public static partial class Maybe
     /// <param name="left">Execute <see cref="Func{TSource, TResult}"/> when <see cref="Maybe{TResult}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>]]></see> has value</param>
     /// <param name="right">Execute <see cref="Func{TResult}"/> when <see cref="Maybe{TResult}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>]]></see> has not value</param>
     /// <param name="cancellation">A CancellationToken enables cooperative cancellation between threads, thread pool work items, or Task objects</param>
-    /// <returns><see cref="ValueTask{TResult}"/></returns>
+    /// <returns>The type of the value returned <see cref="ValueTask{TResult}"/></returns>
     /// <exception cref="ArgumentNullException">Left or right condition is null</exception>
     public static async ValueTask<TResult> Match<TSource, TResult>(this Maybe<TSource> source, Func<TSource, CancellationToken, ValueTask<TResult>> left, Func<CancellationToken, ValueTask<TResult>> right, CancellationToken cancellation = default)
     {

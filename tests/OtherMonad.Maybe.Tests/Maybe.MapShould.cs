@@ -57,7 +57,7 @@ public class MaybeMapShould
     }
 
     [Fact]
-    public async Task Given_list_of_maybes_when_apply_map_into_iteraterable_async_of_type_valuetask__return_expected_list_of_maybes()
+    public async Task Given_list_of_maybes_when_apply_map_into_iteraterable_async_of_type_valuetask_return_expected_list_of_maybes()
     {
         var result = new List<Maybe<int>>();
 
@@ -73,7 +73,7 @@ public class MaybeMapShould
     }
 
     [Fact]
-    public async Task Given_list_of_maybes_when_apply_map_into_iteraterable_of_type_valuetask__return_expected_list_of_maybes()
+    public async Task Given_list_of_maybes_when_apply_map_into_iteraterable_of_type_valuetask_return_expected_list_of_maybes()
     {
         var items = FetchDummyItems();
         var result = new List<Maybe<int>>();
@@ -82,6 +82,22 @@ public class MaybeMapShould
             result.Add(item);
 
         Assert.Collection(result,
+            e => Assert.Equal(2, e),
+            e => Assert.Equal(4, e),
+            e => Assert.Equal(6, e),
+            e => Assert.Equal(8, e),
+            e => Assert.Equal(10, e));
+    }
+
+    [Fact]
+    public void Given_list_of_maybes_when_apply_map_return_expected_span_of_maybes()
+    {
+        Span<Maybe<int>> maybes = new Maybe<int>[] { 1, 2, 3, 4, 5 };
+
+        var result = maybes.Map(v => v * 2);
+
+        Assert.Equal(5, result.Length);
+        Assert.Collection(result.ToArray(),
             e => Assert.Equal(2, e),
             e => Assert.Equal(4, e),
             e => Assert.Equal(6, e),
