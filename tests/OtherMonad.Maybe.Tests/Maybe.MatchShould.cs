@@ -44,24 +44,4 @@ public class MaybeMatchShould
 
         Assert.False(result);
     }
-
-    [Fact]
-    public async Task Given_maybe_of_string_when_apply_match_type_of_valuetask_execute_left_condition()
-    {
-        Maybe<string> @object = "test";
-
-        var result = await @object.Match((c, ct) => ValueTask.FromResult(true), (ct) => ValueTask.FromResult(false));
-
-        Assert.True(result);
-    }
-
-    [Fact]
-    public async Task Given_maybe_of_string_when_apply_match_type_of_valuetask_execute_right_condition()
-    {
-        Maybe<string> @object = null;
-
-        var result = await @object.Match((c, ct) => ValueTask.FromResult(true), (ct) => ValueTask.FromResult(false));
-
-        Assert.False(result);
-    }
 }

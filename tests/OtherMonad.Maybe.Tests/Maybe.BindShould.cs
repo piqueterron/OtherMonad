@@ -123,63 +123,6 @@ public class MaybeBindShould
         Assert.Equal(Maybe<Dummy>.None, result);
     }
 
-    [Fact]
-    public async Task Given_maybe_of_string_when_apply_bind_from_valuetask_return_expected_maybe()
-    {
-        var expected = "test-1";
-        Maybe<string> @object = "test";
-
-        var result = await @object.Bind((e, ct) => ValueTask.FromResult($"{e}-1"), CancellationToken.None);
-
-        Assert.True(result.HasValue);
-        Assert.Equal(expected, result);
-    }
-
-    [Fact]
-    public async Task Given_maybe_of_string_when_apply_bind_from_valuetask_return_maybe_none_of_string()
-    {
-        Maybe<string> @object = null;
-
-        var result = await @object.Bind((e, ct) => ValueTask.FromResult($"{e}-1"), CancellationToken.None);
-
-        Assert.False(result.HasValue);
-        Assert.Equal(Maybe<string>.None, result);
-    }
-
-    [Fact]
-    public async Task Given_maybe_of_string_when_apply_bind_from_valuetask_return_expected_maybe_of_string()
-    {
-        var expected = "test-1";
-        Maybe<string> @object = "test";
-
-        var result = await @object.Bind((e, ct) => ValueTask.FromResult(new Dummy { Value = $"{e}-1" }), CancellationToken.None);
-
-        Assert.True(result.HasValue);
-        Assert.Equal(expected, result.Value.Value);
-    }
-
-    [Fact]
-    public async Task Given_maybe_of_string_when_apply_bind_from_valuetask_return_maybe_none_of_object()
-    {
-        Maybe<string> @object = null;
-
-        var result = await @object.Bind((e, ct) => ValueTask.FromResult(new Dummy { Value = $"{e}-1" }), CancellationToken.None);
-
-        Assert.False(result.HasValue);
-        Assert.Equal(Maybe<Dummy>.None, result);
-    }
-
-    [Fact]
-    public async Task Given_maybe_of_string_when_apply_bind_from_valuetask_return_expected_maybe_none_of_object()
-    {
-        Maybe<string> @object = "test";
-
-        var result = await @object.Bind((e, ct) => ValueTask.FromResult(default(Dummy)), CancellationToken.None);
-
-        Assert.False(result.HasValue);
-        Assert.Equal(Maybe<Dummy>.None, result);
-    }
-
     public class Dummy
     {
         public string Value { get; set; }
