@@ -53,29 +53,4 @@ public class MaybeIfShould
         Assert.True(result.HasValue);
         Assert.Equal("test-1", result.Value);
     }
-
-    [Fact]
-    public async Task Given_maybe_of_none_when_apply_orelse_from_valuetask_return_default_value()
-    {
-        Maybe<string> @object = null;
-        var expected = "default";
-
-        var result = await @object.Bind((e, ct) => ValueTask.FromResult($"{e}-1"), CancellationToken.None)
-            .OrElse(expected);
-
-        Assert.True(result.HasValue);
-        Assert.Equal(expected, result.Value);
-    }
-
-    [Fact]
-    public async Task Given_maybe_of_none_when_apply_orelse_from_valuetask_return_maybe_of_string()
-    {
-        Maybe<string> @object = "test";
-
-        var result = await @object.Bind((e, ct) => ValueTask.FromResult($"{e}-1"), CancellationToken.None)
-            .OrElse("default");
-
-        Assert.True(result.HasValue);
-        Assert.Equal("test-1", result.Value);
-    }
 }

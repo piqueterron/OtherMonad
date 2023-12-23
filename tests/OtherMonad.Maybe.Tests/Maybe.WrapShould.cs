@@ -38,6 +38,16 @@ public class MaybeWrapShould
     }
 
     [Fact]
+    public void Given_maybe_of_string_when_apply_unwrap_return_null()
+    {
+        var maybe = Maybe<string>.None;
+
+        var result = maybe.Unwrap();
+
+        Assert.Equal(result, maybe.Value);
+    }
+
+    [Fact]
     public void Given_maybe_of_string_when_apply_unwrap_default_return_value()
     {
         Maybe<string> maybe = "test";
