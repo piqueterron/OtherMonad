@@ -33,11 +33,6 @@ public static partial class Maybe
     {
         var maybe = await source;
 
-        if (maybe.HasValue)
-        {
-            return maybe;
-        }
-
-        return @default;
+        return maybe.OrElse(@default);
     }
 }

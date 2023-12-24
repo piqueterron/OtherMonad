@@ -24,7 +24,7 @@ public static partial class Maybe
     {
         try
         {
-            return (TSource)source;
+            return source.Cast<TSource>();
         }
         catch
         {
