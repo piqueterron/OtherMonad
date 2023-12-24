@@ -1,7 +1,7 @@
 ﻿namespace OtherMonad;
 
 /// <summary>
-/// The Either type is sometimes used to represent a value which is either correct or an error; by convention, <typeparamref name="TLeft"/> represent <strong>success</strong> case and <typeparamref name="TRight"/> <strong>fail</strong> case
+/// The Either type represent a value which two posible values. By convention, left represent <strong>success</strong> case and right <strong>fail</strong> case
 /// </summary>
 /// <typeparam name="TLeft">Type represent success case</typeparam>
 /// <typeparam name="TRight">Type represent fail case</typeparam>
@@ -51,4 +51,36 @@ public readonly struct Either<TLeft, TRight> : IEither<TLeft, TRight>
     /// </summary>
     /// <param name="right"><typeparamref name="TRight"/></param>
     public static implicit operator Either<TLeft, TRight>(TRight right) => new(right);
+
+    /// <summary>
+    /// Explicit method for create Either type 
+    /// </summary>
+    public readonly struct Create
+    {
+        /// <summary>
+        /// Create explicit left value
+        /// </summary>
+        /// <param name="left">Type represent success case</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Null param launch exception</exception>
+        public static Either<TLeft, TRight> Left(TLeft left)
+        {
+            ArgumentNullException.ThrowIfNull(left, nameof(left));
+
+            return new(left);
+        }
+
+        /// <summary>
+        /// Create explicit right value
+        /// </summary>
+        /// <param name="right">Type represent fail case</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Null param launch exception</exception>
+        public static Either<TLeft, TRight> Right(TRight right)
+        {
+            ArgumentNullException.ThrowIfNull(right, nameof(right));
+
+            return new(right);
+        }
+    }
 }
