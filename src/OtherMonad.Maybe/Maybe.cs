@@ -6,7 +6,7 @@ using System;
 /// <para>The Maybe monad encapsulates an optional value. An instance of Maybe either has a value of the encapsulated type or it doesn't in which case it is a <see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>.None]]></see>. This type is meant to be used in cases where your method might or might not return a value.</para>
 /// </summary>
 /// <typeparam name="TSource"></typeparam>
-public readonly struct Maybe<TSource> : IMaybe<TSource>
+public readonly struct Maybe<TSource> : IEquatable<Maybe<TSource>>
 {
     /// <summary>
     /// Current value of type <typeparamref name="TSource"/>, otherwise <see cref="Nullable{TSource}"/>
