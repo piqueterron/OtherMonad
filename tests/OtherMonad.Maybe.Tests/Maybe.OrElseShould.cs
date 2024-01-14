@@ -53,4 +53,60 @@ public class MaybeIfShould
         Assert.True(result.HasValue);
         Assert.Equal("test-1", result.Value);
     }
+
+    [Fact]
+    public void Given_maybe_of_none_when_apply_orelsedeferred_return_default_value()
+    {
+        var expected = "default";
+        Maybe<string> @object = "test";
+
+        var deferred = @object.BindDeferred<string, string>(e => null)
+            .OrElseDeferred(expected);
+
+        var result = deferred();
+
+        Assert.True(result.HasValue);
+        Assert.Equal(expected, result.Value);
+    }
+
+    [Fact]
+    public void Given_maybe_of_string_when_apply_orelsedeferred_return_expected_maybe_of_string()
+    {
+        Maybe<string> @object = "test";
+
+        var deferred = @object.BindDeferred(e => "test").OrElseDeferred("default");
+        var result = deferred();
+
+        Assert.True(result.HasValue);
+        Assert.Equal(@object, result);
+    }
+
+    [Fact]
+    public async Task Given_maybe_of_none_when_apply_orelsedeferred_from_task_return_default_value()
+    {
+        Maybe<string> @object = null;
+        var expected = "default";
+
+        var deferred = @object.BindDeferred((e, ct) => Task.FromResult($"{e}-1"), CancellationToken.None)
+            .OrElseDeferred(expected);
+
+        var result = await deferred();
+
+        Assert.True(result.HasValue);
+        Assert.Equal(expected, result.Value);
+    }
+
+    [Fact]
+    public async Task Given_maybe_of_none_when_apply_orelsedeferred_from_task_return_maybe_of_string()
+    {
+        Maybe<string> @object = "test";
+
+        var deferred = @object.BindDeferred((e, ct) => Task.FromResult($"{e}-1"), CancellationToken.None)
+            .OrElseDeferred("default");
+
+        var result = await deferred();
+
+        Assert.True(result.HasValue);
+        Assert.Equal("test-1", result.Value);
+    }
 }

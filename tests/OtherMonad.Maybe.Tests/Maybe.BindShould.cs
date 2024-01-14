@@ -123,6 +123,36 @@ public class MaybeBindShould
         Assert.Equal(Maybe<Dummy>.None, result);
     }
 
+    [Fact]
+    public void Given_maybe_of_string_when_apply_binddeferred_return_expected_maybe()
+    {
+        var expected = "test-1-1";
+        Maybe<string> @object = "test";
+
+        var deferred = @object.BindDeferred(e => $"{e}-1")
+            .BindDeferred(e => $"{e}-1");
+
+        var result = deferred();
+
+        Assert.True(result.HasValue);
+        Assert.Equal(expected, result.Value);
+    }
+
+    [Fact]
+    public async Task Given_maybe_of_string_when_apply_binddeferred_from_task_return_expected_maybe_of_string()
+    {
+        var expected = "test-1-1";
+        Maybe<string> @object = "test";
+
+        var deferred = @object.BindDeferred((e, ct) => Task.FromResult(new Dummy { Value = $"{e}-1" }), CancellationToken.None)
+            .BindDeferred((e, ct) => Task.FromResult(new Dummy { Value = $"{e.Value}-1" }), CancellationToken.None);
+
+        var result = await deferred();
+
+        Assert.True(result.HasValue);
+        Assert.Equal(expected, result.Value.Value);
+    }
+
     public class Dummy
     {
         public string Value { get; set; }

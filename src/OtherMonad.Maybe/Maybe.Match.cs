@@ -53,4 +53,34 @@ public static partial class Maybe
 
         return await right(cancellation).ConfigureAwait(false);
     }
+
+    public static TResult Match<TSource, TResult>(this Deferred<Maybe<TSource>> source, Func<TSource, TResult> left, Func<TResult> right)
+    {
+        ArgumentNullException.ThrowIfNull(left, nameof(left));
+        ArgumentNullException.ThrowIfNull(right, nameof(right));
+
+        var src = source();
+
+        if (src.HasValue)
+        {
+            return left(src.Value);
+        }
+
+        return right();
+    }
+
+    public static async Task<TResult> Match<TSource, TResult>(this DeferredTask<Maybe<TSource>> source, Func<TSource, TResult> left, Func<TResult> right)
+    {
+        ArgumentNullException.ThrowIfNull(left, nameof(left));
+        ArgumentNullException.ThrowIfNull(right, nameof(right));
+
+        var src = await source();
+
+        if (src.HasValue)
+        {
+            return left(src.Value);
+        }
+
+        return right();
+    }
 }

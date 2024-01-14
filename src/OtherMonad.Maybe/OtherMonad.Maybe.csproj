@@ -5,6 +5,29 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <Title>OtherMonad.Maybe</Title>
+    <Authors>Erik Pique</Authors>
+    <Company></Company>
+    <Description>Other Monad library</Description>
+    <Copyright>MIT</Copyright>
+    <PackageProjectUrl>https://github.com/piqueterron/OtherMonad</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/piqueterron/OtherMonad</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Monads;Functional;Maybe</PackageTags>
+    <PackageIcon>OtherMonad.256x256.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\OtherMonad.256x256.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
   
 </Project>
