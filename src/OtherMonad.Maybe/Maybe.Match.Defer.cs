@@ -14,16 +14,19 @@ public static partial class Maybe
     /// <param name="source">List of <see cref="Maybe{TResult}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>]]></see></param>
     /// <param name="left">Execute <see cref="Func{TSource, TResult}"/> when <see cref="Maybe{TResult}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>]]></see> has value</param>
     /// <param name="right">Execute <see cref="Func{TResult}"/> when <see cref="Maybe{TResult}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>]]></see> has not value</param>
-    /// <returns>The type of the value returned <typeparamref name="TResult"/></returns>
+    /// <param name="cancellation">A CancellationToken enables cooperative cancellation between threads, thread pool work items, or Task objects</param>
+    /// <returns>The type of the value returned <see cref="TResult"/></returns>
     /// <exception cref="ArgumentNullException">Left or right condition is null</exception>
-    public static TResult Match<TSource, TResult>(this Maybe<TSource> source, Func<TSource, TResult> left, Func<TResult> right)
+    public static TResult Match<TSource, TResult>(this Deferred<Maybe<TSource>> source, Func<TSource, TResult> left, Func<TResult> right)
     {
         ArgumentNullException.ThrowIfNull(left, nameof(left));
         ArgumentNullException.ThrowIfNull(right, nameof(right));
 
-        if (source.HasValue)
+        var src = source();
+
+        if (src.HasValue)
         {
-            return left(source.Value);
+            return left(src.Value);
         }
 
         return right();
@@ -41,16 +44,18 @@ public static partial class Maybe
     /// <param name="cancellation">A CancellationToken enables cooperative cancellation between threads, thread pool work items, or Task objects</param>
     /// <returns>The type of the value returned <see cref="Task{TResult}"/></returns>
     /// <exception cref="ArgumentNullException">Left or right condition is null</exception>
-    public static async Task<TResult> Match<TSource, TResult>(this Maybe<TSource> source, Func<TSource, CancellationToken, Task<TResult>> left, Func<CancellationToken, Task<TResult>> right, CancellationToken cancellation = default)
+    public static async Task<TResult> Match<TSource, TResult>(this DeferredTask<Maybe<TSource>> source, Func<TSource, TResult> left, Func<TResult> right)
     {
         ArgumentNullException.ThrowIfNull(left, nameof(left));
         ArgumentNullException.ThrowIfNull(right, nameof(right));
 
-        if (source.HasValue)
+        var src = await source();
+
+        if (src.HasValue)
         {
-            return await left(source.Value, cancellation).ConfigureAwait(false);
+            return left(src.Value);
         }
 
-        return await right(cancellation).ConfigureAwait(false);
+        return right();
     }
 }

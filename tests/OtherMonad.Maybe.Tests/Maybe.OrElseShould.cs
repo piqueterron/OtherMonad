@@ -60,8 +60,8 @@ public class MaybeIfShould
         var expected = "default";
         Maybe<string> @object = "test";
 
-        var deferred = @object.BindDeferred<string, string>(e => null)
-            .OrElseDeferred(expected);
+        var deferred = @object.BindDefer<string, string>(e => null)
+            .OrElseDefer(expected);
 
         var result = deferred();
 
@@ -74,7 +74,7 @@ public class MaybeIfShould
     {
         Maybe<string> @object = "test";
 
-        var deferred = @object.BindDeferred(e => "test").OrElseDeferred("default");
+        var deferred = @object.BindDefer(e => "test").OrElseDefer("default");
         var result = deferred();
 
         Assert.True(result.HasValue);
@@ -87,8 +87,8 @@ public class MaybeIfShould
         Maybe<string> @object = null;
         var expected = "default";
 
-        var deferred = @object.BindDeferred((e, ct) => Task.FromResult($"{e}-1"), CancellationToken.None)
-            .OrElseDeferred(expected);
+        var deferred = @object.BindDefer((e, ct) => Task.FromResult($"{e}-1"), CancellationToken.None)
+            .OrElseDefer(expected);
 
         var result = await deferred();
 
@@ -101,8 +101,8 @@ public class MaybeIfShould
     {
         Maybe<string> @object = "test";
 
-        var deferred = @object.BindDeferred((e, ct) => Task.FromResult($"{e}-1"), CancellationToken.None)
-            .OrElseDeferred("default");
+        var deferred = @object.BindDefer((e, ct) => Task.FromResult($"{e}-1"), CancellationToken.None)
+            .OrElseDefer("default");
 
         var result = await deferred();
 

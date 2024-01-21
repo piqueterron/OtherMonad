@@ -129,8 +129,8 @@ public class MaybeBindShould
         var expected = "test-1-1";
         Maybe<string> @object = "test";
 
-        var deferred = @object.BindDeferred(e => $"{e}-1")
-            .BindDeferred(e => $"{e}-1");
+        var deferred = @object.BindDefer(e => $"{e}-1")
+            .BindDefer(e => $"{e}-1");
 
         var result = deferred();
 
@@ -144,8 +144,8 @@ public class MaybeBindShould
         var expected = "test-1-1";
         Maybe<string> @object = "test";
 
-        var deferred = @object.BindDeferred((e, ct) => Task.FromResult(new Dummy { Value = $"{e}-1" }), CancellationToken.None)
-            .BindDeferred((e, ct) => Task.FromResult(new Dummy { Value = $"{e.Value}-1" }), CancellationToken.None);
+        var deferred = @object.BindDefer((e, ct) => Task.FromResult(new Dummy { Value = $"{e}-1" }), CancellationToken.None)
+            .BindDefer((e, ct) => Task.FromResult(new Dummy { Value = $"{e.Value}-1" }), CancellationToken.None);
 
         var result = await deferred();
 
