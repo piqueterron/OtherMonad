@@ -30,6 +30,6 @@ jobs:
     - name: SonarCloud Scan
       run: |
         dotnet tool install --global dotnet-sonarscanner
-        dotnet sonarscanner begin /k:"piqueterron_OtherMonad" /o:"piqueterron" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="**/*.xml" /d:sonar.verbose="true"
+        dotnet sonarscanner begin /k:"piqueterron_OtherMonad" /o:"piqueterron" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="**/*.xml" /d:sonar.verbose="true" /d:sonar.coverageReportPaths=".\sonarqubecoverage\SonarQube.xml"
         dotnet build OtherMonad.sln --no-incremental
         dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
