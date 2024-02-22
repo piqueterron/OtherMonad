@@ -1,1 +1,3 @@
-# OtherMonad
+# [<img src="OtherMonad.256x256.png" width="25"/>](OtherMonad.256x256.png "OtherMonad") OtherMonad
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=piqueterron_OtherMonad&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=piqueterron_OtherMonad) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=piqueterron_OtherMonad&metric=coverage)](https://sonarcloud.io/summary/new_code?id=piqueterron_OtherMonad)
