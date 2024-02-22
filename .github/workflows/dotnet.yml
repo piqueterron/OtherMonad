@@ -34,7 +34,7 @@ jobs:
       uses: sonarsource/sonarcloud-github-action@master
       with:
         args: >
-          -Dsonar.sources=src/
+          -Dsonar.sources=src/**
           -Dsonar.organization=piqueterron
           -Dsonar.projectKey=piqueterron_OtherMonad
           -Dsonar.cs.vscoveragexml.reportsPaths=coverage.xml
