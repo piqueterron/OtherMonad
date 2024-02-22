@@ -44,9 +44,3 @@ jobs:
         dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
       env:
         DOTNET_CLI_TELEMETRY_OPTOUT: 1 
-    - name: Upload SonarCloud Quality Gate status
-      uses: sonarsource/sonarcloud-github-action@master
-      with:
-        organization: "piqueterron"
-        project: "piqueterron_OtherMonad"
-        token: ${{ secrets.SONAR_TOKEN }}
