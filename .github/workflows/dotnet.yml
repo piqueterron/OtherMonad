@@ -28,7 +28,7 @@ jobs:
     - name: Begin Sonar scan
       run: |
         dotnet tool install --global dotnet-sonarscanner
-        dotnet sonarscanner begin /o:piqueterron /k:piqueterron_OtherMonad /d:sonar.login=${{ secrets.SONAR_TOKEN }} /d:sonar.host.url=https://sonarcloud.io
+        dotnet sonarscanner begin /o:piqueterron /k:piqueterron_OtherMonad /d:sonar.sources=src/** /d:sonar.exclusions=tests/** /d:sonar.login=${{ secrets.SONAR_TOKEN }} /d:sonar.host.url=https://sonarcloud.io
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
