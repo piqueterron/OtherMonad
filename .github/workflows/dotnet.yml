@@ -44,14 +44,15 @@ jobs:
       run: |
         New-Item -Path .\.sonar\scanner -ItemType Directory
         dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+        dotnet tool install -g dotnet-coverage
     - name: Build and analyze
       env:
         GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       shell: powershell
       run: |
-        .\.sonar\scanner\dotnet-sonarscanner begin /k:"piqueterron_OtherMonad" /o:"piqueterron" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:"sonar.verbose=true" /d:"sonar.dotnet.excludeTestProjects=true" /d:"sonar.cs.opencover.reportsPaths=**/coverage.opencover.xml" /d:sonar.host.url="https://sonarcloud.io"
+        .\.sonar\scanner\dotnet-sonarscanner begin /k:"piqueterron_OtherMonad" /o:"piqueterron" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:"sonar.verbose=true" /d:"sonar.dotnet.excludeTestProjects=true" /d:"sonar.cs.vscoveragexml.reportsPaths=**/coverage.xml" /d:sonar.host.url="https://sonarcloud.io"
         dotnet restore
         dotnet build --no-restore --configuration Release
-        dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage;Format=opencover"
+        dotnet-coverage collect 'dotnet test' -f xml  -o 'coverage.xml'
         .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
