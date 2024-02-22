@@ -21,6 +21,12 @@ jobs:
       with:
         dotnet-version: 8.0.x
         
+    - name: Setup JDK
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin' # See 'Supported distributions' for available options
+        java-version: '21'
+        
     - name: SonarCloud Scan
       run: |
         dotnet tool install --global dotnet-sonarscanner
