@@ -33,8 +33,8 @@ jobs:
     - name: SonarCloud Analysis
       run: |
         echo "Starting SonarCloud Analysis"
-        dotnet sonarscanner begin /k:"piqueterron_OtherMonad" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-        dotnet build
+        dotnet sonarscanner begin /k:"piqueterron_OtherMonad" /o:"piqueterron" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
+        dotnet build --configuration Release
         dotnet test
         dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
       env:
