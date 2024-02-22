@@ -33,6 +33,6 @@ jobs:
         dotnet tool update dotnet-reportgenerator-globaltool -g
         dotnet sonarscanner begin /k:"piqueterron_OtherMonad" /o:"piqueterron" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.verbose="true" /d:sonar.coverageReportPaths=".\sonarqubecoverage\SonarQube.xml"
         dotnet build
-        dotnet test --output build --collect:"XPlat Code Coverage"
-        reportgenerator "-reports:*\TestResults\*\coverage.cobertura.xml" "-targetdir:sonarqubecoverage" "-reporttypes:SonarQube"
+        dotnet test --collect:"XPlat Code Coverage" --output
+        reportgenerator "-reports:*/**/coverage.cobertura.xml" "-targetdir:sonarqubecoverage" "-reporttypes:SonarQube"
         dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
