@@ -32,10 +32,10 @@ jobs:
         export PATH="$PATH:$HOME/.dotnet/tools"
     - name: SonarCloud Analysis
       run: |
-        dotnet sonarscanner begin /k:"piqueterron_OtherMonad" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+        dotnet sonarscanner begin /k:"piqueterron_OtherMonad" /d:sonar.login=${{ secrets.SONAR_TOKEN }}
         dotnet build --configuration Release
         dotnet test --configuration Release
-        dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+        dotnet sonarscanner end /d:sonar.login=${{ secrets.SONAR_TOKEN }}
       env:
         SONAR_SCANNER_MSBUILD_VERSION: 6.2
         GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
