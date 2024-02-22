@@ -30,8 +30,13 @@ jobs:
       uses: sonarsource/sonarcloud-github-action@master
       with:
         args: >
+          -Dsonar.sources=.
           -Dsonar.organization=piqueterron
           -Dsonar.projectKey=piqueterron_OtherMonad
+          -Dsonar.cs.vscoveragexml.reportsPaths=coverage.xml
+          -Dsonar.test.exclusions=tests/**
+          -Dsonar.tests=tests/
+          -Dsonar.verbose=true
       env:
         GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
