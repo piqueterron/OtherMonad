@@ -1,7 +1,7 @@
 # This workflow will build a .NET project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
-name: .NET
+name: OtherMonad
 
 on:
   push:
@@ -11,48 +11,28 @@ on:
 
 jobs:
   build:
-
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
+    
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.0.x
-    - name: Setup JDK
-      uses: actions/setup-java@v4
+
+    - name: SonarCloud Scan
+      uses: sonarsource/sonarcloud-github-action@master
       with:
-        distribution: 'temurin'
-        java-version: '21'
-    - name: Cache SonarCloud packages
-      uses: actions/cache@v3
-      with:
-        path: ~\sonar\cache
-        key: ${{ runner.os }}-sonar
-        restore-keys: ${{ runner.os }}-sonar
-    - name: Cache SonarCloud scanner
-      id: cache-sonar-scanner
-      uses: actions/cache@v3
-      with:
-        path: .\.sonar\scanner
-        key: ${{ runner.os }}-sonar-scanner
-        restore-keys: ${{ runner.os }}-sonar-scanner
-    - name: Install SonarCloud scanner
-      if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
-      shell: powershell
-      run: |
-        New-Item -Path .\.sonar\scanner -ItemType Directory
-        dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
-        dotnet tool install -g dotnet-coverage
-    - name: Build and analyze
+        projectBaseDir: OtherMonad
+        args: >
+          -Dsonar.sources=src/
+          -Dsonar.organization=piqueterron
+          -Dsonar.projectKey=piqueterron_OtherMonad
+          -Dsonar.cs.vscoveragexml.reportsPaths=coverage.xml
+          -Dsonar.test.exclusions=tests/**
+          -Dsonar.tests=tests/
+          -Dsonar.verbose=true
       env:
         GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      shell: powershell
-      run: |
-        .\.sonar\scanner\dotnet-sonarscanner begin /k:"piqueterron_OtherMonad" /o:"piqueterron" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:"sonar.verbose=true" /d:"sonar.dotnet.excludeTestProjects=true" /d:"sonar.cs.vscoveragexml.reportsPaths=**/coverage.xml" /d:sonar.host.url="https://sonarcloud.io"
-        dotnet restore
-        dotnet build --no-restore --configuration Release
-        dotnet-coverage collect 'dotnet test' -f xml  -o 'coverage.xml'
-        .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
