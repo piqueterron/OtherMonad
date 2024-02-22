@@ -16,7 +16,7 @@ public static partial class Maybe
     /// <exception cref="ArgumentNullException">selector is null</exception>
     public static Maybe<TResult> Bind<TSource, TResult>(this Maybe<TSource> source, Func<TSource, TResult> selector)
     {
-        ArgumentNullException.ThrowIfNull(selector, nameof(selector));
+        ArgumentNullException.ThrowIfNull(selector);
 
         return source.HasValue ? selector(source.Value) : Maybe<TResult>.None;
     }
@@ -33,7 +33,7 @@ public static partial class Maybe
     /// <exception cref="ArgumentNullException">selector is null</exception>
     public static async Task<Maybe<TResult>> Bind<TSource, TResult>(this Maybe<TSource> source, Func<TSource, CancellationToken, Task<TResult>> selector, CancellationToken cancellation = default)
     {
-        ArgumentNullException.ThrowIfNull(selector, nameof(selector));
+        ArgumentNullException.ThrowIfNull(selector);
 
         return source.HasValue ? await selector(source.Value, cancellation).ConfigureAwait(false) : Maybe<TResult>.None;
     }

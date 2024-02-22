@@ -4,7 +4,7 @@ public static partial class Maybe
 {
     public static Deferred<IEnumerable<Maybe<TResult>>> Map<TSource, TResult>(this IEnumerable<Deferred<Maybe<TSource>>> sources, Func<TSource, TResult> selector)
     {
-        ArgumentNullException.ThrowIfNull(selector, nameof(selector));
+        ArgumentNullException.ThrowIfNull(selector);
 
         return () =>
         {
@@ -23,7 +23,7 @@ public static partial class Maybe
 
     public static DeferredTask<IEnumerable<Maybe<TResult>>> Map<TSource, TResult>(this IEnumerable<DeferredTask<Maybe<TSource>>> sources, Func<TSource, CancellationToken, Task<TResult>> selector, CancellationToken cancellation = default)
     {
-        ArgumentNullException.ThrowIfNull(selector, nameof(selector));
+        ArgumentNullException.ThrowIfNull(selector);
 
         return async () =>
         {

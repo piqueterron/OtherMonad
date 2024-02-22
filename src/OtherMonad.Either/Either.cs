@@ -65,7 +65,7 @@ public readonly struct Either<TLeft, TRight> : IEither<TLeft, TRight>
         /// <exception cref="ArgumentNullException">Null param launch exception</exception>
         public static Either<TLeft, TRight> Left(TLeft left)
         {
-            ArgumentNullException.ThrowIfNull(left, nameof(left));
+            ArgumentNullException.ThrowIfNull(left);
 
             return new(left);
         }
@@ -78,7 +78,7 @@ public readonly struct Either<TLeft, TRight> : IEither<TLeft, TRight>
         /// <exception cref="ArgumentNullException">Null param launch exception</exception>
         public static Either<TLeft, TRight> Right(TRight right)
         {
-            ArgumentNullException.ThrowIfNull(right, nameof(right));
+            ArgumentNullException.ThrowIfNull(right);
 
             return new(right);
         }

@@ -18,8 +18,8 @@ public static partial class Maybe
     /// <exception cref="ArgumentNullException">Left or right condition is null</exception>
     public static TResult Match<TSource, TResult>(this Maybe<TSource> source, Func<TSource, TResult> left, Func<TResult> right)
     {
-        ArgumentNullException.ThrowIfNull(left, nameof(left));
-        ArgumentNullException.ThrowIfNull(right, nameof(right));
+        ArgumentNullException.ThrowIfNull(left);
+        ArgumentNullException.ThrowIfNull(right);
 
         if (source.HasValue)
         {
@@ -43,8 +43,8 @@ public static partial class Maybe
     /// <exception cref="ArgumentNullException">Left or right condition is null</exception>
     public static async Task<TResult> Match<TSource, TResult>(this Maybe<TSource> source, Func<TSource, CancellationToken, Task<TResult>> left, Func<CancellationToken, Task<TResult>> right, CancellationToken cancellation = default)
     {
-        ArgumentNullException.ThrowIfNull(left, nameof(left));
-        ArgumentNullException.ThrowIfNull(right, nameof(right));
+        ArgumentNullException.ThrowIfNull(left);
+        ArgumentNullException.ThrowIfNull(right);
 
         if (source.HasValue)
         {

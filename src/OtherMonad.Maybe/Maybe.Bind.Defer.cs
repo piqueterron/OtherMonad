@@ -16,7 +16,7 @@ public static partial class Maybe
     /// <exception cref="ArgumentNullException">selector is null</exception>
     public static Deferred<Maybe<TResult>> BindDefer<TSource, TResult>(this Maybe<TSource> source, Func<TSource, TResult> selector)
     {
-        ArgumentNullException.ThrowIfNull(selector, nameof(selector));
+        ArgumentNullException.ThrowIfNull(selector);
 
         return () => source.Bind(selector);
     }
@@ -32,7 +32,7 @@ public static partial class Maybe
     /// <exception cref="ArgumentNullException">selector is null</exception>
     public static Deferred<Maybe<TResult>> BindDefer<TSource, TResult>(this Deferred<Maybe<TSource>> source, Func<TSource, TResult> selector)
     {
-        ArgumentNullException.ThrowIfNull(selector, nameof(selector));
+        ArgumentNullException.ThrowIfNull(selector);
 
         return () =>
         {
@@ -53,7 +53,7 @@ public static partial class Maybe
     /// <exception cref="ArgumentNullException">selector is null</exception>
     public static DeferredTask<Maybe<TResult>> BindDefer<TSource, TResult>(this Maybe<TSource> source, Func<TSource, CancellationToken, Task<TResult>> selector, CancellationToken cancellation = default)
     {
-        ArgumentNullException.ThrowIfNull(selector, nameof(selector));
+        ArgumentNullException.ThrowIfNull(selector);
 
         return async () => await source.Bind(selector, cancellation);
     }
@@ -70,7 +70,7 @@ public static partial class Maybe
     /// <exception cref="ArgumentNullException">selector is null</exception>
     public static DeferredTask<Maybe<TResult>> BindDefer<TSource, TResult>(this DeferredTask<Maybe<TSource>> source, Func<TSource, CancellationToken, Task<TResult>> selector, CancellationToken cancellation = default)
     {
-        ArgumentNullException.ThrowIfNull(selector, nameof(selector));
+        ArgumentNullException.ThrowIfNull(selector);
 
         return async () =>
         {

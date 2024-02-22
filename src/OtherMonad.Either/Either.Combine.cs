@@ -27,8 +27,8 @@ public static partial class Either
         Func<TSourceLeft, TOtherLeft, TLeft> selectorLeft,
         Func<TSourceRight?, TOtherRight?, TRight> selectorRight)
     {
-        ArgumentNullException.ThrowIfNull(selectorLeft, nameof(selectorLeft));
-        ArgumentNullException.ThrowIfNull(selectorRight, nameof(selectorRight));
+        ArgumentNullException.ThrowIfNull(selectorLeft);
+        ArgumentNullException.ThrowIfNull(selectorRight);
 
         if (source.IsLeft && other.IsLeft)
         {

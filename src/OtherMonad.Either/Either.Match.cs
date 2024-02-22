@@ -19,8 +19,8 @@ public static partial class Either
     /// <exception cref="ArgumentNullException">Left or right condition is null</exception>
     public static TResult Match<TLeft, TRight, TResult>(this IEither<TLeft, TRight> source, Func<TLeft, TResult> left, Func<TRight, TResult> right)
     {
-        ArgumentNullException.ThrowIfNull(left, nameof(left));
-        ArgumentNullException.ThrowIfNull(right, nameof(right));
+        ArgumentNullException.ThrowIfNull(left);
+        ArgumentNullException.ThrowIfNull(right);
 
         return source.IsLeft ? left(source.Left) : right(source.Right);
     }
@@ -40,8 +40,8 @@ public static partial class Either
     /// <exception cref="ArgumentNullException">Left or right condition is null</exception>
     public static async Task<TResult> Match<TLeft, TRight, TResult>(this IEither<TLeft, TRight> source, Func<TLeft, CancellationToken, Task<TResult>> left, Func<TRight, CancellationToken, Task<TResult>> right, CancellationToken cancellation = default)
     {
-        ArgumentNullException.ThrowIfNull(left, nameof(left));
-        ArgumentNullException.ThrowIfNull(right, nameof(right));
+        ArgumentNullException.ThrowIfNull(left);
+        ArgumentNullException.ThrowIfNull(right);
 
         return source.IsLeft ? await left(source.Left, cancellation).ConfigureAwait(false) : await right(source.Right, cancellation).ConfigureAwait(false);
     }

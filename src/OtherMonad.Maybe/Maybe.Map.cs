@@ -18,7 +18,7 @@ public static partial class Maybe
     /// <exception cref="ArgumentNullException">selector is null</exception>
     public static IEnumerable<Maybe<TResult>> Map<TSource, TResult>(this IEnumerable<Maybe<TSource>> sources, Func<TSource, TResult> selector)
     {
-        ArgumentNullException.ThrowIfNull(selector, nameof(selector));
+        ArgumentNullException.ThrowIfNull(selector);
 
         foreach (var source in sources)
         {
@@ -38,7 +38,7 @@ public static partial class Maybe
     /// <exception cref="ArgumentNullException">selector is null</exception>
     public static async IAsyncEnumerable<Maybe<TResult>> Map<TSource, TResult>(this IEnumerable<Maybe<TSource>> sources, Func<TSource, CancellationToken, Task<TResult>> selector, [EnumeratorCancellation] CancellationToken cancellation = default)
     {
-        ArgumentNullException.ThrowIfNull(selector, nameof(selector));
+        ArgumentNullException.ThrowIfNull(selector);
 
         foreach (var source in sources)
         {
@@ -58,7 +58,7 @@ public static partial class Maybe
     /// <exception cref="ArgumentNullException">selector is null</exception>
     public static async IAsyncEnumerable<Maybe<TResult>> Map<TSource, TResult>(this IAsyncEnumerable<Maybe<TSource>> sources, Func<TSource, CancellationToken, Task<TResult>> selector, [EnumeratorCancellation] CancellationToken cancellation = default)
     {
-        ArgumentNullException.ThrowIfNull(selector, nameof(selector));
+        ArgumentNullException.ThrowIfNull(selector);
 
         await foreach (var source in sources)
         {
