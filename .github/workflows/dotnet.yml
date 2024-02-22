@@ -41,7 +41,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     - name: Upload SonarCloud Quality Gate status
-      uses: SonarSource/sonarcloud-github-action@v1
+      uses: sonarsource/sonarcloud-github-action@master
       with:
         organization: "piqueterron"
         project: "piqueterron_OtherMonad"
