@@ -25,22 +25,16 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: '21'
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
-    - name: Install SonarCloud Scanner
+
+    - name: Begin Sonar scan
       run: |
         dotnet tool install --global dotnet-sonarscanner
-        export PATH="$PATH:$HOME/.dotnet/tools"
-    - name: SonarCloud Analysis
+        dotnet sonarscanner begin /o:piqueterron /k:piqueterron_OtherMonad /d:sonar.login=${{ secrets.SONAR_TOKEN }} /d:sonar.host.url=https://sonarcloud.io
+    - name: Build ConsoleTools and run unit tests
       run: |
-        echo "Starting SonarCloud Analysis"
-        dotnet-sonarscanner begin /k:"piqueterron_OtherMonad" /o:"piqueterron" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
-        dotnet build --configuration Release
-        dotnet test
-        dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-      env:
-        DOTNET_CLI_TELEMETRY_OPTOUT: 1 
+        dotnet build --no-restore
+        dotnet test --no-build --verbosity normal -p:CollectCoverage=true -p:CoverletOutputFormat=opencover
+    - name: End Sonar scan
+      run: dotnet sonarscanner end /d:sonar.login=${{ secrets.SONAR_TOKEN }}
+
+    
