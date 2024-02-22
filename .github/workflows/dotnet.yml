@@ -25,16 +25,35 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: '21'
-    - name: Install dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
-    - name: Test
-      run: dotnet test --blame --no-restore --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=opencover.xml
-    - name: SonarCloud Scan
-      uses: sonarsource/sonarcloud-github-action@master
+    - name: Cache SonarCloud packages
+      uses: actions/cache@v3
+      with:
+        path: ~\sonar\cache
+        key: ${{ runner.os }}-sonar
+        restore-keys: ${{ runner.os }}-sonar
+    - name: Cache SonarCloud scanner
+      id: cache-sonar-scanner
+      uses: actions/cache@v3
+      with:
+        path: .\.sonar\scanner
+        key: ${{ runner.os }}-sonar-scanner
+        restore-keys: ${{ runner.os }}-sonar-scanner
+    - name: Install SonarCloud scanner
+      if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+      shell: powershell
+      run: |
+        New-Item -Path .\.sonar\scanner -ItemType Directory
+        dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+    - name: Build and analyze
       env:
-        GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      shell: powershell
+      run: |
+        .\.sonar\scanner\dotnet-sonarscanner begin /k:"piqueterron_OtherMonad" /o:"piqueterron" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:"sonar.verbose=true" /d:"sonar.dotnet.excludeTestProjects=true" /d:"sonar.cs.opencover.reportsPaths=**/coverage.opencover.xml" /d:sonar.host.url="https://sonarcloud.io"
+        dotnet restore
+        dotnet build --no-restore --configuration Release
+        dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage;Format=opencover"
+        .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
     
