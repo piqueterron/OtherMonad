@@ -70,7 +70,7 @@ public class MaybeMapShould
         yield return Maybe<int>.None;
     }
 
-    private static IEnumerable<Maybe<int>> FetchDummyItems()
+    private static List<Maybe<int>> FetchDummyItems()
     {
         var items = new List<Maybe<int>>();
 

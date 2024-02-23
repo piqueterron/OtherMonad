@@ -25,7 +25,7 @@ public static partial class Either
         this IEither<TSourceLeft, TSourceRight> source,
         IEither<TOtherLeft, TOtherRight> other,
         Func<TSourceLeft, TOtherLeft, TLeft> selectorLeft,
-        Func<TSourceRight?, TOtherRight?, TRight> selectorRight)
+        Func<TSourceRight, TOtherRight, TRight> selectorRight)
     {
         ArgumentNullException.ThrowIfNull(selectorLeft);
         ArgumentNullException.ThrowIfNull(selectorRight);

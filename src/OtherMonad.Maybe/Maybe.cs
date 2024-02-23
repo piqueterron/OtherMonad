@@ -28,12 +28,16 @@ public readonly struct Maybe<TSource> : IEquatable<Maybe<TSource>>
     }
 
     /// <inheritdoc/>
-    public bool Equals(Maybe<TSource> other) =>
-        GetHashCode() == other.GetHashCode();
+    public bool Equals(Maybe<TSource> other)
+    {
+        return GetHashCode() == other.GetHashCode();
+    }
 
     /// <inheritdoc/>
-    public override bool Equals(object obj) =>
-        obj is Maybe<TSource> maybe && Equals(maybe);
+    public override bool Equals(object obj)
+    {
+        return obj is Maybe<TSource> maybe && Equals(maybe);
+    }
 
     /// <inheritdoc/>
     public override int GetHashCode()

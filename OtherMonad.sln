@@ -15,6 +15,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OtherMonad.Maybe.Tests", "t
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OtherMonad.Either.Tests", "tests\OtherMonad.Either.Tests\OtherMonad.Either.Tests.csproj", "{AF7380F9-6668-457A-983D-415868B8C80C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{18E49DC0-EB0A-46C2-91B2-74B11D9D5951}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{A5787E38-6BE6-4091-AAA7-A9C82DF019AF}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +53,7 @@ Global
 		{697684BF-B109-40FB-83F1-E4C4213A8147} = {3CFAC209-899E-4119-82C3-CC8894C831B4}
 		{DB7F1F7D-3C8B-4F26-8491-09D99332535C} = {6BE77E61-6475-4EFE-97D7-A288A8910212}
 		{AF7380F9-6668-457A-983D-415868B8C80C} = {6BE77E61-6475-4EFE-97D7-A288A8910212}
+		{A5787E38-6BE6-4091-AAA7-A9C82DF019AF} = {18E49DC0-EB0A-46C2-91B2-74B11D9D5951}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B6C65EDD-A4E4-447C-BF83-17B0825F31E9}

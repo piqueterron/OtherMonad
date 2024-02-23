@@ -14,17 +14,35 @@ public readonly struct Either<TLeft, TRight> : IEither<TLeft, TRight>
     /// <summary>
     /// <typeparam name="TLeft">Type represent success case</typeparam>
     /// </summary>
-    public TLeft Left => _left;
+    public TLeft Left
+    {
+        get
+        {
+            return _left;
+        }
+    }
 
     /// <summary>
     /// <typeparam name="TRight">Type represent fail case</typeparam>
     /// </summary>
-    public TRight Right => _right;
+    public TRight Right
+    {
+        get
+        {
+            return _right;
+        }
+    }
 
     /// <summary>
     /// Flag represent state of success case or not
     /// </summary>
-    public bool IsLeft => _isLeft;
+    public bool IsLeft
+    {
+        get
+        {
+            return _isLeft;
+        }
+    }
 
     private Either(TLeft left)
     {
@@ -44,13 +62,19 @@ public readonly struct Either<TLeft, TRight> : IEither<TLeft, TRight>
     /// Implicit operators are used when the conversion is guaranteed to succeed without data loss.
     /// </summary>
     /// <param name="left"><typeparamref name="TLeft"/></param>
-    public static implicit operator Either<TLeft, TRight>(TLeft left) => new(left);
+    public static implicit operator Either<TLeft, TRight>(TLeft left)
+    {
+        return new(left);
+    }
 
     /// <summary>
     /// Implicit operators are used when the conversion is guaranteed to succeed without data loss.
     /// </summary>
     /// <param name="right"><typeparamref name="TRight"/></param>
-    public static implicit operator Either<TLeft, TRight>(TRight right) => new(right);
+    public static implicit operator Either<TLeft, TRight>(TRight right)
+    {
+        return new(right);
+    }
 
     /// <summary>
     /// Explicit method for create Either type 
