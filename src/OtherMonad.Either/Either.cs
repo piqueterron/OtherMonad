@@ -14,35 +14,17 @@ public readonly struct Either<TLeft, TRight> : IEither<TLeft, TRight>
     /// <summary>
     /// <typeparam name="TLeft">Type represent success case</typeparam>
     /// </summary>
-    public TLeft Left
-    {
-        get
-        {
-            return _left;
-        }
-    }
+    public TLeft Left => _left;
 
     /// <summary>
     /// <typeparam name="TRight">Type represent fail case</typeparam>
     /// </summary>
-    public TRight Right
-    {
-        get
-        {
-            return _right;
-        }
-    }
+    public TRight Right => _right;
 
     /// <summary>
     /// Flag represent state of success case or not
     /// </summary>
-    public bool IsLeft
-    {
-        get
-        {
-            return _isLeft;
-        }
-    }
+    public bool IsLeft => _isLeft;
 
     private Either(TLeft left)
     {
