@@ -60,4 +60,52 @@ public class MaybeCombineShould
         Assert.True(result.HasValue);
         Assert.Equal(expected, result.Value);
     }
+
+    [Fact]
+    public void GivenTwoMaybesOfIntWhenCombineDeferReturnSumBoth()
+    {
+        var expected = 6;
+
+        Maybe<int> @object1 = 2;
+        Maybe<int> @object2 = 3;
+
+        var defer1 = @object1.BindDefer(x => x + 1);
+
+        var result = defer1.Combine(@object2, (obj1, obj2) => obj1 + obj2);
+
+        Assert.True(result.HasValue);
+        Assert.Equal(expected, result.Value);
+    }
+
+    [Fact]
+    public void GivenTwoMaybesOfIntWhenTryCombineDeferReturnSumBoth()
+    {
+        var expected = 6;
+
+        Maybe<int> @object1 = 2;
+        Maybe<int> @object2 = 3;
+
+        var defer1 = @object1.BindDefer(x => x + 1);
+
+        var result = defer1.TryCombine(@object2, (obj1, obj2) => obj1 + obj2, () => 0);
+
+        Assert.True(result.HasValue);
+        Assert.Equal(expected, result.Value);
+    }
+
+    [Fact]
+    public void GivenTwoMaybesOfIntWhenTryCombineDeferReturnDefault()
+    {
+        var expected = "default";
+
+        Maybe<int> @object1 = 2;
+        Maybe<string> @object2 = "test";
+
+        var defer1 = @object1.BindDefer(x => x + 1);
+
+        var result = defer1.TryCombine(@object2, (obj1, obj2) => throw new ApplicationException(), () => "default");
+
+        Assert.True(result.HasValue);
+        Assert.Equal(expected, result.Value);
+    }
 }

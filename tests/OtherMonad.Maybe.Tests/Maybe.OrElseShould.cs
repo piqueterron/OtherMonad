@@ -109,4 +109,18 @@ public class MaybeIfShould
         Assert.True(result.HasValue);
         Assert.Equal("test-1", result.Value);
     }
+
+    [Fact]
+    public void GivenMaybeWhenApplyOrelsedeferredReturnDefaultValue()
+    {
+        var expected = "default";
+        Maybe<string> @object = null;
+
+        var deferred = @object.OrElseDefer(expected);
+
+        var result = deferred();
+
+        Assert.True(result.HasValue);
+        Assert.Equal(expected, result.Value);
+    }
 }

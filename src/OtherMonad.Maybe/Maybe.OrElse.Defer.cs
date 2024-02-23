@@ -40,18 +40,6 @@ public static partial class Maybe
     /// <param name="source">A value to invoke to check if has value</param>
     /// <param name="default">Default value to return if dont has value</param>
     /// <returns><see cref="DeferredTask{Maybe}"><![CDATA[DeferredTask<Maybe<]]><typeparamref name="TSource"/><![CDATA[>>]]></see></returns>
-    public static DeferredTask<Maybe<TSource>> OrElseDefer<TSource>(this Task<Maybe<TSource>> source, TSource @default)
-    {
-        return async () => await source.OrElse(@default);
-    }
-
-    /// <summary>
-    /// <para>Check if has value and return value otherwise return default <typeparamref name="TSource"/></para>
-    /// </summary>
-    /// <typeparam name="TSource">The type of the element of source</typeparam>
-    /// <param name="source">A value to invoke to check if has value</param>
-    /// <param name="default">Default value to return if dont has value</param>
-    /// <returns><see cref="DeferredTask{Maybe}"><![CDATA[DeferredTask<Maybe<]]><typeparamref name="TSource"/><![CDATA[>>]]></see></returns>
     public static DeferredTask<Maybe<TSource>> OrElseDefer<TSource>(this DeferredTask<Maybe<TSource>> source, TSource @default)
     {
         return async () =>
