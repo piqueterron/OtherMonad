@@ -6,7 +6,7 @@ using OtherMonad;
 public class MaybeWrapShould
 {
     [Fact]
-    public void Given_string_when_apply_wrap_return_maybe_of_string()
+    public void GivenStringWhenApplyWrapReturnMaybeOfString()
     {
         var @object = "test";
 
@@ -17,7 +17,7 @@ public class MaybeWrapShould
     }
 
     [Fact]
-    public void Given_object_null_when_apply_wrap_return_maybe_none_of_object()
+    public void GivenObjectNullWhenApplyWrapReturnMaybeNoneOfObject()
     {
         object @object = null;
 
@@ -28,7 +28,7 @@ public class MaybeWrapShould
     }
 
     [Fact]
-    public void Given_maybe_of_string_when_apply_unwrap_return_value()
+    public void GivenMaybeOfStringWhenApplyUnwrapReturnValue()
     {
         Maybe<string> maybe = "test";
 
@@ -38,7 +38,7 @@ public class MaybeWrapShould
     }
 
     [Fact]
-    public void Given_maybe_of_string_when_apply_unwrap_return_null()
+    public void GivenMaybeOfStringWhenApplyUnwrapReturnNull()
     {
         var maybe = Maybe<string>.None;
 
@@ -48,7 +48,7 @@ public class MaybeWrapShould
     }
 
     [Fact]
-    public void Given_maybe_of_string_when_apply_unwrap_default_return_value()
+    public void GivenMaybeOfStringWhenApplyUnwrapDefaultReturnValue()
     {
         Maybe<string> maybe = "test";
 
@@ -58,7 +58,7 @@ public class MaybeWrapShould
     }
 
     [Fact]
-    public void Given_maybe_of_string_when_apply_unwrap_default_dont_has_value_return_default_value()
+    public void GivenMaybeOfStringWhenApplyUnwrapDefaultDontHasValueReturnDefaultValue()
     {
         var expected = "default";
 

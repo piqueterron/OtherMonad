@@ -4,7 +4,7 @@
 public class MaybeCombineShould
 {
     [Fact]
-    public void Given_two_maybes_of_int_when_combine_return_sum_both()
+    public void GivenTwoMaybesOfIntWhenCombineReturnSumBoth()
     {
         var expected = 5;
 
@@ -18,12 +18,12 @@ public class MaybeCombineShould
     }
 
     [Fact]
-    public void Given_two_maybes_of_int_when_combine_return_sum_equals_two()
+    public void GivenTwoMaybesOfIntWhenCombineReturnSumEqualsTwo()
     {
         var expected = 2;
 
         Maybe<int> @object1 = 2;
-        Maybe<int> @object2 = Maybe<int>.None;
+        var @object2 = Maybe<int>.None;
 
         var result = @object1.Combine(@object2, (obj1, obj2) => obj1 + obj2);
 
@@ -32,7 +32,7 @@ public class MaybeCombineShould
     }
 
     [Fact]
-    public void Given_two_maybes_of_int_when_combine_return_sum_equals_six()
+    public void GivenTwoMaybesOfIntWhenCombineReturnSumEqualsSix()
     {
         var expected = 6;
 
@@ -48,7 +48,7 @@ public class MaybeCombineShould
     }
 
     [Fact]
-    public void Given_two_maybes_of_int_when_trycombine_throw_exception_return_deafult()
+    public void GivenTwoMaybesOfIntWhenTrycombineThrowExceptionReturnDeafult()
     {
         var expected = -1;
 

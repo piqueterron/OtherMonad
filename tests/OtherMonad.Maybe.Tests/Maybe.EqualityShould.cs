@@ -6,7 +6,7 @@ using OtherMonad;
 public class MaybeEqualityShould
 {
     [Fact]
-    public void Given_object_to_apply_equality_return_equals()
+    public void GivenObjectToApplyEqualityReturnEquals()
     {
         var result = (object)Maybe<int>.None;
 
@@ -14,7 +14,7 @@ public class MaybeEqualityShould
     }
 
     [Fact]
-    public void Given_object_to_apply_equality_return_no_equals()
+    public void GivenObjectToApplyEqualityReturnNoEquals()
     {
         var result = (object)Maybe<string>.None;
 
@@ -22,7 +22,7 @@ public class MaybeEqualityShould
     }
 
     [Fact]
-    public void Given_two_maybes_to_apply_equality_return_equals()
+    public void GivenTwoMaybesToApplyEqualityReturnEquals()
     {
         var result = Maybe<int>.None;
 
@@ -30,7 +30,7 @@ public class MaybeEqualityShould
     }
 
     [Fact]
-    public void Given_two_maybes_to_apply_equality_return_no_equals()
+    public void GivenTwoMaybesToApplyEqualityReturnNoEquals()
     {
         Maybe<int> result = 10;
 
@@ -38,7 +38,7 @@ public class MaybeEqualityShould
     }
 
     [Fact]
-    public void Given_two_maybes_to_apply_equality_operator_return_equals()
+    public void GivenTwoMaybesToApplyEqualityOperatorReturnEquals()
     {
         Maybe<int> result = 0;
 
@@ -46,7 +46,7 @@ public class MaybeEqualityShould
     }
 
     [Fact]
-    public void Given_two_maybes_to_apply_equality_operator_return_no_equals()
+    public void GivenTwoMaybesToApplyEqualityOperatorReturnNoEquals()
     {
         Maybe<int> result = 10;
 

@@ -6,7 +6,7 @@ using OtherMonad;
 public class MaybeMapShould
 {
     [Fact]
-    public void Given_list_of_maybes_when_apply_map_return_expected_list_of_maybes()
+    public void GivenListOfMaybesWhenApplyMapReturnExpectedListOfMaybes()
     {
         var maybes = new List<Maybe<int>>
         {
@@ -24,7 +24,7 @@ public class MaybeMapShould
     }
 
     [Fact]
-    public async Task Given_list_of_maybes_when_apply_map_into_iteraterable_async_of_type_task_return_expected_list_of_maybes()
+    public async Task GivenListOfMaybesWhenApplyMapIntoIteraterableAsyncOfTypeTaskReturnExpectedListOfMaybes()
     {
         var result = new List<Maybe<int>>();
 
@@ -41,7 +41,7 @@ public class MaybeMapShould
     }
 
     [Fact]
-    public async Task Given_list_of_maybes_when_apply_map_into_iteraterable_of_task_return_expected_list_of_maybes()
+    public async Task GivenListOfMaybesWhenApplyMapIntoIteraterableOfTaskReturnExpectedListOfMaybes()
     {
         var items = FetchDummyItems();
         var result = new List<Maybe<int>>();
@@ -58,7 +58,9 @@ public class MaybeMapShould
             e => Assert.Equal(0, e));
     }
 
+#pragma warning disable CS1998 // El método asincrónico carece de operadores "await" y se ejecutará de forma sincrónica
     private static async IAsyncEnumerable<Maybe<int>> FetchDummyItemsAsync()
+#pragma warning restore CS1998 // El método asincrónico carece de operadores "await" y se ejecutará de forma sincrónica
     {
         for (var i = 1; i <= 5; i++)
         {

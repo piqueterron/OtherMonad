@@ -6,7 +6,7 @@ using OtherMonad;
 public class MaybeIfShould
 {
     [Fact]
-    public void Given_maybe_of_none_when_apply_orelse_return_default_value()
+    public void GivenMaybeOfNoneWhenApplyOrelseReturnDefaultValue()
     {
         var expected = "default";
         Maybe<string> @object = "test";
@@ -19,7 +19,7 @@ public class MaybeIfShould
     }
 
     [Fact]
-    public void Given_maybe_of_string_when_apply_orelse_return_expected_maybe_of_string()
+    public void GivenMaybeOfStringWhenApplyOrelseReturnExpectedMaybeOfString()
     {
         Maybe<string> @object = "test";
 
@@ -30,7 +30,7 @@ public class MaybeIfShould
     }
 
     [Fact]
-    public async Task Given_maybe_of_none_when_apply_orelse_from_task_return_default_value()
+    public async Task GivenMaybeOfNoneWhenApplyOrelseFromTaskReturnDefaultValue()
     {
         Maybe<string> @object = null;
         var expected = "default";
@@ -43,7 +43,7 @@ public class MaybeIfShould
     }
 
     [Fact]
-    public async Task Given_maybe_of_none_when_apply_orelse_from_task_return_maybe_of_string()
+    public async Task GivenMaybeOfNoneWhenApplyOrelseFromTaskReturnMaybeOfString()
     {
         Maybe<string> @object = "test";
 
@@ -55,7 +55,7 @@ public class MaybeIfShould
     }
 
     [Fact]
-    public void Given_maybe_of_none_when_apply_orelsedeferred_return_default_value()
+    public void GivenMaybeOfNoneWhenApplyOrelsedeferredReturnDefaultValue()
     {
         var expected = "default";
         Maybe<string> @object = "test";
@@ -70,7 +70,7 @@ public class MaybeIfShould
     }
 
     [Fact]
-    public void Given_maybe_of_string_when_apply_orelsedeferred_return_expected_maybe_of_string()
+    public void GivenMaybeOfStringWhenApplyOrelsedeferredReturnExpectedMaybeOfString()
     {
         Maybe<string> @object = "test";
 
@@ -82,7 +82,7 @@ public class MaybeIfShould
     }
 
     [Fact]
-    public async Task Given_maybe_of_none_when_apply_orelsedeferred_from_task_return_default_value()
+    public async Task GivenMaybeOfNoneWhenApplyOrelsedeferredFromTaskReturnDefaultValue()
     {
         Maybe<string> @object = null;
         var expected = "default";
@@ -97,7 +97,7 @@ public class MaybeIfShould
     }
 
     [Fact]
-    public async Task Given_maybe_of_none_when_apply_orelsedeferred_from_task_return_maybe_of_string()
+    public async Task GivenMaybeOfNoneWhenApplyOrelsedeferredFromTaskReturnMaybeOfString()
     {
         Maybe<string> @object = "test";
 

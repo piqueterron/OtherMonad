@@ -6,7 +6,7 @@ using OtherMonad;
 public class EitherMatchShould
 {
     [Fact]
-    public void Given_either_task_when_apply_match_with_left_null_condition_throw_argumentnullexception()
+    public void GivenEitherTaskWhenApplyMatchWithLeftNullConditionThrowArgumentnullexception()
     {
         Either<string, Exception> either = "test";
 
@@ -17,7 +17,7 @@ public class EitherMatchShould
     }
 
     [Fact]
-    public void Given_either_task_when_apply_match_with_right_null_condition_throw_argumentnullexception()
+    public void GivenEitherTaskWhenApplyMatchWithRightNullConditionThrowArgumentnullexception()
     {
         Either<string, Exception> either = "test";
 
@@ -28,7 +28,7 @@ public class EitherMatchShould
     }
 
     [Fact]
-    public void Given_either_task_when_apply_match_with_successs_state_execute_left_condition()
+    public void GivenEitherTaskWhenApplyMatchWithSuccesssStateExecuteLeftCondition()
     {
         Either<string, Exception> either = "test";
 
@@ -38,7 +38,7 @@ public class EitherMatchShould
     }
 
     [Fact]
-    public void Given_either_task_when_apply_match_with_error_state_execute_right_condition()
+    public void GivenEitherTaskWhenApplyMatchWithErrorStateExecuteRightCondition()
     {
         Either<string, Exception> either = new Exception();
 
@@ -48,7 +48,7 @@ public class EitherMatchShould
     }
 
     [Fact]
-    public async Task Given_either_taskasync_when_apply_match_with_left_null_condition_throw_argumentnullexception()
+    public async Task GivenEitherTaskasyncWhenApplyMatchWithLeftNullConditionThrowArgumentnullexception()
     {
         Either<string, Exception> either = "test";
 
@@ -59,7 +59,7 @@ public class EitherMatchShould
     }
 
     [Fact]
-    public async Task Given_either_taskasync_when_apply_match_with_right_null_condition_throw_argumentnullexception()
+    public async Task GivenEitherTaskasyncWhenApplyMatchWithRightNullConditionThrowArgumentnullexception()
     {
         Either<string, Exception> either = "test";
 
@@ -70,7 +70,7 @@ public class EitherMatchShould
     }
 
     [Fact]
-    public async Task Given_either_taskasync_when_apply_match_with_successs_state_execute_left_condition()
+    public async Task GivenEitherTaskasyncWhenApplyMatchWithSuccesssStateExecuteLeftCondition()
     {
         Either<string, Exception> either = "test";
 
@@ -80,7 +80,7 @@ public class EitherMatchShould
     }
 
     [Fact]
-    public async Task Given_either_taskasync_when_apply_match_with_error_state_execute_right_condition()
+    public async Task GivenEitherTaskasyncWhenApplyMatchWithErrorStateExecuteRightCondition()
     {
         Either<string, Exception> either = new Exception();
 
@@ -90,7 +90,7 @@ public class EitherMatchShould
     }
 
     [Fact]
-    public async Task Given_either_taskasync_when_apply_trymatch_with_left_condition_null_return_default()
+    public async Task GivenEitherTaskasyncWhenApplyTrymatchWithLeftConditionNullReturnDefault()
     {
         Either<string, Exception> either = "test";
 
@@ -100,7 +100,7 @@ public class EitherMatchShould
     }
 
     [Fact]
-    public async Task Given_either_taskasync_when_apply_trymatch_with_right_condition_null_return_default()
+    public async Task GivenEitherTaskasyncWhenApplyTrymatchWithRightConditionNullReturnDefault()
     {
         Either<string, Exception> either = "test";
 
@@ -110,7 +110,7 @@ public class EitherMatchShould
     }
 
     [Fact]
-    public async Task Given_either_taskasync_when_apply_trymatch_left_condition_return_left_value()
+    public async Task GivenEitherTaskasyncWhenApplyTrymatchLeftConditionReturnLeftValue()
     {
         Either<string, Exception> either = "test";
 
@@ -120,7 +120,7 @@ public class EitherMatchShould
     }
 
     [Fact]
-    public async Task Given_either_taskasync_when_apply_trymatch_right_condition_return_right_value()
+    public async Task GivenEitherTaskasyncWhenApplyTrymatchRightConditionReturnRightValue()
     {
         Either<string, Exception> either = new Exception();
 
@@ -130,7 +130,7 @@ public class EitherMatchShould
     }
 
     [Fact]
-    public async Task Given_either_taskasync_when_apply_trymatch_left_condition_throw_exception_return_default()
+    public async Task GivenEitherTaskasyncWhenApplyTrymatchLeftConditionThrowExceptionReturnDefault()
     {
         Either<string, Exception> either = "test";
 
@@ -140,7 +140,7 @@ public class EitherMatchShould
     }
 
     [Fact]
-    public async Task Given_either_taskasync_when_apply_trymatch_right_condition_throw_exception_return_default()
+    public async Task GivenEitherTaskasyncWhenApplyTrymatchRightConditionThrowExceptionReturnDefault()
     {
         Either<string, Exception> either = new Exception();
 
@@ -150,7 +150,7 @@ public class EitherMatchShould
     }
 
     [Fact]
-    public void Given_either_when_apply_trymatch_with_right_and_left_condition_null_return_default()
+    public void GivenEitherWhenApplyTrymatchWithRightAndLeftConditionNullReturnDefault()
     {
         Either<string, Exception> either = "test";
 
@@ -160,7 +160,7 @@ public class EitherMatchShould
     }
 
     [Fact]
-    public void Given_either_when_apply_trymatch_with_left_condition_null_return_default()
+    public void GivenEitherWhenApplyTrymatchWithLeftConditionNullReturnDefault()
     {
         Either<string, Exception> either = "test";
 
@@ -170,7 +170,7 @@ public class EitherMatchShould
     }
 
     [Fact]
-    public void Given_either_when_apply_trymatch_with_right_condition_null_return_default()
+    public void GivenEitherWhenApplyTrymatchWithRightConditionNullReturnDefault()
     {
         Either<string, Exception> either = "test";
 
@@ -180,7 +180,7 @@ public class EitherMatchShould
     }
 
     [Fact]
-    public void Given_either_when_apply_trymatch_left_condition_throw_exception_return_default()
+    public void GivenEitherWhenApplyTrymatchLeftConditionThrowExceptionReturnDefault()
     {
         Either<string, Exception> either = "test";
 
@@ -190,7 +190,7 @@ public class EitherMatchShould
     }
 
     [Fact]
-    public void Given_either_when_apply_trymatch_right_condition_throw_exception_return_default()
+    public void GivenEitherWhenApplyTrymatchRightConditionThrowExceptionReturnDefault()
     {
         Either<string, Exception> either = new Exception();
 

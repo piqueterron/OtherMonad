@@ -4,7 +4,7 @@
 public class EitherCreateShould
 {
     [Fact]
-    public void Given_either_with_same_generics_values_when_apply_create_left_return_either_with_left_setter()
+    public void GivenEitherWithSameGenericsValuesWhenApplyCreateLeftReturnEitherWithLeftSetter()
     {
         var result = Either<string, string>.Create.Left("l");
 
@@ -14,7 +14,7 @@ public class EitherCreateShould
     }
 
     [Fact]
-    public void Given_either_with_same_generics_values_when_apply_create_right_return_either_with_right_setter()
+    public void GivenEitherWithSameGenericsValuesWhenApplyCreateRightReturnEitherWithRightSetter()
     {
         var result = Either<string, string>.Create.Right("r");
 
@@ -24,13 +24,13 @@ public class EitherCreateShould
     }
 
     [Fact]
-    public void Given_either_with_same_generics_values_when_apply_create_left_throw_argumentnullexception()
+    public void GivenEitherWithSameGenericsValuesWhenApplyCreateLeftThrowArgumentnullexception()
     {
         Assert.Throws<ArgumentNullException>(() => Either<string, string>.Create.Left(null));
     }
 
     [Fact]
-    public void Given_either_with_same_generics_values_when_apply_create_right_throw_argumentnullexception()
+    public void GivenEitherWithSameGenericsValuesWhenApplyCreateRightThrowArgumentnullexception()
     {
         Assert.Throws<ArgumentNullException>(() => Either<string, string>.Create.Right(null));
     }

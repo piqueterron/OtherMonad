@@ -5,13 +5,17 @@
 /// </summary>
 public static partial class Maybe
 {
-    public static Maybe<TResult> Combine<TSource, TCombine, TResult>(this Deferred<Maybe<TSource>> source, Maybe<TCombine> other, Func<TSource, TCombine, TResult> select) =>
-        source.BindDefer(src => select(src, other.Value))
+    public static Maybe<TResult> Combine<TSource, TCombine, TResult>(this Deferred<Maybe<TSource>> source, Maybe<TCombine> other, Func<TSource, TCombine, TResult> select)
+    {
+        return source.BindDefer(src => select(src, other.Value))
             .Match(res => res, () => Maybe<TResult>.None);
+    }
 
-    public static async Task<Maybe<TResult>> Combine<TSource, TCombine, TResult>(this DeferredTask<Maybe<TSource>> source, Maybe<TCombine> other, Func<TSource, TCombine, CancellationToken, Task<TResult>> select, CancellationToken cancellationToken = default) =>
-        await source.BindDefer((src, ct) => select(src, other.Value, ct), cancellationToken)
+    public static async Task<Maybe<TResult>> Combine<TSource, TCombine, TResult>(this DeferredTask<Maybe<TSource>> source, Maybe<TCombine> other, Func<TSource, TCombine, CancellationToken, Task<TResult>> select, CancellationToken cancellationToken = default)
+    {
+        return await source.BindDefer((src, ct) => select(src, other.Value, ct), cancellationToken)
             .Match(res => res, () => Maybe<TResult>.None);
+    }
 
     public static Maybe<TResult> TryCombine<TSource, TCombine, TResult>(this Deferred<Maybe<TSource>> source, Maybe<TCombine> other, Func<TSource, TCombine, TResult> select, Func<TResult> defaultValueFactory)
     {

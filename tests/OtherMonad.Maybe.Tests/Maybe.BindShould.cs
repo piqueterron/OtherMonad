@@ -6,7 +6,7 @@ using OtherMonad;
 public class MaybeBindShould
 {
     [Fact]
-    public void Given_maybe_of_string_when_apply_bind_return_expected_maybe()
+    public void GivenMaybeOfStringWhenApplyBindReturnExpectedMaybe()
     {
         var expected = "test-1";
         Maybe<string> @object = "test";
@@ -18,7 +18,7 @@ public class MaybeBindShould
     }
 
     [Fact]
-    public void Given_maybe_of_int_when_apply_chain_of_bind_return_expected_maybe()
+    public void GivenMaybeOfIntWhenApplyChainOfBindReturnExpectedMaybe()
     {
         var expected = 10;
         Maybe<int> @object = 2;
@@ -33,7 +33,7 @@ public class MaybeBindShould
     }
 
     [Fact]
-    public void Given_maybe_of_string_when_apply_bind_return_new_maybe_of_object()
+    public void GivenMaybeOfStringWhenApplyBindReturnNewMaybeOfObject()
     {
         var expected = "test-1";
         Maybe<string> @object = "test";
@@ -45,7 +45,7 @@ public class MaybeBindShould
     }
 
     [Fact]
-    public void Given_maybe_of_string_when_apply_bind_to_maybe_of_none_return_maybe_none_of_object()
+    public void GivenMaybeOfStringWhenApplyBindToMaybeOfNoneReturnMaybeNoneOfObject()
     {
         Maybe<string> @object = null;
 
@@ -56,7 +56,7 @@ public class MaybeBindShould
     }
 
     [Fact]
-    public void Given_maybe_of_string_when_apply_bind_to_maybe_of_none_return_maybe_none_of_string()
+    public void GivenMaybeOfStringWhenApplyBindToMaybeOfNoneReturnMaybeNoneOfString()
     {
         Maybe<string> @object = null;
 
@@ -67,7 +67,7 @@ public class MaybeBindShould
     }
 
     [Fact]
-    public async Task Given_maybe_of_string_when_apply_bind_from_task_return_expected_maybe()
+    public async Task GivenMaybeOfStringWhenApplyBindFromTaskReturnExpectedMaybe()
     {
         var expected = "test-1";
         Maybe<string> @object = "test";
@@ -79,7 +79,7 @@ public class MaybeBindShould
     }
 
     [Fact]
-    public async Task Given_maybe_of_string_when_apply_bind_from_task_return_maybe_none_of_string()
+    public async Task GivenMaybeOfStringWhenApplyBindFromTaskReturnMaybeNoneOfString()
     {
         Maybe<string> @object = null;
 
@@ -90,7 +90,7 @@ public class MaybeBindShould
     }
 
     [Fact]
-    public async Task Given_maybe_of_string_when_apply_bind_from_task_return_expected_maybe_of_string()
+    public async Task GivenMaybeOfStringWhenApplyBindFromTaskReturnExpectedMaybeOfString()
     {
         var expected = "test-1";
         Maybe<string> @object = "test";
@@ -102,7 +102,7 @@ public class MaybeBindShould
     }
 
     [Fact]
-    public async Task Given_maybe_of_string_when_apply_bind_from_task_return_maybe_none_of_object()
+    public async Task GivenMaybeOfStringWhenApplyBindFromTaskReturnMaybeNoneOfObject()
     {
         Maybe<string> @object = null;
 
@@ -113,7 +113,7 @@ public class MaybeBindShould
     }
 
     [Fact]
-    public async Task Given_maybe_of_string_when_apply_bind_from_task_return_expected_maybe_of_none_object()
+    public async Task GivenMaybeOfStringWhenApplyBindFromTaskReturnExpectedMaybeOfNoneObject()
     {
         Maybe<string> @object = "test";
 
@@ -124,7 +124,7 @@ public class MaybeBindShould
     }
 
     [Fact]
-    public void Given_maybe_of_string_when_apply_binddeferred_return_expected_maybe()
+    public void GivenMaybeOfStringWhenApplyBinddeferredReturnExpectedMaybe()
     {
         var expected = "test-1-1";
         Maybe<string> @object = "test";
@@ -139,7 +139,7 @@ public class MaybeBindShould
     }
 
     [Fact]
-    public async Task Given_maybe_of_string_when_apply_binddeferred_from_task_return_expected_maybe_of_string()
+    public async Task GivenMaybeOfStringWhenApplyBinddeferredFromTaskReturnExpectedMaybeOfString()
     {
         var expected = "test-1-1";
         Maybe<string> @object = "test";

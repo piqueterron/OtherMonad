@@ -6,7 +6,7 @@ using OtherMonad;
 public class MaybeCastShould
 {
     [Fact]
-    public void Given_object_with_string_apply_cast_to_string_return_maybe_of_string()
+    public void GivenObjectWithStringApplyCastToStringReturnMaybeOfString()
     {
         object @object = "test";
 
@@ -17,7 +17,7 @@ public class MaybeCastShould
     }
 
     [Fact]
-    public void Given_object_with_string_apply_cast_to_string_throw_invalidcastexception()
+    public void GivenObjectWithStringApplyCastToStringThrowInvalidcastexception()
     {
         object @object = "test";
 
@@ -25,7 +25,7 @@ public class MaybeCastShould
     }
 
     [Fact]
-    public void Given_object_with_string_apply_trycast_to_string_return_maybe_of_string()
+    public void GivenObjectWithStringApplyTrycastToStringReturnMaybeOfString()
     {
         object @object = "test";
 
@@ -36,7 +36,7 @@ public class MaybeCastShould
     }
 
     [Fact]
-    public void Given_object_with_null_apply_trycast_to_string_return_maybe_none_of_string()
+    public void GivenObjectWithNullApplyTrycastToStringReturnMaybeNoneOfString()
     {
         object @object = null;
 
@@ -47,7 +47,7 @@ public class MaybeCastShould
     }
 
     [Fact]
-    public void Given_object_of_int_apply_trycast_to_maybe_of_string_return_maybe_none_of_string()
+    public void GivenObjectOfIntApplyTrycastToMaybeOfStringReturnMaybeNoneOfString()
     {
         object @object = 1;
 

@@ -6,7 +6,7 @@ using OtherMonad;
 public class EitherCombineShould
 {
     [Fact]
-    public void Given_two_eithers_with_state_success_when_apply_combine_return_all_results()
+    public void GivenTwoEithersWithStateSuccessWhenApplyCombineReturnAllResults()
     {
         var expected = "test1test2";
 
@@ -20,7 +20,7 @@ public class EitherCombineShould
     }
 
     [Fact]
-    public void Given_two_eithers_with_state_fail_when_apply_combine_return_all_exceptions()
+    public void GivenTwoEithersWithStateFailWhenApplyCombineReturnAllExceptions()
     {
         var msg1 = "Exception either 1";
         var msg2 = "Exception either 2";
@@ -37,7 +37,7 @@ public class EitherCombineShould
     }
 
     [Fact]
-    public void Given_two_eithers_with_state_fail_when_apply_combine_return_distinct_exceptions()
+    public void GivenTwoEithersWithStateFailWhenApplyCombineReturnDistinctExceptions()
     {
         var msg1 = "Exception either 1";
         var msg2 = "ArgumentException either 2";
@@ -54,7 +54,7 @@ public class EitherCombineShould
     }
 
     [Fact]
-    public void Given_two_eithers_with_one_state_success_and_other_fail_when_apply_combine_return_all_exceptions()
+    public void GivenTwoEithersWithOneStateSuccessAndOtherFailWhenApplyCombineReturnAllExceptions()
     {
         var msg1 = "Exception either 1";
 

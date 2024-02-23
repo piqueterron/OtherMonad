@@ -11,7 +11,10 @@ public static partial class Maybe
     /// <typeparam name="TSource">The type of the element of source</typeparam>
     /// <param name="source">A value to wrap</param>
     /// <returns><see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>]]></see></returns>
-    public static Maybe<TSource> Wrap<TSource>(this TSource source) => source;
+    public static Maybe<TSource> Wrap<TSource>(this TSource source)
+    {
+        return source;
+    }
 
     /// <summary>
     /// <para>Unwraps the <see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>]]></see> type struct to an object of type <typeparamref name="TSource"/></para>
@@ -19,7 +22,10 @@ public static partial class Maybe
     /// <typeparam name="TSource">The type of the element of source</typeparam>
     /// <param name="source">A value to unwrap</param>
     /// <returns><typeparamref name="TSource"/></returns>
-    public static TSource Unwrap<TSource>(this Maybe<TSource> source) => source.Value;
+    public static TSource Unwrap<TSource>(this Maybe<TSource> source)
+    {
+        return source.Value;
+    }
 
     /// <summary>
     /// <para>Unwraps the <see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>]]></see> type structure to an object of type <typeparamref name="TSource"/> otherwise return default <typeparamref name="TSource"/></para>
