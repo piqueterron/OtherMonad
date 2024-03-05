@@ -71,7 +71,28 @@ public class MaybeCombineShould
 
         var defer1 = @object1.BindDefer(x => x + 1);
 
-        var result = defer1.Combine(@object2, (obj1, obj2) => obj1 + obj2);
+        var comb = defer1.Combine(@object2, (obj1, obj2) => obj1 + obj2);
+
+        var result = comb();
+
+        Assert.True(result.HasValue);
+        Assert.Equal(expected, result.Value);
+    }
+
+    [Fact]
+    public void GivenTwoDeferredMaybesOfIntWhenCombineDeferReturnSumBoth()
+    {
+        var expected = 7;
+
+        Maybe<int> @object1 = 2;
+        Maybe<int> @object2 = 3;
+
+        var defer1 = @object1.BindDefer(x => x + 1);
+        var defer2 = @object2.BindDefer(x => x + 1);
+
+        var comb = defer1.Combine(defer2, (obj1, obj2) => obj1 + obj2);
+
+        var result = comb();
 
         Assert.True(result.HasValue);
         Assert.Equal(expected, result.Value);
@@ -87,7 +108,29 @@ public class MaybeCombineShould
 
         var defer1 = @object1.BindDefer(x => x + 1);
 
-        var result = defer1.TryCombine(@object2, (obj1, obj2) => obj1 + obj2, () => 0);
+        var comb = defer1.TryCombine(@object2, (obj1, obj2) => obj1 + obj2, () => 0);
+
+        var result = comb();
+
+        Assert.True(result.HasValue);
+        Assert.Equal(expected, result.Value);
+    }
+
+
+    [Fact]
+    public void GivenTwoDeferredMaybesOfIntWhenTryCombineDeferReturnSumBoth()
+    {
+        var expected = 7;
+
+        Maybe<int> @object1 = 2;
+        Maybe<int> @object2 = 3;
+
+        var defer1 = @object1.BindDefer(x => x + 1);
+        var defer2 = @object2.BindDefer(x => x + 1);
+
+        var comb = defer1.TryCombine(defer2, (obj1, obj2) => obj1 + obj2, () => 0);
+
+        var result = comb();
 
         Assert.True(result.HasValue);
         Assert.Equal(expected, result.Value);
@@ -103,7 +146,28 @@ public class MaybeCombineShould
 
         var defer1 = @object1.BindDefer(x => x + 1);
 
-        var result = defer1.TryCombine(@object2, (obj1, obj2) => throw new ApplicationException(), () => "default");
+        var comb = defer1.TryCombine(@object2, (obj1, obj2) => throw new ApplicationException(), () => expected);
+
+        var result = comb();
+
+        Assert.True(result.HasValue);
+        Assert.Equal(expected, result.Value);
+    }
+
+    [Fact]
+    public void GivenTwoDeferredMaybesOfIntWhenTryCombineDeferReturnDefault()
+    {
+        var expected = "default";
+
+        Maybe<int> @object1 = 2;
+        Maybe<string> @object2 = "test";
+
+        var defer1 = @object1.BindDefer(x => x + 1);
+        var defer2 = @object2.BindDefer(x => x + "1");
+
+        var comb = defer1.TryCombine(defer2, (obj1, obj2) => throw new ApplicationException(), () => expected);
+
+        var result = comb();
 
         Assert.True(result.HasValue);
         Assert.Equal(expected, result.Value);
