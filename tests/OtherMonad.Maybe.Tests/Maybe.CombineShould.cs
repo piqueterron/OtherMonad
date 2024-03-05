@@ -99,6 +99,45 @@ public class MaybeCombineShould
     }
 
     [Fact]
+    public async void GivenTwoDeferredTaskMaybesOfIntWhenCombineDeferReturnSumBoth()
+    {
+        var expected = 7;
+
+        Maybe<int> @object1 = 2;
+        Maybe<int> @object2 = 3;
+
+        var defer1 = @object1.BindDefer((x, ct) => Task.FromResult(x + 1));
+        var defer2 = @object2.BindDefer((x, ct) => Task.FromResult(x + 1));
+
+        var comb = defer1.Combine(defer2, (obj1, obj2, ct) => Task.FromResult(obj1 + obj2));
+
+        var result = comb();
+        var data = await result;
+
+        Assert.True(data.HasValue);
+        Assert.Equal(expected, data.Value);
+    }
+
+    [Fact]
+    public async void GivenTwoDeferredTaskAndMaybesOfIntWhenCombineDeferReturnSumBoth()
+    {
+        var expected = 6;
+
+        Maybe<int> @object1 = 2;
+        Maybe<int> @object2 = 3;
+
+        var defer1 = @object1.BindDefer((x, ct) => Task.FromResult(x + 1));
+
+        var comb = defer1.Combine(@object2, (obj1, obj2, ct) => Task.FromResult(obj1 + obj2));
+
+        var result = comb();
+        var data = await result;
+
+        Assert.True(data.HasValue);
+        Assert.Equal(expected, data.Value);
+    }
+
+    [Fact]
     public void GivenTwoMaybesOfIntWhenTryCombineDeferReturnSumBoth()
     {
         var expected = 6;
@@ -115,7 +154,6 @@ public class MaybeCombineShould
         Assert.True(result.HasValue);
         Assert.Equal(expected, result.Value);
     }
-
 
     [Fact]
     public void GivenTwoDeferredMaybesOfIntWhenTryCombineDeferReturnSumBoth()
@@ -171,5 +209,87 @@ public class MaybeCombineShould
 
         Assert.True(result.HasValue);
         Assert.Equal(expected, result.Value);
+    }
+
+    [Fact]
+    public async void GivenTwoDeferredTaskMaybesOfIntWhenTryCombineDeferReturnExpected()
+    {
+        var expected = 6;
+
+        Maybe<int> @object1 = 2;
+        Maybe<int> @object2 = 3;
+
+        var defer1 = @object1.BindDefer((x, ct) => Task.FromResult(x + 1));
+
+        var comb = defer1.TryCombine(@object2, (obj1, obj2, ctx) => Task.FromResult(obj1 + obj2), () => Task.FromResult(0), CancellationToken.None);
+
+        var result = comb();
+
+        var data = await result;
+
+        Assert.True(data.HasValue);
+        Assert.Equal(expected, data.Value);
+    }
+
+    [Fact]
+    public async void GivenTwoDeferredTaskMaybesOfIntWhenTryCombineDeferReturnDefault()
+    {
+        var expected = 0;
+
+        Maybe<int> @object1 = 2;
+        Maybe<int> @object2 = 3;
+
+        var defer1 = @object1.BindDefer((x, ct) => Task.FromResult(x + 1));
+
+        var comb = defer1.TryCombine(@object2, (obj1, obj2, ctx) => throw new ApplicationException(), () => Task.FromResult(0), CancellationToken.None);
+
+        var result = comb();
+
+        var data = await result;
+
+        Assert.True(data.HasValue);
+        Assert.Equal(expected, data.Value);
+    }
+
+    [Fact]
+    public async void GivenTwoDeferredTaskIntWhenTryCombineDeferReturnExpected()
+    {
+        var expected = 7;
+
+        Maybe<int> @object1 = 2;
+        Maybe<int> @object2 = 3;
+
+        var defer1 = @object1.BindDefer((x, ct) => Task.FromResult(x + 1));
+        var defer2 = @object2.BindDefer((x, ct) => Task.FromResult(x + 1));
+
+        var comb = defer1.TryCombine(defer2, (obj1, obj2, ctx) => Task.FromResult(obj1 + obj2), () => Task.FromResult(0), CancellationToken.None);
+
+        var result = comb();
+
+        var data = await result;
+
+        Assert.True(data.HasValue);
+        Assert.Equal(expected, data.Value);
+    }
+
+    [Fact]
+    public async void GivenTwoDeferredTaskIntWhenTryCombineDeferReturnDefault()
+    {
+        var expected = 0;
+
+        Maybe<int> @object1 = 2;
+        Maybe<int> @object2 = 3;
+
+        var defer1 = @object1.BindDefer((x, ct) => Task.FromResult(x + 1));
+        var defer2 = @object2.BindDefer((x, ct) => Task.FromResult(x + 1));
+
+        var comb = defer1.TryCombine(defer2, (obj1, obj2, ctx) => throw new ApplicationException(), () => Task.FromResult(0), CancellationToken.None);
+
+        var result = comb();
+
+        var data = await result;
+
+        Assert.True(data.HasValue);
+        Assert.Equal(expected, data.Value);
     }
 }
