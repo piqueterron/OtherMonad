@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 public static partial class Maybe
 {
     /// <summary>
-    /// <para>Projects each element of a sequence with value into a new <see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[> ]]></see></para>
+    /// <para>Projects each element of a sequence with value into a new <see cref="Maybe{TResult}"><![CDATA[ IEnumerable<Maybe<]]><typeparamref name="TResult"/><![CDATA[>> ]]></see></para>
     /// </summary>
     /// <typeparam name="TSource">The type of the elements of source</typeparam>
     /// <typeparam name="TResult">The type of the value returned by selector</typeparam>
@@ -27,7 +27,7 @@ public static partial class Maybe
     }
 
     /// <summary>
-    /// <para>Projects each element of a sequence with value into a new <see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[> ]]></see></para>
+    /// <para>Projects each element of a sequence with value into a new <see cref="Maybe{TResult}"><![CDATA[ IEnumerable<Maybe<]]><typeparamref name="TResult"/><![CDATA[>> ]]></see></para>
     /// </summary>
     /// <typeparam name="TSource">The type of the elements of source</typeparam>
     /// <typeparam name="TResult">The type of the value returned by selector</typeparam>
@@ -47,7 +47,7 @@ public static partial class Maybe
     }
 
     /// <summary>
-    /// <para>Projects each element of a sequence with value into a new <see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[> ]]></see></para>
+    /// <para>Projects each element of a sequence with value into a new <see cref="Maybe{TResult}"><![CDATA[ IEnumerable<Maybe<]]><typeparamref name="TResult"/><![CDATA[>> ]]></see></para>
     /// </summary>
     /// <typeparam name="TSource">The type of the elements of source</typeparam>
     /// <typeparam name="TResult">The type of the value returned by selector</typeparam>
