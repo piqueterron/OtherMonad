@@ -1,10 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>disable</Nullable>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <Title>OtherMonad.Maybe</Title>
     <Authors>Erik Pique</Authors>
     <Company></Company>
@@ -16,12 +12,12 @@
     <PackageTags>Monads;Functional;Maybe</PackageTags>
     <PackageIcon>OtherMonad.256x256.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="..\..\OtherMonad.256x256.png">
       <Pack>True</Pack>
+      <Visible>false</Visible>
       <PackagePath>\</PackagePath>
     </None>
     <None Update="README.md">

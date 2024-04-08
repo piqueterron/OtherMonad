@@ -71,7 +71,7 @@ public class MaybeCombineShould
 
         var defer1 = @object1.BindDefer(x => x + 1);
 
-        var comb = defer1.Combine(@object2, (obj1, obj2) => obj1 + obj2);
+        var comb = defer1.CombineDefer(@object2, (obj1, obj2) => obj1 + obj2);
 
         var result = comb();
 
@@ -90,7 +90,7 @@ public class MaybeCombineShould
         var defer1 = @object1.BindDefer(x => x + 1);
         var defer2 = @object2.BindDefer(x => x + 1);
 
-        var comb = defer1.Combine(defer2, (obj1, obj2) => obj1 + obj2);
+        var comb = defer1.CombineDefer(defer2, (obj1, obj2) => obj1 + obj2);
 
         var result = comb();
 
@@ -109,7 +109,7 @@ public class MaybeCombineShould
         var defer1 = @object1.BindDefer((x, ct) => Task.FromResult(x + 1));
         var defer2 = @object2.BindDefer((x, ct) => Task.FromResult(x + 1));
 
-        var comb = defer1.Combine(defer2, (obj1, obj2, ct) => Task.FromResult(obj1 + obj2));
+        var comb = defer1.CombineDefer(defer2, (obj1, obj2, ct) => Task.FromResult(obj1 + obj2));
 
         var result = comb();
         var data = await result;
@@ -128,7 +128,7 @@ public class MaybeCombineShould
 
         var defer1 = @object1.BindDefer((x, ct) => Task.FromResult(x + 1));
 
-        var comb = defer1.Combine(@object2, (obj1, obj2, ct) => Task.FromResult(obj1 + obj2));
+        var comb = defer1.CombineDefer(@object2, (obj1, obj2, ct) => Task.FromResult(obj1 + obj2));
 
         var result = comb();
         var data = await result;
@@ -147,7 +147,7 @@ public class MaybeCombineShould
 
         var defer1 = @object1.BindDefer(x => x + 1);
 
-        var comb = defer1.TryCombine(@object2, (obj1, obj2) => obj1 + obj2, () => 0);
+        var comb = defer1.TryCombineDefer(@object2, (obj1, obj2) => obj1 + obj2, () => 0);
 
         var result = comb();
 
@@ -166,7 +166,7 @@ public class MaybeCombineShould
         var defer1 = @object1.BindDefer(x => x + 1);
         var defer2 = @object2.BindDefer(x => x + 1);
 
-        var comb = defer1.TryCombine(defer2, (obj1, obj2) => obj1 + obj2, () => 0);
+        var comb = defer1.TryCombineDefer(defer2, (obj1, obj2) => obj1 + obj2, () => 0);
 
         var result = comb();
 
@@ -184,7 +184,7 @@ public class MaybeCombineShould
 
         var defer1 = @object1.BindDefer(x => x + 1);
 
-        var comb = defer1.TryCombine(@object2, (obj1, obj2) => throw new ApplicationException(), () => expected);
+        var comb = defer1.TryCombineDefer(@object2, (obj1, obj2) => throw new ApplicationException(), () => expected);
 
         var result = comb();
 
@@ -203,7 +203,7 @@ public class MaybeCombineShould
         var defer1 = @object1.BindDefer(x => x + 1);
         var defer2 = @object2.BindDefer(x => x + "1");
 
-        var comb = defer1.TryCombine(defer2, (obj1, obj2) => throw new ApplicationException(), () => expected);
+        var comb = defer1.TryCombineDefer(defer2, (obj1, obj2) => throw new ApplicationException(), () => expected);
 
         var result = comb();
 
@@ -221,7 +221,7 @@ public class MaybeCombineShould
 
         var defer1 = @object1.BindDefer((x, ct) => Task.FromResult(x + 1));
 
-        var comb = defer1.TryCombine(@object2, (obj1, obj2, ctx) => Task.FromResult(obj1 + obj2), () => Task.FromResult(0), CancellationToken.None);
+        var comb = defer1.TryCombineDefer(@object2, (obj1, obj2, ctx) => Task.FromResult(obj1 + obj2), () => Task.FromResult(0), CancellationToken.None);
 
         var result = comb();
 
@@ -241,7 +241,7 @@ public class MaybeCombineShould
 
         var defer1 = @object1.BindDefer((x, ct) => Task.FromResult(x + 1));
 
-        var comb = defer1.TryCombine(@object2, (obj1, obj2, ctx) => throw new ApplicationException(), () => Task.FromResult(0), CancellationToken.None);
+        var comb = defer1.TryCombineDefer(@object2, (obj1, obj2, ctx) => throw new ApplicationException(), () => Task.FromResult(0), CancellationToken.None);
 
         var result = comb();
 
@@ -262,7 +262,7 @@ public class MaybeCombineShould
         var defer1 = @object1.BindDefer((x, ct) => Task.FromResult(x + 1));
         var defer2 = @object2.BindDefer((x, ct) => Task.FromResult(x + 1));
 
-        var comb = defer1.TryCombine(defer2, (obj1, obj2, ctx) => Task.FromResult(obj1 + obj2), () => Task.FromResult(0), CancellationToken.None);
+        var comb = defer1.TryCombineDefer(defer2, (obj1, obj2, ctx) => Task.FromResult(obj1 + obj2), () => Task.FromResult(0), CancellationToken.None);
 
         var result = comb();
 
@@ -283,7 +283,7 @@ public class MaybeCombineShould
         var defer1 = @object1.BindDefer((x, ct) => Task.FromResult(x + 1));
         var defer2 = @object2.BindDefer((x, ct) => Task.FromResult(x + 1));
 
-        var comb = defer1.TryCombine(defer2, (obj1, obj2, ctx) => throw new ApplicationException(), () => Task.FromResult(0), CancellationToken.None);
+        var comb = defer1.TryCombineDefer(defer2, (obj1, obj2, ctx) => throw new ApplicationException(), () => Task.FromResult(0), CancellationToken.None);
 
         var result = comb();
 

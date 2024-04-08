@@ -14,7 +14,7 @@ public static partial class Maybe
     /// <param name="selector">A transform function to apply to each source element</param>
     /// <returns>The type of the value returned <see cref="Maybe{TSource}"><![CDATA[Deferred<IEnumerable<Maybe<]]><typeparamref name="TResult"/><![CDATA[>>>]]></see></returns>
     /// <exception cref="ArgumentNullException">selector is null</exception>
-    public static Deferred<IEnumerable<Maybe<TResult>>> Map<TSource, TResult>(this Deferred<IEnumerable<Maybe<TSource>>> sources, Func<TSource, TResult> selector)
+    public static Deferred<IEnumerable<Maybe<TResult>>> MapDefer<TSource, TResult>(this Deferred<IEnumerable<Maybe<TSource>>> sources, Func<TSource, TResult> selector)
     {
         ArgumentNullException.ThrowIfNull(selector);
 
@@ -43,7 +43,7 @@ public static partial class Maybe
     /// <param name="cancellation">A CancellationToken enables cooperative cancellation between threads, thread pool work items, or Task objects</param>
     /// <returns>The type of the value returned <see cref="Maybe{TSource}"><![CDATA[DeferredTask<IEnumerable<Maybe<]]><typeparamref name="TResult"/><![CDATA[>>>]]></see></returns>
     /// <exception cref="ArgumentNullException">selector is null</exception>
-    public static DeferredTask<IEnumerable<Maybe<TResult>>> Map<TSource, TResult>(this DeferredTask<IEnumerable<Maybe<TSource>>> sources, Func<TSource, CancellationToken, Task<TResult>> selector, CancellationToken cancellation = default)
+    public static DeferredTask<IEnumerable<Maybe<TResult>>> MapDefer<TSource, TResult>(this DeferredTask<IEnumerable<Maybe<TSource>>> sources, Func<TSource, CancellationToken, Task<TResult>> selector, CancellationToken cancellation = default)
     {
         ArgumentNullException.ThrowIfNull(selector);
 

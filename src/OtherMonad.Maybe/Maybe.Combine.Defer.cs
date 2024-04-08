@@ -16,7 +16,7 @@ public static partial class Maybe
     /// <param name="other">A right value to invoke a combine</param>
     /// <param name="select">A combine function to apply to source element with other</param>
     /// <returns><see cref="Maybe{TResult}"><![CDATA[ Deferred<Maybe<]]><typeparamref name="TResult"/><![CDATA[>> ]]></see> or default value</returns>
-    public static Deferred<Maybe<TResult>> Combine<TSource, TCombine, TResult>(this Deferred<Maybe<TSource>> source, Maybe<TCombine> other, Func<TSource, TCombine, TResult> select)
+    public static Deferred<Maybe<TResult>> CombineDefer<TSource, TCombine, TResult>(this Deferred<Maybe<TSource>> source, Maybe<TCombine> other, Func<TSource, TCombine, TResult> select)
     {
         return () =>
         {
@@ -36,7 +36,7 @@ public static partial class Maybe
     /// <param name="other">A right value to invoke a combine</param>
     /// <param name="select">A combine function to apply to source element with other</param>
     /// <returns><see cref="Maybe{TResult}"><![CDATA[ Deferred<Maybe<]]><typeparamref name="TResult"/><![CDATA[>> ]]></see> or default value</returns>
-    public static Deferred<Maybe<TResult>> Combine<TSource, TCombine, TResult>(this Deferred<Maybe<TSource>> source, Deferred<Maybe<TCombine>> other, Func<TSource, TCombine, TResult> select)
+    public static Deferred<Maybe<TResult>> CombineDefer<TSource, TCombine, TResult>(this Deferred<Maybe<TSource>> source, Deferred<Maybe<TCombine>> other, Func<TSource, TCombine, TResult> select)
     {
         return () =>
         {
@@ -59,7 +59,7 @@ public static partial class Maybe
     /// <param name="select">A combine function to apply to source element with other</param>
     /// <param name="cancellation">A CancellationToken enables cooperative cancellation between threads, thread pool work items, or Task objects</param>
     /// <returns><see cref="Maybe{TResult}"><![CDATA[ Deferred<Maybe<]]><typeparamref name="TResult"/><![CDATA[>> ]]></see> or default value</returns>
-    public static DeferredTask<Maybe<TResult>> Combine<TSource, TCombine, TResult>(this DeferredTask<Maybe<TSource>> source, Maybe<TCombine> other, Func<TSource, TCombine, CancellationToken, Task<TResult>> select, CancellationToken cancellation = default)
+    public static DeferredTask<Maybe<TResult>> CombineDefer<TSource, TCombine, TResult>(this DeferredTask<Maybe<TSource>> source, Maybe<TCombine> other, Func<TSource, TCombine, CancellationToken, Task<TResult>> select, CancellationToken cancellation = default)
     {
         return async () =>
         {
@@ -80,7 +80,7 @@ public static partial class Maybe
     /// <param name="select">A combine function to apply to source element with other</param>
     /// <param name="cancellation">A CancellationToken enables cooperative cancellation between threads, thread pool work items, or Task objects</param>
     /// <returns><see cref="Maybe{TResult}"><![CDATA[ Deferred<Maybe<]]><typeparamref name="TResult"/><![CDATA[>> ]]></see> or default value</returns>
-    public static DeferredTask<Maybe<TResult>> Combine<TSource, TCombine, TResult>(this DeferredTask<Maybe<TSource>> source, DeferredTask<Maybe<TCombine>> other, Func<TSource, TCombine, CancellationToken, Task<TResult>> select, CancellationToken cancellation = default)
+    public static DeferredTask<Maybe<TResult>> CombineDefer<TSource, TCombine, TResult>(this DeferredTask<Maybe<TSource>> source, DeferredTask<Maybe<TCombine>> other, Func<TSource, TCombine, CancellationToken, Task<TResult>> select, CancellationToken cancellation = default)
     {
         return async () =>
         {
@@ -103,13 +103,13 @@ public static partial class Maybe
     /// <param name="select">A combine function to apply to source element with other</param>
     /// <param name="defaultValueFactory">Default value in case no match</param>
     /// <returns><see cref="Maybe{TResult}"><![CDATA[ Deferred<Maybe<]]><typeparamref name="TResult"/><![CDATA[>> ]]></see> or default value</returns>
-    public static Deferred<Maybe<TResult>> TryCombine<TSource, TCombine, TResult>(this Deferred<Maybe<TSource>> source, Maybe<TCombine> other, Func<TSource, TCombine, TResult> select, Func<TResult> defaultValueFactory)
+    public static Deferred<Maybe<TResult>> TryCombineDefer<TSource, TCombine, TResult>(this Deferred<Maybe<TSource>> source, Maybe<TCombine> other, Func<TSource, TCombine, TResult> select, Func<TResult> defaultValueFactory)
     {
         return () =>
         {
             try
             {
-                var comb = source.Combine(other, select);
+                var comb = source.CombineDefer(other, select);
 
                 return comb();
             }
@@ -132,13 +132,13 @@ public static partial class Maybe
     /// <param name="select">A combine function to apply to source element with other</param>
     /// <param name="defaultValueFactory">Default value in case no match</param>
     /// <returns><see cref="Maybe{TResult}"><![CDATA[ Deferred<Maybe<]]><typeparamref name="TResult"/><![CDATA[>> ]]></see> or default value</returns>
-    public static Deferred<Maybe<TResult>> TryCombine<TSource, TCombine, TResult>(this Deferred<Maybe<TSource>> source, Deferred<Maybe<TCombine>> other, Func<TSource, TCombine, TResult> select, Func<TResult> defaultValueFactory)
+    public static Deferred<Maybe<TResult>> TryCombineDefer<TSource, TCombine, TResult>(this Deferred<Maybe<TSource>> source, Deferred<Maybe<TCombine>> other, Func<TSource, TCombine, TResult> select, Func<TResult> defaultValueFactory)
     {
         return () =>
         {
             try
             {
-                var comb = source.Combine(other, select);
+                var comb = source.CombineDefer(other, select);
 
                 return comb();
             }
@@ -162,13 +162,13 @@ public static partial class Maybe
     /// <param name="defaultValueFactory">Default value in case no match</param>
     /// <param name="cancellation">A CancellationToken enables cooperative cancellation between threads, thread pool work items, or Task objects</param>
     /// <returns><see cref="Maybe{TResult}"><![CDATA[ DeferredTask<Maybe<]]><typeparamref name="TResult"/><![CDATA[>> ]]></see> or default value</returns>
-    public static DeferredTask<Maybe<TResult>> TryCombine<TSource, TCombine, TResult>(this DeferredTask<Maybe<TSource>> source, Maybe<TCombine> other, Func<TSource, TCombine, CancellationToken, Task<TResult>> select, Func<Task<TResult>> defaultValueFactory, CancellationToken cancellation = default)
+    public static DeferredTask<Maybe<TResult>> TryCombineDefer<TSource, TCombine, TResult>(this DeferredTask<Maybe<TSource>> source, Maybe<TCombine> other, Func<TSource, TCombine, CancellationToken, Task<TResult>> select, Func<Task<TResult>> defaultValueFactory, CancellationToken cancellation = default)
     {
         return async () =>
         {
             try
             {
-                var comb = source.Combine(other, select, cancellation);
+                var comb = source.CombineDefer(other, select, cancellation);
 
                 return await comb();
             }
@@ -192,13 +192,13 @@ public static partial class Maybe
     /// <param name="defaultValueFactory">Default value in case no match</param>
     /// <param name="cancellation">A CancellationToken enables cooperative cancellation between threads, thread pool work items, or Task objects</param>
     /// <returns><see cref="Maybe{TResult}"><![CDATA[ DeferredTask<Maybe<]]><typeparamref name="TResult"/><![CDATA[>> ]]></see> or default value</returns>
-    public static DeferredTask<Maybe<TResult>> TryCombine<TSource, TCombine, TResult>(this DeferredTask<Maybe<TSource>> source, DeferredTask<Maybe<TCombine>> other, Func<TSource, TCombine, CancellationToken, Task<TResult>> select, Func<Task<TResult>> defaultValueFactory, CancellationToken cancellation = default)
+    public static DeferredTask<Maybe<TResult>> TryCombineDefer<TSource, TCombine, TResult>(this DeferredTask<Maybe<TSource>> source, DeferredTask<Maybe<TCombine>> other, Func<TSource, TCombine, CancellationToken, Task<TResult>> select, Func<Task<TResult>> defaultValueFactory, CancellationToken cancellation = default)
     {
         return async () =>
         {
             try
             {
-                var comb = source.Combine(other, select, cancellation);
+                var comb = source.CombineDefer(other, select, cancellation);
 
                 return await comb();
             }
