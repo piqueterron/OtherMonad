@@ -7,6 +7,7 @@ public static partial class Either
 {
     /// <summary>
     /// <para>Combine <see cref="IEither{TSourceLeft,TSourceRight}"/> with <see cref="IEither{TOtherLeft,TOtherRight}"/> apply <see cref="Func{TSourceLeft, TOtherLeft, TLeft}"/> if both has left value, otherwise apply <see cref="Func{TSourceRight, TOtherRight, TRight}"/></para>
+    /// <para>When states are mixed (one Left, one Right) the result is always a failure. <paramref name="selectorRight"/> is called with the available Right value and <c>default</c> for the missing one; the selector must handle <c>default</c> values gracefully.</para>
     /// </summary>
     /// <typeparam name="TSourceLeft">The type of the left element of source</typeparam>
     /// <typeparam name="TSourceRight">The type of the right element of source</typeparam>
