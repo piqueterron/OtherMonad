@@ -35,6 +35,15 @@ public static partial class Either
             return selectorLeft(source.Left, other.Left);
         }
 
-        return selectorRight(source.Right, other.Right);
+        if (!source.IsLeft && !other.IsLeft)
+        {
+            return selectorRight(source.Right, other.Right);
+        }
+
+        // Mixed states: one is Left (success) and the other is Right (fail).
+        // The result is always a failure; pass the available Right value and default for the missing one.
+        return source.IsLeft
+            ? selectorRight(default, other.Right)
+            : selectorRight(source.Right, default);
     }
 }

@@ -38,9 +38,17 @@ public class MaybeEqualityShould
     }
 
     [Fact]
-    public void GivenTwoMaybesToApplyEqualityOperatorReturnEquals()
+    public void GivenMaybeOfZeroIntAndMaybeNoneIntWhenApplyEqualityOperatorReturnNotEquals()
     {
         Maybe<int> result = 0;
+
+        Assert.False(Maybe<int>.None == result);
+    }
+
+    [Fact]
+    public void GivenTwoMaybesToApplyEqualityOperatorReturnEquals()
+    {
+        Maybe<int> result = Maybe<int>.None;
 
         Assert.True(Maybe<int>.None == result);
     }

@@ -37,7 +37,7 @@ public class MaybeMapShould
             e => Assert.Equal(6, e),
             e => Assert.Equal(8, e),
             e => Assert.Equal(10, e),
-            e => Assert.Equal(0, e));
+            e => Assert.Equal(Maybe<int>.None, e));
     }
 
     [Fact]
@@ -55,7 +55,7 @@ public class MaybeMapShould
             e => Assert.Equal(6, e),
             e => Assert.Equal(8, e),
             e => Assert.Equal(10, e),
-            e => Assert.Equal(0, e));
+            e => Assert.Equal(Maybe<int>.None, e));
     }
 
 #pragma warning disable CS1998 // El método asincrónico carece de operadores "await" y se ejecutará de forma sincrónica
