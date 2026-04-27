@@ -99,7 +99,7 @@ public class MaybeCombineShould
     }
 
     [Fact]
-    public async void GivenTwoDeferredTaskMaybesOfIntWhenCombineDeferReturnSumBoth()
+    public async Task GivenTwoDeferredTaskMaybesOfIntWhenCombineDeferReturnSumBoth()
     {
         var expected = 7;
 
@@ -119,7 +119,7 @@ public class MaybeCombineShould
     }
 
     [Fact]
-    public async void GivenTwoDeferredTaskAndMaybesOfIntWhenCombineDeferReturnSumBoth()
+    public async Task GivenTwoDeferredTaskAndMaybesOfIntWhenCombineDeferReturnSumBoth()
     {
         var expected = 6;
 
@@ -212,7 +212,7 @@ public class MaybeCombineShould
     }
 
     [Fact]
-    public async void GivenTwoDeferredTaskMaybesOfIntWhenTryCombineDeferReturnExpected()
+    public async Task GivenTwoDeferredTaskMaybesOfIntWhenTryCombineDeferReturnExpected()
     {
         var expected = 6;
 
@@ -232,7 +232,7 @@ public class MaybeCombineShould
     }
 
     [Fact]
-    public async void GivenTwoDeferredTaskMaybesOfIntWhenTryCombineDeferReturnDefault()
+    public async Task GivenTwoDeferredTaskMaybesOfIntWhenTryCombineDeferReturnDefault()
     {
         var expected = 0;
 
@@ -252,7 +252,7 @@ public class MaybeCombineShould
     }
 
     [Fact]
-    public async void GivenTwoDeferredTaskIntWhenTryCombineDeferReturnExpected()
+    public async Task GivenTwoDeferredTaskIntWhenTryCombineDeferReturnExpected()
     {
         var expected = 7;
 
@@ -273,7 +273,7 @@ public class MaybeCombineShould
     }
 
     [Fact]
-    public async void GivenTwoDeferredTaskIntWhenTryCombineDeferReturnDefault()
+    public async Task GivenTwoDeferredTaskIntWhenTryCombineDeferReturnDefault()
     {
         var expected = 0;
 

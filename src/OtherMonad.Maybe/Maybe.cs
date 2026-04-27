@@ -30,7 +30,13 @@ public readonly struct Maybe<TSource> : IEquatable<Maybe<TSource>>
     /// <inheritdoc/>
     public bool Equals(Maybe<TSource> other)
     {
-        return GetHashCode() == other.GetHashCode();
+        if (HasValue != other.HasValue)
+            return false;
+
+        if (!HasValue)
+            return true;
+
+        return EqualityComparer<TSource>.Default.Equals(Value, other.Value);
     }
 
     /// <inheritdoc/>
@@ -45,7 +51,7 @@ public readonly struct Maybe<TSource> : IEquatable<Maybe<TSource>>
         unchecked
         {
             var hash = 13;
-            hash = hash * 7 ^ Value?.GetHashCode() ?? 0;
+            hash = hash * 7 ^ (Value?.GetHashCode() ?? 0);
 
             return hash;
         }
