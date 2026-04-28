@@ -38,13 +38,11 @@ public class MaybeWrapShould
     }
 
     [Fact]
-    public void GivenMaybeOfStringWhenApplyUnwrapReturnNull()
+    public void GivenMaybeNoneWhenApplyUnwrapThrowsInvalidOperationException()
     {
         var maybe = Maybe<string>.None;
 
-        var result = maybe.Unwrap();
-
-        Assert.Equal(result, maybe.Value);
+        Assert.Throws<InvalidOperationException>(() => maybe.Unwrap());
     }
 
     [Fact]

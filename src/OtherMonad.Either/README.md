@@ -1,6 +1,8 @@
 # OtherMonad.Either
 
-`OtherMonad.Either` provides the `Either<TLeft, TRight>` type — a discriminated union that holds **one of two possible values**. By convention, **Left** represents the _success_ case and **Right** represents the _failure_ case (railway-oriented programming).
+`OtherMonad.Either` provides the `Either<TLeft, TRight>` type — a discriminated union that holds **one of two possible values**. Following the convention used by Haskell, fp-ts, and LanguageExt:
+
+> **Right = success &nbsp;·&nbsp; Left = failure/error** *(right is right)*
 
 ## Table of Contents
 
@@ -10,7 +12,11 @@
 - [Extension Methods](#extension-methods)
   - [Match](#match)
   - [TryMatch](#trymatch)
+  - [Bind](#bind)
+  - [Map](#map)
+  - [OrElse](#orelse)
   - [Combine](#combine)
+- [Equality](#equality)
 - [Async Support](#async-support)
 
 ## Getting Started
@@ -26,29 +32,24 @@ using OtherMonad;
 ## Core Type
 
 ```csharp
-public readonly struct Either<TLeft, TRight> : IEither<TLeft, TRight>
+public readonly struct Either<TLeft, TRight> : IEither<TLeft, TRight>, IEquatable<Either<TLeft, TRight>>
 ```
 
 | Member | Description |
 |--------|-------------|
-| `Left` | The success value of type `TLeft`. |
-| `Right` | The failure value of type `TRight`. |
-| `IsLeft` | `true` when the instance holds a Left (success) value. |
+| `Right` | The **success** value of type `TRight`. Throws `InvalidOperationException` if accessed in the Left state. |
+| `Left` | The **failure/error** value of type `TLeft`. Throws `InvalidOperationException` if accessed in the Right state. |
+| `IsRight` | `true` when the instance holds a Right (success) value. |
+| `IsLeft` | `true` when the instance holds a Left (failure/error) value. |
 
 ## Creating Values
 
-### Implicit conversion
-
 ```csharp
-Either<int, string> ok  = 42;           // Left / success
-Either<int, string> err = "not found";  // Right / failure
-```
+// Right = success
+var ok  = Either<Exception, int>.Create.Right(42);
 
-### Explicit factory
-
-```csharp
-var ok  = Either<int, string>.Create.Left(42);
-var err = Either<int, string>.Create.Right("not found");
+// Left = failure/error
+var err = Either<Exception, int>.Create.Left(new Exception("not found"));
 ```
 
 > Both factory methods throw `ArgumentNullException` if `null` is supplied.
@@ -60,15 +61,15 @@ var err = Either<int, string>.Create.Right("not found");
 Evaluates the Either and returns a result by applying the corresponding function.
 
 ```csharp
-// Synchronous
+// Synchronous — left handles failure, right handles success
 string msg = either.Match(
-    left:  v   => $"Value: {v}",
-    right: err => $"Error: {err}");
+    left:  err => $"Error: {err.Message}",
+    right: v   => $"Value: {v}");
 
 // Asynchronous
 string msg = await either.Match(
-    left:  async (v, ct)   => await GetSuccessMessage(v, ct),
-    right: async (e, ct)   => await GetErrorMessage(e, ct),
+    left:  async (err, ct) => await GetErrorMessage(err, ct),
+    right: async (v,   ct) => await GetSuccessMessage(v, ct),
     cancellation: token);
 ```
 
@@ -78,30 +79,70 @@ Same as `Match` but silently returns `@default` if either function is `null` or 
 
 ```csharp
 string safe = either.TryMatch(
-    left:     v   => $"Value: {v}",
-    right:    err => $"Error: {err}",
+    left:     err => $"Error: {err.Message}",
+    right:    v   => $"Value: {v}",
     @default: "fallback");
+```
+
+### Bind
+
+If in the Right (success) state, applies a function that returns a new Either. Propagates Left unchanged.
+
+```csharp
+Either<Exception, string> result = either.Bind(n => Either<Exception, string>.Create.Right(n.ToString()));
+```
+
+### Map
+
+If in the Right (success) state, transforms the Right value. Propagates Left unchanged.
+
+```csharp
+Either<Exception, string> result = either.Map(n => n.ToString());
+```
+
+### OrElse
+
+If in the Left (failure) state, returns the provided fallback Either. Returns self when Right.
+
+```csharp
+Either<Exception, int> result = either.OrElse(Either<Exception, int>.Create.Right(0));
+
+// Async overload with factory
+Either<Exception, int> result = await either.OrElse(
+    (ct) => Task.FromResult(Either<Exception, int>.Create.Right(0)), token);
 ```
 
 ### Combine
 
-Merges two `Either` instances using a left selector (both success) or a right selector (any failure).
+Merges two `Either` instances:
+- **Both Right (success)**: applies `selectorRight`.
+- **Both Left (failure)**: applies `selectorLeft`.
+- **Mixed**: always returns Left (failure). `selectorLeft` is called with the available Left value and `null` for the missing side.
 
 ```csharp
 var combined = first.Combine(
     second,
-    selectorLeft:  (a, b) => a + b,
-    selectorRight: (e1, e2) => $"{e1} | {e2}");
+    selectorLeft:  (e1, e2) => new AggregateException(e1, e2),
+    selectorRight: (a,  b)  => a + b);
 ```
 
-> When states are mixed (one Left, one Right), the result is always a failure.
+## Equality
+
+`Either<TLeft, TRight>` implements `IEquatable<Either<TLeft, TRight>>` with `==` / `!=` operators and a correct `GetHashCode`.
+
+```csharp
+var a = Either<Exception, int>.Create.Right(42);
+var b = Either<Exception, int>.Create.Right(42);
+
+bool equal = a == b; // true
+```
 
 ## Async Support
 
-All `Match` variants have `Task<TResult>` overloads that accept `CancellationToken`.
+`Bind`, `Map`, `OrElse`, and all `Match` variants have `Task<TResult>` overloads that accept `CancellationToken`.
 
 ```csharp
-var result = await either.Match(
-    left:  (v, ct)   => Task.FromResult($"ok: {v}"),
-    right: (e, ct)   => Task.FromResult($"err: {e}"));
+var result = await either.Map(
+    (v, ct) => Task.FromResult(v.ToString()),
+    cancellationToken);
 ```

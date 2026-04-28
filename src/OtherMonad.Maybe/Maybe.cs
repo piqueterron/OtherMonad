@@ -51,6 +51,7 @@ public readonly struct Maybe<TSource> : IEquatable<Maybe<TSource>>
         unchecked
         {
             var hash = 13;
+            hash = hash * 7 ^ HasValue.GetHashCode();
             hash = hash * 7 ^ (Value?.GetHashCode() ?? 0);
 
             return hash;

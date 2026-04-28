@@ -6,17 +6,18 @@
 public static partial class Either
 {
     /// <summary>
-    /// <para>Execute <see cref="Func{TLeft, TResult}"></see> 
-    /// if success otherwise execute <see cref="Func{TRight, TResult}"></see></para>
+    /// <para>Evaluates the Either and returns a result by applying the corresponding function.
+    /// Executes <paramref name="right"/> when in the Right (success) state,
+    /// or <paramref name="left"/> when in the Left (failure) state.</para>
     /// </summary>
-    /// <typeparam name="TLeft">Function call when struct state is success</typeparam>
-    /// <typeparam name="TRight">Function call when struct state is fail</typeparam>
-    /// <typeparam name="TResult">The type of the value returned by selector</typeparam>
-    /// <param name="source">The type of the element of source</param>
-    /// <param name="left">Execute success <see cref="Func{TLeft, TResult}"/> when <typeparamref name="TLeft"/></param>
-    /// <param name="right">Execute fail <see cref="Func{TRight, TResult}"/> when <typeparamref name="TRight"/></param>
+    /// <typeparam name="TLeft">The failure/error type.</typeparam>
+    /// <typeparam name="TRight">The success type.</typeparam>
+    /// <typeparam name="TResult">The type of the value returned by the selector.</typeparam>
+    /// <param name="source">The Either instance to evaluate.</param>
+    /// <param name="left">Function invoked when in the Left (failure) state.</param>
+    /// <param name="right">Function invoked when in the Right (success) state.</param>
     /// <returns><typeparamref name="TResult"/></returns>
-    /// <exception cref="ArgumentNullException">Left or right condition is null</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="left"/> or <paramref name="right"/> is <see langword="null"/>.</exception>
     public static TResult Match<TLeft, TRight, TResult>(this IEither<TLeft, TRight> source, Func<TLeft, TResult> left, Func<TRight, TResult> right)
     {
         ArgumentNullException.ThrowIfNull(left);
@@ -26,18 +27,19 @@ public static partial class Either
     }
 
     /// <summary>
-    /// <para>Execute <see cref="Func{TLeft, CancellationToken, TResult}"></see> 
-    /// if success otherwise execute <see cref="Func{TRight, CancellationToken, TResult}"></see></para>
+    /// <para>Evaluates the Either asynchronously and returns a result by applying the corresponding function.
+    /// Executes <paramref name="right"/> when in the Right (success) state,
+    /// or <paramref name="left"/> when in the Left (failure) state.</para>
     /// </summary>
-    /// <typeparam name="TLeft">Function call when struct state is success</typeparam>
-    /// <typeparam name="TRight">Function call when struct state is fail</typeparam>
-    /// <typeparam name="TResult">The type of the value returned by selector</typeparam>
-    /// <param name="source">The type of the element of source</param>
-    /// <param name="left">Execute success <see cref="Func{TLeft, TResult}"/> when <typeparamref name="TLeft"/></param>
-    /// <param name="right">Execute fail <see cref="Func{TRight, TResult}"/> when <typeparamref name="TRight"/></param>
-    /// <param name="cancellation">A CancellationToken enables cooperative cancellation between threads, thread pool work items, or Task objects</param>
+    /// <typeparam name="TLeft">The failure/error type.</typeparam>
+    /// <typeparam name="TRight">The success type.</typeparam>
+    /// <typeparam name="TResult">The type of the value returned by the selector.</typeparam>
+    /// <param name="source">The Either instance to evaluate.</param>
+    /// <param name="left">Async function invoked when in the Left (failure) state.</param>
+    /// <param name="right">Async function invoked when in the Right (success) state.</param>
+    /// <param name="cancellation">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
     /// <returns><see cref="Task{TResult}"><![CDATA[Task<]]><typeparamref name="TResult"/><![CDATA[>]]></see></returns>
-    /// <exception cref="ArgumentNullException">Left or right condition is null</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="left"/> or <paramref name="right"/> is <see langword="null"/>.</exception>
     public static async Task<TResult> Match<TLeft, TRight, TResult>(this IEither<TLeft, TRight> source, Func<TLeft, CancellationToken, Task<TResult>> left, Func<TRight, CancellationToken, Task<TResult>> right, CancellationToken cancellation = default)
     {
         ArgumentNullException.ThrowIfNull(left);
@@ -47,19 +49,19 @@ public static partial class Either
     }
 
     /// <summary>
-    /// <para>Execute <see cref="Func{TLeft, CancellationToken, TResult}"></see> 
-    /// if success otherwise execute <see cref="Func{TRight, CancellationToken, TResult}"></see>. 
-    /// If any path it throws an exception, obfuscate the exception and return the default value</para>
+    /// <para>Same as <see cref="Match{TLeft,TRight,TResult}(IEither{TLeft,TRight},Func{TLeft,CancellationToken,Task{TResult}},Func{TRight,CancellationToken,Task{TResult}},CancellationToken)"/>
+    /// but silently returns <paramref name="default"/> if either function is <see langword="null"/> or throws.</para>
     /// </summary>
-    /// <typeparam name="TLeft">Function call when struct state is success</typeparam>
-    /// <typeparam name="TRight">Function call when struct state is fail</typeparam>
-    /// <typeparam name="TResult">The type of the value returned by selector</typeparam>
-    /// <param name="source">The type of the element of source</param>
-    /// <param name="left">Execute success <see cref="Func{TLeft, TResult}"/> when <typeparamref name="TLeft"/></param>
-    /// <param name="right">Execute fail <see cref="Func{TRight, TResult}"/> when <typeparamref name="TRight"/></param>
-    /// <param name="cancellation">A CancellationToken enables cooperative cancellation between threads, thread pool work items, or Task objects</param>
+    /// <typeparam name="TLeft">The failure/error type.</typeparam>
+    /// <typeparam name="TRight">The success type.</typeparam>
+    /// <typeparam name="TResult">The type of the value returned by the selector.</typeparam>
+    /// <param name="source">The Either instance to evaluate.</param>
+    /// <param name="left">Async function invoked when in the Left (failure) state.</param>
+    /// <param name="right">Async function invoked when in the Right (success) state.</param>
+    /// <param name="default">Value returned when a function is <see langword="null"/> or throws.</param>
+    /// <param name="cancellation">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
     /// <returns><see cref="Task{TResult}"><![CDATA[Task<]]><typeparamref name="TResult"/><![CDATA[>]]></see></returns>
-    public static async Task<TResult> TryMatch<TLeft, TRight, TResult>(this IEither<TLeft, TRight> source, Func<TLeft, CancellationToken, Task<TResult>> left, Func<TRight, CancellationToken, Task<TResult>> right, TResult @default = default, CancellationToken cancellation = default)
+    public static async Task<TResult> TryMatch<TLeft, TRight, TResult>(this IEither<TLeft, TRight> source, Func<TLeft, CancellationToken, Task<TResult>> left, Func<TRight, CancellationToken, Task<TResult>> right, TResult @default = default!, CancellationToken cancellation = default)
     {
         if (left is null || right is null)
         {
@@ -70,26 +72,25 @@ public static partial class Either
         {
             return await source.Match(left, right, cancellation);
         }
-        catch
+        catch (Exception)
         {
             return @default;
         }
     }
 
     /// <summary>
-    /// <para>Execute <see cref="Func{TLeft, TResult}"></see> 
-    /// if success otherwise execute <see cref="Func{TRight, TResult}"></see>
-    /// If any path it throws an exception, obfuscate the exception and return the default value</para>
+    /// <para>Same as <see cref="Match{TLeft,TRight,TResult}(IEither{TLeft,TRight},Func{TLeft,TResult},Func{TRight,TResult})"/>
+    /// but silently returns <paramref name="default"/> if either function is <see langword="null"/> or throws.</para>
     /// </summary>
-    /// <typeparam name="TLeft">Function call when struct state is success</typeparam>
-    /// <typeparam name="TRight">Function call when struct state is fail</typeparam>
-    /// <typeparam name="TResult">The type of the value returned by selector</typeparam>
-    /// <param name="source">The type of the element of source</param>
-    /// <param name="left">Execute success <see cref="Func{TLeft, TResult}"/> when <typeparamref name="TLeft"/></param>
-    /// <param name="right">Execute fail <see cref="Func{TRight, TResult}"/> when <typeparamref name="TRight"/></param>
-    /// <param name="default">Value by default type of <typeparamref name="TResult"/></param>
+    /// <typeparam name="TLeft">The failure/error type.</typeparam>
+    /// <typeparam name="TRight">The success type.</typeparam>
+    /// <typeparam name="TResult">The type of the value returned by the selector.</typeparam>
+    /// <param name="source">The Either instance to evaluate.</param>
+    /// <param name="left">Function invoked when in the Left (failure) state.</param>
+    /// <param name="right">Function invoked when in the Right (success) state.</param>
+    /// <param name="default">Value returned when a function is <see langword="null"/> or throws.</param>
     /// <returns><typeparamref name="TResult"/></returns>
-    public static TResult TryMatch<TLeft, TRight, TResult>(this IEither<TLeft, TRight> source, Func<TLeft, TResult> left, Func<TRight, TResult> right, TResult @default = default)
+    public static TResult TryMatch<TLeft, TRight, TResult>(this IEither<TLeft, TRight> source, Func<TLeft, TResult> left, Func<TRight, TResult> right, TResult @default = default!)
     {
         if (left is null || right is null)
         {
@@ -100,7 +101,7 @@ public static partial class Either
         {
             return source.Match(left, right);
         }
-        catch
+        catch (Exception)
         {
             return @default;
         }

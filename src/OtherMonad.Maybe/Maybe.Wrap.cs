@@ -22,8 +22,12 @@ public static partial class Maybe
     /// <typeparam name="TSource">The type of the element of source</typeparam>
     /// <param name="source">A value to unwrap</param>
     /// <returns><typeparamref name="TSource"/></returns>
+    /// <exception cref="InvalidOperationException">Thrown when <paramref name="source"/> has no value (<see cref="Maybe{TSource}.HasValue"/> is <see langword="false"/>). Use <see cref="Unwrap{TSource}(Maybe{TSource}, TSource)"/> to provide a fallback value.</exception>
     public static TSource Unwrap<TSource>(this Maybe<TSource> source)
     {
+        if (!source.HasValue)
+            throw new InvalidOperationException("Maybe has no value. Use Unwrap(defaultValue) to provide a fallback.");
+
         return source.Value;
     }
 

@@ -9,8 +9,9 @@ public class EitherCreateShould
         var result = Either<string, string>.Create.Left("l");
 
         Assert.True(result.IsLeft);
+        Assert.False(result.IsRight);
         Assert.NotNull(result.Left);
-        Assert.Null(result.Right);
+        Assert.Throws<InvalidOperationException>(() => _ = result.Right);
     }
 
     [Fact]
@@ -19,8 +20,9 @@ public class EitherCreateShould
         var result = Either<string, string>.Create.Right("r");
 
         Assert.False(result.IsLeft);
-        Assert.Null(result.Left);
+        Assert.True(result.IsRight);
         Assert.NotNull(result.Right);
+        Assert.Throws<InvalidOperationException>(() => _ = result.Left);
     }
 
     [Fact]

@@ -1,92 +1,125 @@
 ﻿namespace OtherMonad;
 
 /// <summary>
-/// The Either type represent a value which two posible values. By convention, left represent <strong>success</strong> case and right <strong>fail</strong> case
+/// The Either type represents a value with two possible alternatives. By convention — matching
+/// Haskell, fp-ts, and LanguageExt — <strong>Right represents the success case</strong> and
+/// <strong>Left represents the failure/error case</strong>.
 /// </summary>
-/// <typeparam name="TLeft">Type represent success case</typeparam>
-/// <typeparam name="TRight">Type represent fail case</typeparam>
-public readonly struct Either<TLeft, TRight> : IEither<TLeft, TRight>
+/// <typeparam name="TLeft">Type that represents the failure/error case.</typeparam>
+/// <typeparam name="TRight">Type that represents the success case.</typeparam>
+public readonly struct Either<TLeft, TRight> : IEither<TLeft, TRight>, IEquatable<Either<TLeft, TRight>>
 {
     private readonly TLeft? _left;
     private readonly TRight? _right;
     private readonly bool _isLeft;
 
     /// <summary>
-    /// The success value of type <typeparamref name="TLeft"/>.
+    /// The failure/error value of type <typeparamref name="TLeft"/>.
     /// </summary>
-    public TLeft Left => _left!;
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the instance is in the Right (success) state. Check <see cref="IsLeft"/> before accessing.
+    /// </exception>
+    public TLeft Left => _isLeft
+        ? _left!
+        : throw new InvalidOperationException("Either is in a Right (success) state. Access Right instead.");
 
     /// <summary>
-    /// The failure value of type <typeparamref name="TRight"/>.
+    /// The success value of type <typeparamref name="TRight"/>.
     /// </summary>
-    public TRight Right => _right!;
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the instance is in the Left (failure) state. Check <see cref="IsRight"/> before accessing.
+    /// </exception>
+    public TRight Right => !_isLeft
+        ? _right!
+        : throw new InvalidOperationException("Either is in a Left (failure) state. Access Left instead.");
 
     /// <summary>
-    /// Flag represent state of success case or not
+    /// <see langword="true"/> when the instance holds a Left (failure/error) value.
     /// </summary>
     public bool IsLeft => _isLeft;
 
-    private Either(TLeft left)
+    /// <summary>
+    /// <see langword="true"/> when the instance holds a Right (success) value.
+    /// </summary>
+    public bool IsRight => !_isLeft;
+
+    private Either(TLeft? left, TRight? right, bool isLeft)
     {
         _left = left;
-        _right = default;
-        _isLeft = true;
-    }
-
-    private Either(TRight right)
-    {
-        _left = default;
         _right = right;
-        _isLeft = false;
+        _isLeft = isLeft;
     }
 
     /// <summary>
-    /// Implicit operators are used when the conversion is guaranteed to succeed without data loss.
-    /// </summary>
-    /// <param name="left"><typeparamref name="TLeft"/></param>
-    public static implicit operator Either<TLeft, TRight>(TLeft left)
-    {
-        return new(left);
-    }
-
-    /// <summary>
-    /// Implicit operators are used when the conversion is guaranteed to succeed without data loss.
-    /// </summary>
-    /// <param name="right"><typeparamref name="TRight"/></param>
-    public static implicit operator Either<TLeft, TRight>(TRight right)
-    {
-        return new(right);
-    }
-
-    /// <summary>
-    /// Explicit method for create Either type 
+    /// Explicit method for creating Either instances.
     /// </summary>
     public readonly struct Create
     {
         /// <summary>
-        /// Create explicit left value
+        /// Creates an Either that holds a Left (failure/error) value.
         /// </summary>
-        /// <param name="left">Type represent success case</param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException">Null param launch exception</exception>
+        /// <param name="left">The failure/error value.</param>
+        /// <returns><see cref="Either{TLeft,TRight}"/> in the Left state.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="left"/> is <see langword="null"/>.</exception>
         public static Either<TLeft, TRight> Left(TLeft left)
         {
             ArgumentNullException.ThrowIfNull(left);
 
-            return new(left);
+            return new Either<TLeft, TRight>(left, default, true);
         }
 
         /// <summary>
-        /// Create explicit right value
+        /// Creates an Either that holds a Right (success) value.
         /// </summary>
-        /// <param name="right">Type represent fail case</param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException">Null param launch exception</exception>
+        /// <param name="right">The success value.</param>
+        /// <returns><see cref="Either{TLeft,TRight}"/> in the Right state.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="right"/> is <see langword="null"/>.</exception>
         public static Either<TLeft, TRight> Right(TRight right)
         {
             ArgumentNullException.ThrowIfNull(right);
 
-            return new(right);
+            return new Either<TLeft, TRight>(default, right, false);
         }
+    }
+
+    /// <inheritdoc/>
+    public bool Equals(Either<TLeft, TRight> other)
+    {
+        if (_isLeft != other._isLeft)
+            return false;
+
+        return _isLeft
+            ? EqualityComparer<TLeft>.Default.Equals(_left, other._left)
+            : EqualityComparer<TRight>.Default.Equals(_right, other._right);
+    }
+
+    /// <inheritdoc/>
+    public override bool Equals(object? obj)
+    {
+        return obj is Either<TLeft, TRight> other && Equals(other);
+    }
+
+    /// <inheritdoc/>
+    public override int GetHashCode()
+    {
+        return _isLeft
+            ? HashCode.Combine(true, _left)
+            : HashCode.Combine(false, _right);
+    }
+
+    /// <summary>
+    /// Equality operator for two <see cref="Either{TLeft,TRight}"/> instances.
+    /// </summary>
+    public static bool operator ==(Either<TLeft, TRight> left, Either<TLeft, TRight> right)
+    {
+        return left.Equals(right);
+    }
+
+    /// <summary>
+    /// Inequality operator for two <see cref="Either{TLeft,TRight}"/> instances.
+    /// </summary>
+    public static bool operator !=(Either<TLeft, TRight> left, Either<TLeft, TRight> right)
+    {
+        return !(left == right);
     }
 }
