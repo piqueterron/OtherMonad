@@ -3,5 +3,5 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\OtherMonad.Either\OtherMonad.Either.csproj" />
   </ItemGroup>
-
+ 
 </Project>
