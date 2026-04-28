@@ -108,6 +108,20 @@ public readonly struct Either<TLeft, TRight> : IEither<TLeft, TRight>, IEquatabl
     }
 
     /// <summary>
+    /// Returns a string that represents the current <see cref="Either{TLeft,TRight}"/> instance.
+    /// </summary>
+    /// <returns>
+    /// <c>"Either { Left = {Left} }"</c> when in the Left (failure/error) state;
+    /// <c>"Either { Right = {Right} }"</c> when in the Right (success) state.
+    /// </returns>
+    public override string ToString()
+    {
+        return _isLeft
+            ? $"Either {{ Left = {_left} }}"
+            : $"Either {{ Right = {_right} }}";
+    }
+
+    /// <summary>
     /// Equality operator for two <see cref="Either{TLeft,TRight}"/> instances.
     /// </summary>
     public static bool operator ==(Either<TLeft, TRight> left, Either<TLeft, TRight> right)

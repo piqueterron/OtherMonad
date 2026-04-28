@@ -6,7 +6,7 @@ using OtherMonad;
 public class MaybeMatchShould
 {
     [Fact]
-    public void GivenMaybeOfStringWhenApplyMatchExecuteLeftCondition()
+    public void GivenMaybeOfStringWhenApplyMatchExecuteSomeCondition()
     {
         Maybe<string> @object = "test";
 
@@ -16,7 +16,7 @@ public class MaybeMatchShould
     }
 
     [Fact]
-    public void GivenMaybeOfStringWhenApplyMatchExecuteRightCondition()
+    public void GivenMaybeOfStringWhenApplyMatchExecuteNoneCondition()
     {
         Maybe<string> @object = null;
 
@@ -26,7 +26,7 @@ public class MaybeMatchShould
     }
 
     [Fact]
-    public async Task GivenMaybeOfStringWhenApplyMatchTypeOfTaskExecuteLeftCondition()
+    public async Task GivenMaybeOfStringWhenApplyMatchTypeOfTaskExecuteSomeCondition()
     {
         Maybe<string> @object = "test";
 
@@ -36,7 +36,7 @@ public class MaybeMatchShould
     }
 
     [Fact]
-    public async Task GivenMaybeOfStringWhenApplyMatchTypeOfTaskExecuteRightCondition()
+    public async Task GivenMaybeOfStringWhenApplyMatchTypeOfTaskExecuteNoneCondition()
     {
         Maybe<string> @object = null;
 

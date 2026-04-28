@@ -53,8 +53,8 @@ Maybe<int> length = name.Bind(s => s.Length);  // Maybe<int> { Value = 5, HasVal
 
 // Match — branch on presence/absence
 string result = name.Match(
-    left:  s  => $"Hello, {s}!",
-    right: () => "No name provided");
+    some: s  => $"Hello, {s}!",
+    none: () => "No name provided");
 
 // OrElse — provide a fallback
 Maybe<string> fallback = empty.OrElse("default");

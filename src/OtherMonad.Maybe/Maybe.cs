@@ -59,6 +59,20 @@ public readonly struct Maybe<TSource> : IEquatable<Maybe<TSource>>
     }
 
     /// <summary>
+    /// Returns a string that represents the current <see cref="Maybe{TSource}"/> instance.
+    /// </summary>
+    /// <returns>
+    /// <c>"Maybe { Value = {Value}, HasValue = true }"</c> when a value is present;
+    /// <c>"Maybe { HasValue = false }"</c> when the instance is <see cref="None"/>.
+    /// </returns>
+    public override string ToString()
+    {
+        return HasValue
+            ? $"Maybe {{ Value = {Value}, HasValue = true }}"
+            : "Maybe { HasValue = false }";
+    }
+
+    /// <summary>
     /// Nullable <see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>]]></see>
     /// </summary>
     public static readonly Maybe<TSource> None = new();
