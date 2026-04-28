@@ -13,12 +13,12 @@ public interface IEither<out TLeft, out TRight>
     bool IsLeft { get; }
 
     /// <summary>
-    /// <typeparam name="TLeft">Type represent success case</typeparam>
+    /// The success value of type <typeparamref name="TLeft"/>.
     /// </summary>
     TLeft Left { get; }
 
     /// <summary>
-    /// <typeparam name="TRight">Type represent fail case</typeparam>
+    /// The failure value of type <typeparamref name="TRight"/>.
     /// </summary>
     TRight Right { get; }
 }
