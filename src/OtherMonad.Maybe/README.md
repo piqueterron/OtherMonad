@@ -1,6 +1,6 @@
 # OtherMonad.Maybe
 
-`OtherMonad.Maybe` provides the `Maybe<T>` type — a safe container for an optional value. An instance either _has_ a value or it is `Maybe<T>.None`, eliminating `null` references and guarding against `NullReferenceException`.
+`OtherMonad.Maybe` provides the `Maybe<T>` type — a safe container for an optional value. An instance either _has_ a value or it is `Maybe<T>.None`, eliminating `null` references and guarding against null-reference exceptions.
 
 ## Table of Contents
 
@@ -17,6 +17,7 @@
   - [Wrap / Unwrap](#wrap--unwrap)
 - [Deferred Execution](#deferred-execution)
 - [Async Support](#async-support)
+- [Thread Safety in Deferred Execution](#thread-safety-in-deferred-execution)
 
 ## Getting Started
 
@@ -121,7 +122,7 @@ int        safe      = wrapped.Unwrap(@default: 0); // 0 when HasValue = false
 
 ## Deferred Execution
 
-Deferred variants (`BindDefer`, `MapDefer`, `OrElseDefer`, `CombineDefer`, `CastDefer`, …) return a `Deferred<Maybe<T>>` delegate that is only evaluated when invoked. This supports lazy pipelines without allocating intermediate values.
+Deferred variants (`BindDefer`, `MapDefer`, `OrElseDefer`, `CombineDefer`, `CastDefer`, …) return a `Deferred<Maybe<T>>` delegate that is only evaluated when invoked. This supports lazy pipelines and reduces unnecessary computation.
 
 ```csharp
 Deferred<Maybe<int>> lazy = "hello"
@@ -150,3 +151,71 @@ DeferredTask<Maybe<int>> lazyAsync = maybe.BindDefer(
 
 Maybe<int> result = await lazyAsync();
 ```
+
+## Thread Safety in Deferred Execution
+
+The `Deferred<T>` and `DeferredTask<T>` delegates are **thread-safe** as long as the selector functions passed to them do not capture mutable shared state.
+
+### ✅ Safe Usage
+
+Avoid capturing mutable external variables. Each deferred operation is independent and thread-safe:
+
+```csharp
+// Safe: Delegados sin capturas mutables
+var maybe1 = Maybe<int>.None;
+var maybe2 = Maybe<int>.None;
+
+var d1 = maybe1.BindDefer(x => x * 2);
+var d2 = maybe2.BindDefer(x => x + 10);
+
+// Safe to execute in parallel
+Task.Run(() => d1()); // Thread-safe ✓
+Task.Run(() => d2()); // Thread-safe ✓
+
+// Also safe: Immutable captured values
+var multiplier = 5;
+var d3 = maybe1.BindDefer(x => x * multiplier); // Captures immutable reference
+Task.Run(() => d3()); // Thread-safe ✓
+```
+
+### ❌ Unsafe Usage
+
+**DO NOT** capture mutable state in selector functions:
+
+```csharp
+// DANGER: Mutable captured variable
+var counter = 0;
+var maybe = 5.Wrap();
+
+var deferred = maybe.BindDefer(x => ++counter); // Captures mutable 'counter'
+
+// Race condition: Multiple threads may read/write 'counter' simultaneously
+Task.Run(() => deferred());
+Task.Run(() => deferred());
+Task.Run(() => deferred());
+
+// Result: counter value is unpredictable due to race conditions ⚠️
+```
+
+### ✅ Correct Solution
+
+Use thread-safe patterns when mutable state is needed:
+
+```csharp
+// Safe: Use thread-safe mechanisms
+var counter = new System.Threading.Interlocked.Exchange;
+var maybe = 5.Wrap();
+
+var deferred = maybe.BindDefer(x => 
+{
+    Interlocked.Increment(ref counter);
+    return x;
+});
+
+// Now safe for concurrent execution
+Task.Run(() => deferred());
+Task.Run(() => deferred());
+Task.Run(() => deferred());
+```
+
+**Summary:** `Deferred<T>` delegates are thread-safe by design. Ensure your selector functions don't capture mutable shared state, and you'll have no concurrency issues.
