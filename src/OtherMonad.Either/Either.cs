@@ -12,12 +12,12 @@ public readonly struct Either<TLeft, TRight> : IEither<TLeft, TRight>
     private readonly bool _isLeft;
 
     /// <summary>
-    /// <typeparam name="TLeft">Type represent success case</typeparam>
+    /// The success value of type <typeparamref name="TLeft"/>.
     /// </summary>
     public TLeft Left => _left!;
 
     /// <summary>
-    /// <typeparam name="TRight">Type represent fail case</typeparam>
+    /// The failure value of type <typeparamref name="TRight"/>.
     /// </summary>
     public TRight Right => _right!;
 
