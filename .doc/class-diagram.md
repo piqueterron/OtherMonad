@@ -21,6 +21,7 @@ classDiagram
         +Equals(Maybe~TSource~) bool
         +Equals(object) bool
         +GetHashCode() int
+        +ToString() string
         +implicit operator Maybe~TSource~(TSource)
     }
 
@@ -68,8 +69,13 @@ classDiagram
         +TLeft Left
         +TRight Right
         +bool IsLeft
-        +implicit operator Either~TLeft,TRight~(TLeft)
-        +implicit operator Either~TLeft,TRight~(TRight)
+        +bool IsRight
+        +Equals(Either~TLeft,TRight~) bool
+        +Equals(object) bool
+        +GetHashCode() int
+        +ToString() string
+        +operator ==(Either~TLeft,TRight~, Either~TLeft,TRight~) bool
+        +operator !=(Either~TLeft,TRight~, Either~TLeft,TRight~) bool
     }
 
     class EitherCreate~TLeft,TRight~ {

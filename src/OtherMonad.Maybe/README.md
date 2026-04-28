@@ -77,8 +77,8 @@ Branches on presence/absence and returns a result.
 
 ```csharp
 string result = maybe.Match(
-    left:  value => $"Found: {value}",
-    right: ()    => "Nothing");
+    some: value => $"Found: {value}",
+    none: ()    => "Nothing");
 ```
 
 ### OrElse
