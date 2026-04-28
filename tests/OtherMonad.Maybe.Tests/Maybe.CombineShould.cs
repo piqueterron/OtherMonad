@@ -18,17 +18,14 @@ public class MaybeCombineShould
     }
 
     [Fact]
-    public void GivenTwoMaybesOfIntWhenCombineReturnSumEqualsTwo()
+    public void GivenMaybeWithValueAndNoneWhenCombineThenReturnsNone()
     {
-        var expected = 2;
-
         Maybe<int> @object1 = 2;
         var @object2 = Maybe<int>.None;
 
         var result = @object1.Combine(@object2, (obj1, obj2) => obj1 + obj2);
 
-        Assert.True(result.HasValue);
-        Assert.Equal(expected, result.Value);
+        Assert.False(result.HasValue);
     }
 
     [Fact]

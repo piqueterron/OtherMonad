@@ -7,19 +7,19 @@
 /// <typeparam name="TRight">Type represent fail case</typeparam>
 public readonly struct Either<TLeft, TRight> : IEither<TLeft, TRight>
 {
-    private readonly TLeft _left;
-    private readonly TRight _right;
+    private readonly TLeft? _left;
+    private readonly TRight? _right;
     private readonly bool _isLeft;
 
     /// <summary>
     /// <typeparam name="TLeft">Type represent success case</typeparam>
     /// </summary>
-    public TLeft Left => _left;
+    public TLeft Left => _left!;
 
     /// <summary>
     /// <typeparam name="TRight">Type represent fail case</typeparam>
     /// </summary>
-    public TRight Right => _right;
+    public TRight Right => _right!;
 
     /// <summary>
     /// Flag represent state of success case or not
