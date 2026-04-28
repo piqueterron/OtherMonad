@@ -45,8 +45,6 @@ public static partial class Either
             return Either<TLeft, TRight>.Create.Left(selectorLeft(source.Left, other.Left));
         }
 
-        // Mixed states: one is Left (failure) and the other is Right (success).
-        // The result is always a failure; pass the available Left value and default for the missing one.
         return source.IsLeft
             ? Either<TLeft, TRight>.Create.Left(selectorLeft(source.Left, default))
             : Either<TLeft, TRight>.Create.Left(selectorLeft(default, other.Left));
