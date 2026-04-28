@@ -10,13 +10,13 @@ public class EitherCombineShould
     {
         var expected = "test1test2";
 
-        Either<string, Exception> either1 = "test1";
-        Either<string, Exception> either2 = "test2";
+        var either1 = Either<Exception, string>.Create.Right("test1");
+        var either2 = Either<Exception, string>.Create.Right("test2");
 
-        var result = either1.Combine(either2, (x, y) => x + y, (x, y) => new AggregateException(x, y));
+        var result = either1.Combine(either2, (x, y) => new AggregateException(x!, y!), (x, y) => x + y);
 
-        Assert.True(result.IsLeft);
-        Assert.Equal(expected, result.Left);
+        Assert.True(result.IsRight);
+        Assert.Equal(expected, result.Right);
     }
 
     [Fact]
@@ -25,15 +25,15 @@ public class EitherCombineShould
         var msg1 = "Exception either 1";
         var msg2 = "Exception either 2";
 
-        Either<string, Exception> either1 = new Exception(msg1);
-        Either<string, Exception> either2 = new Exception(msg2);
+        var either1 = Either<Exception, string>.Create.Left(new Exception(msg1));
+        var either2 = Either<Exception, string>.Create.Left(new Exception(msg2));
 
-        var result = either1.Combine(either2, (x, y) => x + y, (x, y) => new AggregateException(x, y));
+        var result = either1.Combine(either2, (x, y) => new AggregateException(x, y), (x, y) => x + y);
 
-        Assert.False(result.IsLeft);
-        Assert.IsType<AggregateException>(result.Right);
-        Assert.Equal(msg1, result.Right.InnerExceptions[0].Message);
-        Assert.Equal(msg2, result.Right.InnerExceptions[1].Message);
+        Assert.False(result.IsRight);
+        Assert.IsType<AggregateException>(result.Left);
+        Assert.Equal(msg1, result.Left.InnerExceptions[0].Message);
+        Assert.Equal(msg2, result.Left.InnerExceptions[1].Message);
     }
 
     [Fact]
@@ -42,36 +42,36 @@ public class EitherCombineShould
         var msg1 = "Exception either 1";
         var msg2 = "ArgumentException either 2";
 
-        Either<string, Exception> either1 = new Exception(msg1);
-        Either<string, ArgumentException> either2 = new ArgumentException(msg2);
+        var either1 = Either<Exception, string>.Create.Left(new Exception(msg1));
+        var either2 = Either<ArgumentException, string>.Create.Left(new ArgumentException(msg2));
 
-        var result = either1.Combine(either2, (x, y) => x + y, (x, y) => new AggregateException(x, y));
+        var result = either1.Combine(either2, (x, y) => new AggregateException(x, y), (x, y) => x + y);
 
-        Assert.False(result.IsLeft);
-        Assert.IsType<AggregateException>(result.Right);
-        Assert.Equal(msg1, result.Right.InnerExceptions[0].Message);
-        Assert.Equal(msg2, result.Right.InnerExceptions[1].Message);
+        Assert.False(result.IsRight);
+        Assert.IsType<AggregateException>(result.Left);
+        Assert.Equal(msg1, result.Left.InnerExceptions[0].Message);
+        Assert.Equal(msg2, result.Left.InnerExceptions[1].Message);
     }
 
     [Fact]
-    public void GivenTwoEithersWithOneStateSuccessAndOtherFailWhenApplyCombineReturnAllExceptions()
+    public void GivenTwoEithersWithOneStateSuccessAndOtherFailWhenApplyCombineReturnFailure()
     {
         var msg1 = "Exception either 1";
 
-        Either<string, Exception> either1 = "test";
-        Either<string, Exception> either2 = new Exception(msg1);
+        var either1 = Either<Exception, string>.Create.Left(new Exception(msg1));
+        var either2 = Either<Exception, string>.Create.Right("test");
 
         var result = either1.Combine(either2,
-            (x, y) => x + y,
             (x, y) =>
                 x is not null && y is not null
                     ? new AggregateException(x, y)
                     : x is not null
                         ? new AggregateException(x)
-                        : new AggregateException(y));
+                        : new AggregateException(y!),
+            (x, y) => x + y);
 
-        Assert.False(result.IsLeft);
-        Assert.IsType<AggregateException>(result.Right);
-        Assert.Equal(msg1, result.Right.InnerExceptions[0].Message);
+        Assert.False(result.IsRight);
+        Assert.IsType<AggregateException>(result.Left);
+        Assert.Equal(msg1, result.Left.InnerExceptions[0].Message);
     }
 }

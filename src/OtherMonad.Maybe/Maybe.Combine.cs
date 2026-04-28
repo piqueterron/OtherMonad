@@ -22,7 +22,7 @@ public static partial class Maybe
         {
             return source.Combine(other, select);
         }
-        catch
+        catch (Exception)
         {
             return defaultValueFactory();
         }

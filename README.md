@@ -20,7 +20,7 @@ OtherMonad brings two core functional programming abstractions to C#:
 | Type | Purpose |
 |------|---------|
 | `Maybe<T>` | Represents an optional value — either _something_ or _nothing_ (`None`). Eliminates `null` checks. |
-| `Either<TLeft, TRight>` | Represents a value that is one of two alternatives — by convention **Left** is success and **Right** is failure. |
+| `Either<TLeft, TRight>` | Represents a value that is one of two alternatives. Following the standard fp convention: **Right = success, Left = failure/error**. |
 
 Both types expose a rich set of extension methods (Bind, Map, Match, Combine, OrElse, Cast, Wrap …) and support synchronous, asynchronous, and deferred execution patterns.
 
@@ -65,13 +65,26 @@ Maybe<string> fallback = empty.OrElse("default");
 ```csharp
 using OtherMonad;
 
-Either<int, string> success = Either<int, string>.Create.Left(42);
-Either<int, string> failure = Either<int, string>.Create.Right("Something went wrong");
+// Right = success, Left = failure/error
+var success = Either<Exception, int>.Create.Right(42);
+var failure = Either<Exception, int>.Create.Left(new Exception("Something went wrong"));
 
-// Match — handle both branches
+// Match — handle both branches (left = error, right = success)
 string message = success.Match(
-    left:  value => $"Got {value}",
-    right: error => $"Error: {error}");
+    left:  err   => $"Error: {err.Message}",
+    right: value => $"Got {value}");
+
+// Map — transform the success value
+Either<Exception, string> mapped = success.Map(n => n.ToString());
+
+// Bind — chain operations that may fail
+Either<Exception, string> bound = success.Bind(n =>
+    n > 0
+        ? Either<Exception, string>.Create.Right($"positive: {n}")
+        : Either<Exception, string>.Create.Left(new Exception("must be positive")));
+
+// OrElse — provide a fallback on failure
+Either<Exception, int> recovered = failure.OrElse(success);
 ```
 
 ## Contributing

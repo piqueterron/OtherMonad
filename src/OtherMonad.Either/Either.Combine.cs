@@ -6,45 +6,49 @@
 public static partial class Either
 {
     /// <summary>
-    /// <para>Combine <see cref="IEither{TSourceLeft,TSourceRight}"/> with <see cref="IEither{TOtherLeft,TOtherRight}"/> apply <see cref="Func{TSourceLeft, TOtherLeft, TLeft}"/> if both has left value, otherwise apply <see cref="Func{TSourceRight, TOtherRight, TRight}"/></para>
-    /// <para>When states are mixed (one Left, one Right) the result is always a failure. <paramref name="selectorRight"/> is called with the available Right value and <c>default</c> for the missing one; the selector must handle <c>default</c> values gracefully.</para>
+    /// <para>Combines <see cref="IEither{TSourceLeft,TSourceRight}"/> with <see cref="IEither{TOtherLeft,TOtherRight}"/>:
+    /// applies <paramref name="selectorRight"/> when both are in the Right (success) state,
+    /// applies <paramref name="selectorLeft"/> when both are in the Left (failure) state,
+    /// or returns a Left (failure) when states are mixed.</para>
+    /// <para>When states are mixed (one Left, one Right) the result is always a failure.
+    /// <paramref name="selectorLeft"/> is called with the available Left value and
+    /// <c>default</c> for the missing one; the selector must handle <c>null</c> inputs gracefully.</para>
     /// </summary>
-    /// <typeparam name="TSourceLeft">The type of the left element of source</typeparam>
-    /// <typeparam name="TSourceRight">The type of the right element of source</typeparam>
-    /// <typeparam name="TOtherLeft">The type of the left element of combine</typeparam>
-    /// <typeparam name="TOtherRight">The type of the right element of combine</typeparam>
-    /// <typeparam name="TLeft">The type of the left value returned by selector</typeparam>
-    /// <typeparam name="TRight">The type of the right value returned by selector</typeparam>
-    /// <param name="source">A left value to invoke a combine</param>
-    /// <param name="other">A right value to invoke a combine</param>
-    /// <param name="selectorLeft">A combine function to apply to source left element with other</param>
-    /// <param name="selectorRight">A combine function to apply to source right element with other</param>
+    /// <typeparam name="TSourceLeft">The failure/error type of source.</typeparam>
+    /// <typeparam name="TSourceRight">The success type of source.</typeparam>
+    /// <typeparam name="TOtherLeft">The failure/error type of other.</typeparam>
+    /// <typeparam name="TOtherRight">The success type of other.</typeparam>
+    /// <typeparam name="TLeft">The failure/error type of the result.</typeparam>
+    /// <typeparam name="TRight">The success type of the result.</typeparam>
+    /// <param name="source">The first Either to combine.</param>
+    /// <param name="other">The second Either to combine.</param>
+    /// <param name="selectorLeft">Combines two failure values into one failure result. May receive <c>null</c> for the missing side in mixed states.</param>
+    /// <param name="selectorRight">Combines two success values into one success result.</param>
     /// <returns><see cref="Either{TLeft,TRight}"/></returns>
-    /// <exception cref="ArgumentNullException">Left selector is null</exception>
-    /// <exception cref="ArgumentNullException">Right selector is null</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="selectorLeft"/> or <paramref name="selectorRight"/> is <see langword="null"/>.</exception>
     public static Either<TLeft, TRight> Combine<TSourceLeft, TSourceRight, TOtherLeft, TOtherRight, TLeft, TRight>(
         this IEither<TSourceLeft, TSourceRight> source,
         IEither<TOtherLeft, TOtherRight> other,
-        Func<TSourceLeft, TOtherLeft, TLeft> selectorLeft,
+        Func<TSourceLeft?, TOtherLeft?, TLeft> selectorLeft,
         Func<TSourceRight, TOtherRight, TRight> selectorRight)
     {
         ArgumentNullException.ThrowIfNull(selectorLeft);
         ArgumentNullException.ThrowIfNull(selectorRight);
 
+        if (source.IsRight && other.IsRight)
+        {
+            return Either<TLeft, TRight>.Create.Right(selectorRight(source.Right, other.Right));
+        }
+
         if (source.IsLeft && other.IsLeft)
         {
-            return selectorLeft(source.Left, other.Left);
+            return Either<TLeft, TRight>.Create.Left(selectorLeft(source.Left, other.Left));
         }
 
-        if (!source.IsLeft && !other.IsLeft)
-        {
-            return selectorRight(source.Right, other.Right);
-        }
-
-        // Mixed states: one is Left (success) and the other is Right (fail).
-        // The result is always a failure; pass the available Right value and default for the missing one.
+        // Mixed states: one is Left (failure) and the other is Right (success).
+        // The result is always a failure; pass the available Left value and default for the missing one.
         return source.IsLeft
-            ? selectorRight(default, other.Right)
-            : selectorRight(source.Right, default);
+            ? Either<TLeft, TRight>.Create.Left(selectorLeft(source.Left, default))
+            : Either<TLeft, TRight>.Create.Left(selectorLeft(default, other.Left));
     }
 }

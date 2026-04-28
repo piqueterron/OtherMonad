@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/OtherMonad.Maybe/OtherMonad.Maybe.csproj" />
+    <Project Path="src/OtherMonad.Either/OtherMonad.Either.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/OtherMonad.Maybe.Tests/OtherMonad.Maybe.Tests.csproj" />
+    <Project Path="tests/OtherMonad.Either.Tests/OtherMonad.Either.Tests.csproj" />
+  </Folder>
+</Solution>

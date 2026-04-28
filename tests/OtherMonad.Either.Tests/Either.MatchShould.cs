@@ -6,9 +6,9 @@ using OtherMonad;
 public class EitherMatchShould
 {
     [Fact]
-    public void GivenEitherTaskWhenApplyMatchWithLeftNullConditionThrowArgumentnullexception()
+    public void GivenEitherWhenApplyMatchWithLeftNullConditionThrowArgumentnullexception()
     {
-        Either<string, Exception> either = "test";
+        var either = Either<Exception, string>.Create.Right("test");
 
         Assert.Throws<ArgumentNullException>(() =>
         {
@@ -17,9 +17,9 @@ public class EitherMatchShould
     }
 
     [Fact]
-    public void GivenEitherTaskWhenApplyMatchWithRightNullConditionThrowArgumentnullexception()
+    public void GivenEitherWhenApplyMatchWithRightNullConditionThrowArgumentnullexception()
     {
-        Either<string, Exception> either = "test";
+        var either = Either<Exception, string>.Create.Right("test");
 
         Assert.Throws<ArgumentNullException>(() =>
         {
@@ -28,29 +28,29 @@ public class EitherMatchShould
     }
 
     [Fact]
-    public void GivenEitherTaskWhenApplyMatchWithSuccesssStateExecuteLeftCondition()
+    public void GivenEitherWhenApplyMatchWithSuccessStateExecuteRightCondition()
     {
-        Either<string, Exception> either = "test";
+        var either = Either<Exception, string>.Create.Right("test");
 
-        var result = either.Match(c => "success", c => "fail");
+        var result = either.Match(c => "fail", c => "success");
 
         Assert.Equal("success", result);
     }
 
     [Fact]
-    public void GivenEitherTaskWhenApplyMatchWithErrorStateExecuteRightCondition()
+    public void GivenEitherWhenApplyMatchWithErrorStateExecuteLeftCondition()
     {
-        Either<string, Exception> either = new Exception();
+        var either = Either<Exception, string>.Create.Left(new Exception());
 
-        var result = either.Match(c => "success", c => "fail");
+        var result = either.Match(c => "fail", c => "success");
 
         Assert.Equal("fail", result);
     }
 
     [Fact]
-    public async Task GivenEitherTaskasyncWhenApplyMatchWithLeftNullConditionThrowArgumentnullexception()
+    public async Task GivenEitherAsyncWhenApplyMatchWithLeftNullConditionThrowArgumentnullexception()
     {
-        Either<string, Exception> either = "test";
+        var either = Either<Exception, string>.Create.Right("test");
 
         await Assert.ThrowsAnyAsync<ArgumentNullException>(async () =>
         {
@@ -59,9 +59,9 @@ public class EitherMatchShould
     }
 
     [Fact]
-    public async Task GivenEitherTaskasyncWhenApplyMatchWithRightNullConditionThrowArgumentnullexception()
+    public async Task GivenEitherAsyncWhenApplyMatchWithRightNullConditionThrowArgumentnullexception()
     {
-        Either<string, Exception> either = "test";
+        var either = Either<Exception, string>.Create.Right("test");
 
         await Assert.ThrowsAnyAsync<ArgumentNullException>(async () =>
         {
@@ -70,29 +70,29 @@ public class EitherMatchShould
     }
 
     [Fact]
-    public async Task GivenEitherTaskasyncWhenApplyMatchWithSuccesssStateExecuteLeftCondition()
+    public async Task GivenEitherAsyncWhenApplyMatchWithSuccessStateExecuteRightCondition()
     {
-        Either<string, Exception> either = "test";
+        var either = Either<Exception, string>.Create.Right("test");
 
-        var result = await either.Match((c, ct) => Task.FromResult("success"), (c, ct) => Task.FromResult("fail"), CancellationToken.None);
+        var result = await either.Match((c, ct) => Task.FromResult("fail"), (c, ct) => Task.FromResult("success"), CancellationToken.None);
 
         Assert.Equal("success", result);
     }
 
     [Fact]
-    public async Task GivenEitherTaskasyncWhenApplyMatchWithErrorStateExecuteRightCondition()
+    public async Task GivenEitherAsyncWhenApplyMatchWithErrorStateExecuteLeftCondition()
     {
-        Either<string, Exception> either = new Exception();
+        var either = Either<Exception, string>.Create.Left(new Exception());
 
-        var result = await either.Match((c, ct) => Task.FromResult("success"), (c, ct) => Task.FromResult("fail"), CancellationToken.None);
+        var result = await either.Match((c, ct) => Task.FromResult("fail"), (c, ct) => Task.FromResult("success"), CancellationToken.None);
 
         Assert.Equal("fail", result);
     }
 
     [Fact]
-    public async Task GivenEitherTaskasyncWhenApplyTrymatchWithLeftConditionNullReturnDefault()
+    public async Task GivenEitherAsyncWhenApplyTryMatchWithLeftConditionNullReturnDefault()
     {
-        Either<string, Exception> either = "test";
+        var either = Either<Exception, string>.Create.Right("test");
 
         var result = await either.TryMatch(null!, (c, ct) => Task.FromResult(""), "default", CancellationToken.None);
 
@@ -100,9 +100,9 @@ public class EitherMatchShould
     }
 
     [Fact]
-    public async Task GivenEitherTaskasyncWhenApplyTrymatchWithRightConditionNullReturnDefault()
+    public async Task GivenEitherAsyncWhenApplyTryMatchWithRightConditionNullReturnDefault()
     {
-        Either<string, Exception> either = "test";
+        var either = Either<Exception, string>.Create.Right("test");
 
         var result = await either.TryMatch((c, ct) => Task.FromResult(""), null!, "default", CancellationToken.None);
 
@@ -110,49 +110,49 @@ public class EitherMatchShould
     }
 
     [Fact]
-    public async Task GivenEitherTaskasyncWhenApplyTrymatchLeftConditionReturnLeftValue()
+    public async Task GivenEitherAsyncWhenApplyTryMatchRightConditionReturnRightValue()
     {
-        Either<string, Exception> either = "test";
+        var either = Either<Exception, string>.Create.Right("test");
 
-        var result = await either.TryMatch((c, ct) => Task.FromResult("success"), (c, ct) => Task.FromResult("fail"), "default", CancellationToken.None);
+        var result = await either.TryMatch((c, ct) => Task.FromResult("fail"), (c, ct) => Task.FromResult("success"), "default", CancellationToken.None);
 
         Assert.Equal("success", result);
     }
 
     [Fact]
-    public async Task GivenEitherTaskasyncWhenApplyTrymatchRightConditionReturnRightValue()
+    public async Task GivenEitherAsyncWhenApplyTryMatchLeftConditionReturnLeftValue()
     {
-        Either<string, Exception> either = new Exception();
+        var either = Either<Exception, string>.Create.Left(new Exception());
 
-        var result = await either.TryMatch((c, ct) => Task.FromResult("success"), (c, ct) => Task.FromResult("fail"), "default", CancellationToken.None);
+        var result = await either.TryMatch((c, ct) => Task.FromResult("fail"), (c, ct) => Task.FromResult("success"), "default", CancellationToken.None);
 
         Assert.Equal("fail", result);
     }
 
     [Fact]
-    public async Task GivenEitherTaskasyncWhenApplyTrymatchLeftConditionThrowExceptionReturnDefault()
+    public async Task GivenEitherAsyncWhenApplyTryMatchRightConditionThrowExceptionReturnDefault()
     {
-        Either<string, Exception> either = "test";
+        var either = Either<Exception, string>.Create.Right("test");
 
-        var result = await either.TryMatch((c, ct) => throw new Exception(), (c, ct) => Task.FromResult("fail"), "default", CancellationToken.None);
+        var result = await either.TryMatch((c, ct) => Task.FromResult("fail"), (c, ct) => throw new Exception(), "default", CancellationToken.None);
 
         Assert.Equal("default", result);
     }
 
     [Fact]
-    public async Task GivenEitherTaskasyncWhenApplyTrymatchRightConditionThrowExceptionReturnDefault()
+    public async Task GivenEitherAsyncWhenApplyTryMatchLeftConditionThrowExceptionReturnDefault()
     {
-        Either<string, Exception> either = new Exception();
+        var either = Either<Exception, string>.Create.Left(new Exception());
 
-        var result = await either.TryMatch((c, ct) => Task.FromResult("success"), (c, ct) => throw new Exception(), "default", CancellationToken.None);
+        var result = await either.TryMatch((c, ct) => throw new Exception(), (c, ct) => Task.FromResult("success"), "default", CancellationToken.None);
 
         Assert.Equal("default", result);
     }
 
     [Fact]
-    public void GivenEitherWhenApplyTrymatchWithRightAndLeftConditionNullReturnDefault()
+    public void GivenEitherWhenApplyTryMatchWithRightAndLeftConditionNullReturnDefault()
     {
-        Either<string, Exception> either = "test";
+        var either = Either<Exception, string>.Create.Right("test");
 
         var result = either.TryMatch(null!, null!, true);
 
@@ -160,9 +160,9 @@ public class EitherMatchShould
     }
 
     [Fact]
-    public void GivenEitherWhenApplyTrymatchWithLeftConditionNullReturnDefault()
+    public void GivenEitherWhenApplyTryMatchWithLeftConditionNullReturnDefault()
     {
-        Either<string, Exception> either = "test";
+        var either = Either<Exception, string>.Create.Right("test");
 
         var result = either.TryMatch(null!, c => false, true);
 
@@ -170,9 +170,9 @@ public class EitherMatchShould
     }
 
     [Fact]
-    public void GivenEitherWhenApplyTrymatchWithRightConditionNullReturnDefault()
+    public void GivenEitherWhenApplyTryMatchWithRightConditionNullReturnDefault()
     {
-        Either<string, Exception> either = "test";
+        var either = Either<Exception, string>.Create.Right("test");
 
         var result = either.TryMatch(c => false, null!, true);
 
@@ -180,21 +180,21 @@ public class EitherMatchShould
     }
 
     [Fact]
-    public void GivenEitherWhenApplyTrymatchLeftConditionThrowExceptionReturnDefault()
+    public void GivenEitherWhenApplyTryMatchRightConditionThrowExceptionReturnDefault()
     {
-        Either<string, Exception> either = "test";
+        var either = Either<Exception, string>.Create.Right("test");
 
-        var result = either.TryMatch(c => throw new Exception(), c => false, true);
+        var result = either.TryMatch(c => false, c => throw new Exception(), true);
 
         Assert.True(result);
     }
 
     [Fact]
-    public void GivenEitherWhenApplyTrymatchRightConditionThrowExceptionReturnDefault()
+    public void GivenEitherWhenApplyTryMatchLeftConditionThrowExceptionReturnDefault()
     {
-        Either<string, Exception> either = new Exception();
+        var either = Either<Exception, string>.Create.Left(new Exception());
 
-        var result = either.TryMatch(c => false, c => throw new Exception(), true);
+        var result = either.TryMatch(c => throw new Exception(), c => false, true);
 
         Assert.True(result);
     }
