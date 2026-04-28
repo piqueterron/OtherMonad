@@ -2,9 +2,9 @@
 	<PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <LangVersion>latest</LangVersion>
-		<Nullable>disable</Nullable>
+		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<NoWarn>$(NoWarn);1591;CA2254;CS8602</NoWarn>
+		<NoWarn>$(NoWarn);1591;CA2254</NoWarn>
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>

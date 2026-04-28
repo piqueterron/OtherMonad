@@ -12,7 +12,7 @@ public class EitherMatchShould
 
         Assert.Throws<ArgumentNullException>(() =>
         {
-            either.Match(null, c => "");
+            either.Match(null!, c => "");
         });
     }
 
@@ -23,7 +23,7 @@ public class EitherMatchShould
 
         Assert.Throws<ArgumentNullException>(() =>
         {
-            either.Match(c => "", null);
+            either.Match(c => "", null!);
         });
     }
 
@@ -54,7 +54,7 @@ public class EitherMatchShould
 
         await Assert.ThrowsAnyAsync<ArgumentNullException>(async () =>
         {
-            await either.Match(null, (c, ct) => Task.FromResult(""), CancellationToken.None);
+            await either.Match(null!, (c, ct) => Task.FromResult(""), CancellationToken.None);
         });
     }
 
@@ -65,7 +65,7 @@ public class EitherMatchShould
 
         await Assert.ThrowsAnyAsync<ArgumentNullException>(async () =>
         {
-            await either.Match((c, ct) => Task.FromResult(""), null, CancellationToken.None);
+            await either.Match((c, ct) => Task.FromResult(""), null!, CancellationToken.None);
         });
     }
 
@@ -94,7 +94,7 @@ public class EitherMatchShould
     {
         Either<string, Exception> either = "test";
 
-        var result = await either.TryMatch(null, (c, ct) => Task.FromResult(""), "default", CancellationToken.None);
+        var result = await either.TryMatch(null!, (c, ct) => Task.FromResult(""), "default", CancellationToken.None);
 
         Assert.Equal("default", result);
     }
@@ -104,7 +104,7 @@ public class EitherMatchShould
     {
         Either<string, Exception> either = "test";
 
-        var result = await either.TryMatch((c, ct) => Task.FromResult(""), null, "default", CancellationToken.None);
+        var result = await either.TryMatch((c, ct) => Task.FromResult(""), null!, "default", CancellationToken.None);
 
         Assert.Equal("default", result);
     }
@@ -154,7 +154,7 @@ public class EitherMatchShould
     {
         Either<string, Exception> either = "test";
 
-        var result = either.TryMatch(null, null, true);
+        var result = either.TryMatch(null!, null!, true);
 
         Assert.True(result);
     }
@@ -164,7 +164,7 @@ public class EitherMatchShould
     {
         Either<string, Exception> either = "test";
 
-        var result = either.TryMatch(null, c => false, true);
+        var result = either.TryMatch(null!, c => false, true);
 
         Assert.True(result);
     }
@@ -174,7 +174,7 @@ public class EitherMatchShould
     {
         Either<string, Exception> either = "test";
 
-        var result = either.TryMatch(c => false, null, true);
+        var result = either.TryMatch(c => false, null!, true);
 
         Assert.True(result);
     }

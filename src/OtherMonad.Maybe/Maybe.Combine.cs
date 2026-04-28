@@ -40,7 +40,9 @@ public static partial class Maybe
     /// <returns><see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[> ]]></see> or <see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[>.None ]]></see></returns>
     public static Maybe<TResult> Combine<TSource, TCombine, TResult>(this Maybe<TSource> source, Maybe<TCombine> other, Func<TSource, TCombine, TResult> select)
     {
-        return source.Bind(src => select(src, other.Value))
-            .Match(res => res, () => Maybe<TResult>.None);
+        if (!source.HasValue || !other.HasValue)
+            return Maybe<TResult>.None;
+
+        return select(source.Value, other.Value);
     }
 }

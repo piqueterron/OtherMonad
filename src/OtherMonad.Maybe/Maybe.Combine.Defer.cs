@@ -20,6 +20,9 @@ public static partial class Maybe
     {
         return () =>
         {
+            if (!other.HasValue)
+                return Maybe<TResult>.None;
+
             return source.BindDefer(src => select(src, other.Value))
                 .Match(res => res, () => Maybe<TResult>.None);
         };
@@ -42,6 +45,9 @@ public static partial class Maybe
         {
             var data = other();
 
+            if (!data.HasValue)
+                return Maybe<TResult>.None;
+
             return source.BindDefer(src => select(src, data.Value))
                 .Match(res => res, () => Maybe<TResult>.None);
         };
@@ -63,6 +69,9 @@ public static partial class Maybe
     {
         return async () =>
         {
+            if (!other.HasValue)
+                return Maybe<TResult>.None;
+
             return await source.BindDefer((src, ct) => select(src, other.Value, ct), cancellation)
                 .Match(res => res, () => Maybe<TResult>.None);
         };
@@ -85,6 +94,9 @@ public static partial class Maybe
         return async () =>
         {
             var data = await other();
+
+            if (!data.HasValue)
+                return Maybe<TResult>.None;
 
             return await source.BindDefer((src, ct) => select(src, data.Value, ct), cancellation)
                 .Match(res => res, () => Maybe<TResult>.None);

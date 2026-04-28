@@ -26,12 +26,12 @@ public class EitherCreateShould
     [Fact]
     public void GivenEitherWithSameGenericsValuesWhenApplyCreateLeftThrowArgumentnullexception()
     {
-        Assert.Throws<ArgumentNullException>(() => Either<string, string>.Create.Left(null));
+        Assert.Throws<ArgumentNullException>(() => Either<string, string>.Create.Left(null!));
     }
 
     [Fact]
     public void GivenEitherWithSameGenericsValuesWhenApplyCreateRightThrowArgumentnullexception()
     {
-        Assert.Throws<ArgumentNullException>(() => Either<string, string>.Create.Right(null));
+        Assert.Throws<ArgumentNullException>(() => Either<string, string>.Create.Right(null!));
     }
 }

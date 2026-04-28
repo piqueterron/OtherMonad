@@ -155,6 +155,6 @@ public class MaybeBindShould
 
     public class Dummy
     {
-        public string Value { get; set; }
+        public string? Value { get; set; }
     }
 }
