@@ -22,7 +22,7 @@ public static partial class Maybe
 
         foreach (var source in sources)
         {
-            yield return source.Bind(src => selector(src));
+            yield return source.Bind(selector);
         }
     }
 
@@ -42,7 +42,7 @@ public static partial class Maybe
 
         foreach (var source in sources)
         {
-            yield return await source.Bind((src, ct) => selector(src, ct), cancellation).ConfigureAwait(false);
+            yield return await source.Bind(selector, cancellation).ConfigureAwait(false);
         }
     }
 
@@ -62,7 +62,7 @@ public static partial class Maybe
 
         await foreach (var source in sources)
         {
-            yield return await source.Bind((src, ct) => selector(src, ct), cancellation).ConfigureAwait(false);
+            yield return await source.Bind(selector, cancellation).ConfigureAwait(false);
         }
     }
 }

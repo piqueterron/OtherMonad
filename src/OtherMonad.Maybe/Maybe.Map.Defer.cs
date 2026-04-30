@@ -24,7 +24,7 @@ public static partial class Maybe
 
             foreach (var source in sources())
             {
-                var data = source.Bind(src => selector(src));
+                var data = source.Bind(selector);
 
                 list.Add(data);
             }
@@ -54,7 +54,7 @@ public static partial class Maybe
 
             foreach (var source in src)
             {
-                var deferred = source.BindDefer((src, ct) => selector(src, ct), cancellation);
+                var deferred = source.BindDefer(selector, cancellation);
                 var item = await deferred();
 
                 list.Add(item);
