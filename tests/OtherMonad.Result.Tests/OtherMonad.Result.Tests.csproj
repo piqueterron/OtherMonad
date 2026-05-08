@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>OtherMonad.Tests.Result</AssemblyName>
+    <RootNamespace>OtherMonad.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\OtherMonad.Result\OtherMonad.Result.csproj" />
+  </ItemGroup>
+
+</Project>
