@@ -1,30 +1,28 @@
 # OtherMonad.Result
 
-`OtherMonad.Result` provides the `Result<T>` type — a **semantic specialisation of `Either<Exception, T>`** that models operations that either succeed with a value or fail with an exception.
+`Result<T>` models an operation that either:
 
-> **Ok = success &nbsp;·&nbsp; Err = failure/error**
+- succeeds with a value (`Ok`)
+- fails with an `Exception` (`Err`)
 
-`Result<T>` wraps `Either<Exception, T>` internally and re-exposes its full behaviour under idiomatic C# vocabulary. Because it implements `IEither<Exception, T>`, any generic code that operates on `IEither` works transparently with `Result<T>`.
+Internally, it is a specialization of `Either<Exception, T>`.
 
-## Table of Contents
+## Why `Result` in addition to `Either`?
 
-- [Getting Started](#getting-started)
-- [Core Type](#core-type)
-- [Creating Values](#creating-values)
-- [Extension Methods](#extension-methods)
-  - [Match](#match)
-  - [TryMatch](#trymatch)
-  - [Bind](#bind)
-  - [Map](#map)
-  - [OrElse](#orelse)
-  - [GetValueOrDefault](#getvalueordefault)
-  - [Combine](#combine)
-  - [Try](#try)
-- [Implicit Conversions](#implicit-conversions)
-- [Equality](#equality)
-- [Async Support](#async-support)
+`Either<TLeft, TRight>` supports any failure type on `Left`.
 
-## Getting Started
+`Result<T>` exists for the common .NET case where failures are exceptions:
+- clearer C# vocabulary (`Ok`/`Err`)
+- direct interoperability with exception-based APIs via `Result.Try`
+- still compatible with `Either<Exception, T>` through implicit conversions
+
+### When to use each type
+
+Use `Either<TLeft, TRight>` when your failure is a domain type.
+
+Use `Result<T>` when your failure model is `Exception`.
+
+## Installation
 
 ```bash
 dotnet add package OtherMonad.Result
@@ -34,147 +32,207 @@ dotnet add package OtherMonad.Result
 using OtherMonad;
 ```
 
-## Core Type
+## Core type
 
 ```csharp
 public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
 ```
 
-| Member | Description |
-|--------|-------------|
-| `Value` | The **success** value of type `T`. Throws `InvalidOperationException` if accessed in the Err state. |
-| `Error` | The **failure** `Exception`. Throws `InvalidOperationException` if accessed in the Ok state. |
-| `IsOk` | `true` when the instance holds a success value. |
-| `IsErr` | `true` when the instance holds an exception. |
+Key members:
+- `IsOk`, `IsErr`
+- `Value`, `Error`
+- `Create.Ok(value)`, `Create.Err(exception)`
+- implicit conversion with `Either<Exception, T>`
 
-## Creating Values
+## Complete API
+
+### Match / TryMatch (sync/async)
+
+- `Match<T, TResult>(this IResult<T>, Func<Exception, TResult> onErr, Func<T, TResult> onOk)`
+- `Match<T, TResult>(this IResult<T>, Func<Exception, CancellationToken, Task<TResult>> onErr, Func<T, CancellationToken, Task<TResult>> onOk, CancellationToken)`
+- `TryMatch<T, TResult>(..., TResult default = default!)` (sync and async)
 
 ```csharp
-// Ok = success
-var ok = Result<int>.Create.Ok(42);
+using OtherMonad;
 
-// Err = failure
-var err = Result<int>.Create.Err(new Exception("not found"));
+Result<int> score = Result<int>.Create.Ok(92);
+
+string report = score.Match(
+    onErr: ex => $"Could not compute report: {ex.Message}",
+    onOk: value => value >= 90 ? "Excellent" : "Keep going");
+
+string safeReport = score.TryMatch(
+    onErr: _ => throw new InvalidOperationException(),
+    onOk: value => $"Score={value}",
+    @default: "Report unavailable");
 ```
 
-> Both factory methods throw `ArgumentNullException` if `null` is supplied.
+### Bind (sync/async)
 
-## Extension Methods
-
-### Match
-
-Evaluates the Result and returns a value by applying the corresponding function.
+- `Bind<T, TResult>(this Result<T>, Func<T, Result<TResult>> selector)`
+- `Bind<T, TResult>(this Result<T>, Func<T, CancellationToken, Task<Result<TResult>>> selector, CancellationToken)`
 
 ```csharp
-// Synchronous — onErr handles failure, onOk handles success
-string msg = result.Match(
-    onErr: ex  => $"Error: {ex.Message}",
-    onOk:  v   => $"Value: {v}");
+using OtherMonad;
 
-// Asynchronous
-string msg = await result.Match(
-    onErr: async (ex, ct) => await GetErrorMessage(ex, ct),
-    onOk:  async (v,  ct) => await GetSuccessMessage(v, ct),
-    cancellation: token);
+Result<string> input = Result<string>.Create.Ok("42");
+
+Result<int> parsed = input.Bind(text =>
+    int.TryParse(text, out var value)
+        ? Result<int>.Create.Ok(value)
+        : Result<int>.Create.Err(new FormatException("Input is not numeric")));
+
+Result<int> parsedAsync = await input.Bind(async (text, ct) =>
+{
+    await Task.Delay(5, ct);
+    return int.TryParse(text, out var value)
+        ? Result<int>.Create.Ok(value)
+        : Result<int>.Create.Err(new FormatException("Input is not numeric"));
+});
 ```
 
-### TryMatch
+### Map (sync/async)
 
-Same as `Match` but silently returns `@default` if either function is `null` or throws.
+- `Map<T, TResult>(this Result<T>, Func<T, TResult> selector)`
+- `Map<T, TResult>(this Result<T>, Func<T, CancellationToken, Task<TResult>> selector, CancellationToken)`
 
 ```csharp
-string safe = result.TryMatch(
-    onErr:    ex => $"Error: {ex.Message}",
-    onOk:     v  => $"Value: {v}",
-    @default: "fallback");
+using OtherMonad;
+
+Result<int> baseValue = Result<int>.Create.Ok(5);
+Result<string> mapped = baseValue.Map(v => $"Value:{v}");
+
+Result<string> mappedAsync = await baseValue.Map(async (v, ct) =>
+{
+    await Task.Delay(5, ct);
+    return $"AsyncValue:{v}";
+});
 ```
 
-### Bind
+### OrElse (sync/async)
 
-If in the Ok state, applies a function that returns a new `Result`. Propagates Err unchanged.
-
-```csharp
-Result<string> result = result.Bind(n => Result<string>.Create.Ok(n.ToString()));
-```
-
-### Map
-
-If in the Ok state, transforms the value. Propagates Err unchanged.
+- `OrElse<T>(this Result<T>, Result<T> fallback)`
+- `OrElse<T>(this Result<T>, Func<CancellationToken, Task<Result<T>>> fallbackFactory, CancellationToken)`
 
 ```csharp
-Result<string> result = result.Map(n => n.ToString());
-```
+using OtherMonad;
 
-### OrElse
+Result<int> primary = Result<int>.Create.Err(new Exception("Primary failed"));
+Result<int> fallback = Result<int>.Create.Ok(10);
 
-If in the Err state, returns the provided fallback Result. Returns self when Ok.
+Result<int> recovered = primary.OrElse(fallback);
 
-```csharp
-Result<int> final = result.OrElse(Result<int>.Create.Ok(0));
-
-// Async overload with factory
-Result<int> final = await result.OrElse(
-    ct => Task.FromResult(Result<int>.Create.Ok(0)), token);
+Result<int> recoveredAsync = await primary.OrElse(async ct =>
+{
+    await Task.Delay(5, ct);
+    return Result<int>.Create.Ok(20);
+});
 ```
 
 ### GetValueOrDefault
 
-Returns the success value if Ok; otherwise returns the specified default.
+- `GetValueOrDefault<T>(this Result<T>, T default = default!)`
 
 ```csharp
-int value = result.GetValueOrDefault(0);
+using OtherMonad;
+
+int value1 = Result<int>.Create.Ok(7).GetValueOrDefault(0);
+int value2 = Result<int>.Create.Err(new Exception("x")).GetValueOrDefault(0);
 ```
 
 ### Combine
 
-Merges two `Result` instances:
-- **Both Ok**: applies `selectorOk`.
-- **Both Err**: wraps both exceptions in an `AggregateException`.
-- **Mixed**: propagates the available exception.
+- `Combine<T, TOther, TResult>(this Result<T>, Result<TOther>, Func<T, TOther, TResult> selectorOk)`
 
 ```csharp
-Result<int> sum = first.Combine(second, (a, b) => a + b);
+using OtherMonad;
+
+Result<int> left = Result<int>.Create.Ok(3);
+Result<int> right = Result<int>.Create.Ok(4);
+
+Result<int> multiplied = left.Combine(right, (a, b) => a * b);
 ```
 
-### Try
+### Try (sync/async)
 
-Wraps a potentially-throwing delegate, capturing any exception as an Err.
+- `Try<T>(Func<T> factory)`
+- `Try<T>(Func<CancellationToken, Task<T>> factory, CancellationToken)`
 
 ```csharp
-// Synchronous
-Result<int> result = Result.Try(() => int.Parse(input));
+using OtherMonad;
 
-// Asynchronous
-Result<string> result = await Result.Try(
-    ct => httpClient.GetStringAsync(url, ct), token);
+Result<int> parsed = Result.Try(() => int.Parse("42"));
+Result<int> failed = Result.Try(() => int.Parse("not-a-number"));
+
+Result<string> downloaded = await Result.Try(async ct =>
+{
+    await Task.Delay(5, ct);
+    return "payload";
+});
 ```
 
-## Implicit Conversions
+## Advanced scenarios
 
-`Result<T>` and `Either<Exception, T>` convert to each other implicitly:
+### Async/await processing pipeline
 
 ```csharp
-Either<Exception, int> either = result;   // Result<T> → Either<Exception, T>
-Result<int> result2 = either;             // Either<Exception, T> → Result<T>
+using OtherMonad;
+
+Result<string> input = Result<string>.Create.Ok("25");
+
+var final = await input
+    .Bind(async (text, ct) =>
+    {
+        await Task.Delay(5, ct);
+        return int.TryParse(text, out var number)
+            ? Result<int>.Create.Ok(number)
+            : Result<int>.Create.Err(new FormatException("Invalid integer"));
+    })
+    .Map(async (number, ct) =>
+    {
+        await Task.Delay(5, ct);
+        return number * 2;
+    });
+
+string output = final.Match(
+    onErr: ex => $"Pipeline failed: {ex.Message}",
+    onOk: value => $"Pipeline value: {value}");
 ```
 
-## Equality
-
-`Result<T>` implements `IEquatable<Result<T>>` with `==` / `!=` operators and a correct `GetHashCode`.
+### Compose with `Maybe`
 
 ```csharp
-var a = Result<int>.Create.Ok(42);
-var b = Result<int>.Create.Ok(42);
+using OtherMonad;
 
-bool equal = a == b; // true
+Result<Maybe<int>> maybeQuota = Result<Maybe<int>>.Create.Ok(Maybe<int>.None);
+
+string text = maybeQuota.Match(
+    onErr: ex => $"Error: {ex.Message}",
+    onOk: maybe => maybe.Match(
+        some: quota => $"Quota={quota}",
+        none: () => "No quota configured"));
 ```
 
-## Async Support
+### Type conversions
 
-`Bind`, `Map`, `OrElse`, and all `Match` variants have `Task<TResult>` overloads that accept `CancellationToken`.
+#### `Either<Exception, T>` <-> `Result<T>`
 
 ```csharp
-var result = await result.Map(
-    (v, ct) => Task.FromResult(v.ToString()),
-    cancellationToken);
+using OtherMonad;
+
+Either<Exception, int> either = Either<Exception, int>.Create.Right(7);
+Result<int> result = either;
+Either<Exception, int> again = result;
+```
+
+#### `Maybe<T>` -> `Result<T>`
+
+```csharp
+using OtherMonad;
+
+Maybe<int> maybe = Maybe<int>.None;
+
+Result<int> asResult = maybe.Match(
+    some: value => Result<int>.Create.Ok(value),
+    none: () => Result<int>.Create.Err(new InvalidOperationException("Value is missing")));
 ```
