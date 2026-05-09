@@ -1,11 +1,13 @@
 # OtherMonad.Either
 
-`Either<TLeft, TRight>` es una unión discriminada con dos estados:
+`Either<TLeft, TRight>` is a two-state discriminated union:
 
-- `Right`: éxito
-- `Left`: error/fracaso
+- `Right`: success value
+- `Left`: failure value
 
-## Instalación
+By convention in this library: **Right is success**.
+
+## Installation
 
 ```bash
 dotnet add package OtherMonad.Either
@@ -15,29 +17,38 @@ dotnet add package OtherMonad.Either
 using OtherMonad;
 ```
 
-## Tipo base
+## Core type
 
 ```csharp
 public readonly struct Either<TLeft, TRight> : IEither<TLeft, TRight>, IEquatable<Either<TLeft, TRight>>
 ```
 
+Key members:
 - `IsRight`, `IsLeft`
 - `Right`, `Left`
 - `Create.Right(value)`, `Create.Left(error)`
 
-## API completa
+## Complete API
 
 ### Match / TryMatch (sync/async)
 
 - `Match<TLeft, TRight, TResult>(this IEither<TLeft, TRight>, Func<TLeft, TResult> left, Func<TRight, TResult> right)`
 - `Match<TLeft, TRight, TResult>(this IEither<TLeft, TRight>, Func<TLeft, CancellationToken, Task<TResult>> left, Func<TRight, CancellationToken, Task<TResult>> right, CancellationToken)`
-- `TryMatch<TLeft, TRight, TResult>(..., TResult default = default!)` (sync y async)
+- `TryMatch<TLeft, TRight, TResult>(..., TResult default = default!)` (sync and async)
 
 ```csharp
-Either<string, int> either = Either<string, int>.Create.Right(42);
-string msg = either.Match(
-    left: err => $"Error: {err}",
-    right: v => $"Value: {v}");
+using OtherMonad;
+
+Either<string, int> parseResult = Either<string, int>.Create.Right(42);
+
+string display = parseResult.Match(
+    left: error => $"Could not parse input: {error}",
+    right: value => $"Parsed value: {value}");
+
+string safeDisplay = parseResult.TryMatch(
+    left: error => throw new InvalidOperationException(error),
+    right: value => $"Value={value}",
+    @default: "Fallback display");
 ```
 
 ### Bind (sync/async)
@@ -46,10 +57,22 @@ string msg = either.Match(
 - `Bind<TLeft, TRight, TResult>(this Either<TLeft, TRight>, Func<TRight, CancellationToken, Task<Either<TLeft, TResult>>> selector, CancellationToken)`
 
 ```csharp
-Either<string, string> next = either.Bind(v =>
-    v > 0
-        ? Either<string, string>.Create.Right($"ok:{v}")
-        : Either<string, string>.Create.Left("invalid"));
+using OtherMonad;
+
+Either<string, int> portInput = Either<string, int>.Create.Right(8080);
+
+Either<string, string> endpoint = portInput.Bind(port =>
+    port is > 0 and < 65536
+        ? Either<string, string>.Create.Right($"https://localhost:{port}")
+        : Either<string, string>.Create.Left("Port out of range"));
+
+Either<string, string> endpointAsync = await portInput.Bind(async (port, ct) =>
+{
+    await Task.Delay(5, ct);
+    return port % 2 == 0
+        ? Either<string, string>.Create.Right($"even-port:{port}")
+        : Either<string, string>.Create.Left("Only even ports are allowed");
+});
 ```
 
 ### Map (sync/async)
@@ -58,7 +81,16 @@ Either<string, string> next = either.Bind(v =>
 - `Map<TLeft, TRight, TResult>(this Either<TLeft, TRight>, Func<TRight, CancellationToken, Task<TResult>> selector, CancellationToken)`
 
 ```csharp
-Either<string, string> mapped = either.Map(v => v.ToString());
+using OtherMonad;
+
+Either<string, int> length = Either<string, string>.Create.Right("othermonad")
+    .Map(text => text.Length);
+
+Either<string, string> asyncMapped = await length.Map(async (value, ct) =>
+{
+    await Task.Delay(5, ct);
+    return $"Length={value}";
+});
 ```
 
 ### OrElse (sync/async)
@@ -67,8 +99,16 @@ Either<string, string> mapped = either.Map(v => v.ToString());
 - `OrElse<TLeft, TRight>(this Either<TLeft, TRight>, Func<CancellationToken, Task<Either<TLeft, TRight>>> fallbackFactory, CancellationToken)`
 
 ```csharp
-Either<string, int> safe = Either<string, int>.Create.Left("bad")
-    .OrElse(Either<string, int>.Create.Right(0));
+using OtherMonad;
+
+Either<string, int> failing = Either<string, int>.Create.Left("Primary source failed");
+Either<string, int> recovered = failing.OrElse(Either<string, int>.Create.Right(100));
+
+Either<string, int> recoveredAsync = await failing.OrElse(async ct =>
+{
+    await Task.Delay(5, ct);
+    return Either<string, int>.Create.Right(200);
+});
 ```
 
 ### Combine
@@ -76,34 +116,61 @@ Either<string, int> safe = Either<string, int>.Create.Left("bad")
 - `Combine<TSourceLeft, TSourceRight, TOtherLeft, TOtherRight, TLeft, TRight>(this IEither<TSourceLeft, TSourceRight>, IEither<TOtherLeft, TOtherRight>, Func<TSourceLeft?, TOtherLeft?, TLeft> selectorLeft, Func<TSourceRight, TOtherRight, TRight> selectorRight)`
 
 ```csharp
-var combined = Either<string, int>.Create.Right(2).Combine(
-    Either<string, int>.Create.Right(3),
-    selectorLeft: (l1, l2) => l1 ?? l2 ?? "error",
-    selectorRight: (r1, r2) => r1 + r2);
+using OtherMonad;
+
+var serviceA = Either<string, int>.Create.Right(20);
+var serviceB = Either<string, int>.Create.Right(22);
+
+Either<string, int> total = serviceA.Combine(
+    serviceB,
+    selectorLeft: (leftA, leftB) => $"Errors: {leftA ?? "none"} | {leftB ?? "none"}",
+    selectorRight: (a, b) => a + b);
 ```
 
-## Escenarios avanzados
+## Advanced scenarios
 
-### Async/await (patrón BindAsync/MapAsync)
+### Async/await flow (`Bind` + `Map`)
 
 ```csharp
-var asyncMapped = await either.Map(async (v, ct) =>
+using OtherMonad;
+
+Either<string, string> input = Either<string, string>.Create.Right("500");
+
+var validated = await input.Bind(async (raw, ct) =>
 {
-    await Task.Delay(10, ct);
-    return v * 10;
+    await Task.Delay(5, ct);
+    return int.TryParse(raw, out var number)
+        ? Either<string, int>.Create.Right(number)
+        : Either<string, int>.Create.Left("Input is not a number");
+});
+
+var httpCode = await validated.Map(async (code, ct) =>
+{
+    await Task.Delay(5, ct);
+    return $"HTTP {code}";
 });
 ```
 
-### Composición con Maybe
+### Compose with `Maybe`
 
 ```csharp
-Either<string, Maybe<int>> nested = Either<string, Maybe<int>>.Create.Right(7.Wrap());
+using OtherMonad;
+
+Either<string, Maybe<int>> maybeValue = Either<string, Maybe<int>>.Create.Right(Maybe<int>.None);
+
+string result = maybeValue.Match(
+    left: error => $"Failure: {error}",
+    right: maybe => maybe.Match(
+        some: value => $"Success with value {value}",
+        none: () => "Success but no value"));
 ```
 
-### Conversiones con Result
+### Convert with `Result`
 
 ```csharp
-Either<Exception, int> e = Either<Exception, int>.Create.Right(7);
-Result<int> r = e;                 // implícita
-Either<Exception, int> e2 = r;     // implícita
+using OtherMonad;
+
+Either<Exception, int> either = Either<Exception, int>.Create.Right(123);
+Result<int> asResult = either;
+Either<Exception, int> asEitherAgain = asResult;
 ```

@@ -1,8 +1,13 @@
 # OtherMonad.Maybe
 
-`Maybe<T>` representa un valor opcional: o hay valor (`HasValue = true`) o no (`Maybe<T>.None`).
+`Maybe<T>` is an optional container.
 
-## Instalación
+- `HasValue = true` means it contains a value.
+- `Maybe<T>.None` means the value is absent.
+
+Use it to avoid `null` checks and model optional data explicitly.
+
+## Installation
 
 ```bash
 dotnet add package OtherMonad.Maybe
@@ -12,18 +17,19 @@ dotnet add package OtherMonad.Maybe
 using OtherMonad;
 ```
 
-## Tipo base
+## Core type
 
 ```csharp
 public readonly struct Maybe<T> : IEquatable<Maybe<T>>
 ```
 
-- `Value`: valor encapsulado (válido solo si `HasValue == true`)
-- `HasValue`: indica presencia de valor
-- `None`: estado vacío
-- Conversión implícita `T -> Maybe<T>`
+Key members:
+- `Value`: contained value (only valid when `HasValue == true`)
+- `HasValue`: indicates whether a value is present
+- `None`: empty state
+- implicit conversion `T -> Maybe<T>`
 
-## API completa
+## Complete API
 
 ### Wrap / Unwrap
 
@@ -32,9 +38,13 @@ public readonly struct Maybe<T> : IEquatable<Maybe<T>>
 - `Unwrap<T>(this Maybe<T> source, T default)`
 
 ```csharp
-Maybe<int> some = 42.Wrap();
-int value = some.Unwrap();
-int safe = Maybe<int>.None.Unwrap(0);
+using OtherMonad;
+
+Maybe<string> userName = "alice".Wrap();
+Maybe<string> emptyName = Maybe<string>.None;
+
+string required = userName.Unwrap();
+string withFallback = emptyName.Unwrap("guest");
 ```
 
 ### Bind (sync/async)
@@ -43,23 +53,45 @@ int safe = Maybe<int>.None.Unwrap(0);
 - `Bind<TSource, TResult>(this Maybe<TSource>, Func<TSource, CancellationToken, Task<TResult>>, CancellationToken)`
 
 ```csharp
-Maybe<int> length = "hello".Wrap().Bind(s => s.Length);
-Maybe<int> asyncLength = await "hello".Wrap().Bind(async (s, ct) =>
+using OtherMonad;
+
+Maybe<string> rawEmail = "  user@example.com  ".Wrap();
+
+Maybe<string> normalized = rawEmail
+    .Bind(email => email.Trim())
+    .Bind(email => email.ToLowerInvariant());
+
+Maybe<bool> isCompanyEmail = await normalized.Bind(async (email, ct) =>
 {
-    await Task.Delay(10, ct);
-    return s.Length;
+    await Task.Delay(5, ct);
+    return email.EndsWith("@example.com", StringComparison.OrdinalIgnoreCase);
 });
 ```
 
-### Map (secuencias)
+### Map (over sequences)
 
 - `Map<TSource, TResult>(this IEnumerable<Maybe<TSource>>, Func<TSource, TResult>)`
 - `Map<TSource, TResult>(this IEnumerable<Maybe<TSource>>, Func<TSource, CancellationToken, Task<TResult>>, CancellationToken)`
 - `Map<TSource, TResult>(this IAsyncEnumerable<Maybe<TSource>>, Func<TSource, CancellationToken, Task<TResult>>, CancellationToken)`
 
 ```csharp
-var source = new[] { 1.Wrap(), Maybe<int>.None, 3.Wrap() };
-IEnumerable<Maybe<string>> mapped = source.Map(v => $"n:{v}");
+using OtherMonad;
+
+var maybeAges = new[]
+{
+    10.Wrap(),
+    Maybe<int>.None,
+    30.Wrap()
+};
+
+IEnumerable<Maybe<string>> labels = maybeAges.Map(age => $"Age={age}");
+
+foreach (var item in labels)
+{
+    Console.WriteLine(item.Match(
+        some: value => value,
+        none: () => "Age is missing"));
+}
 ```
 
 ### Match (sync/async + deferred)
@@ -70,9 +102,25 @@ IEnumerable<Maybe<string>> mapped = source.Map(v => $"n:{v}");
 - `Match<TSource, TResult>(this DeferredTask<Maybe<TSource>>, Func<TSource, TResult> some, Func<TResult> none)`
 
 ```csharp
-string text = Maybe<int>.None.Match(
-    some: v => $"Value: {v}",
-    none: () => "No value");
+using OtherMonad;
+
+Maybe<int> maybeScore = 87.Wrap();
+
+string gradeText = maybeScore.Match(
+    some: score => score >= 90 ? "A" : score >= 80 ? "B" : "C",
+    none: () => "No score available");
+
+string asyncText = await maybeScore.Match(
+    some: async (score, ct) =>
+    {
+        await Task.Delay(5, ct);
+        return $"Score={score}";
+    },
+    none: async ct =>
+    {
+        await Task.Delay(5, ct);
+        return "No score";
+    });
 ```
 
 ### OrElse (sync/async + deferred)
@@ -84,49 +132,79 @@ string text = Maybe<int>.None.Match(
 - `OrElseDefer<T>(this DeferredTask<Maybe<T>> source, T default)`
 
 ```csharp
-Maybe<string> fallback = Maybe<string>.None.OrElse("guest");
+using OtherMonad;
+
+Maybe<string> preferredLocale = Maybe<string>.None;
+Maybe<string> locale = preferredLocale.OrElse("en-US");
+
+Task<Maybe<string>> localeTask = Task.FromResult(Maybe<string>.None);
+Maybe<string> localeFromTask = await localeTask.OrElse("en-GB");
 ```
 
 ### Combine / TryCombine (sync + deferred)
 
 - `Combine<TSource, TCombine, TResult>(this Maybe<TSource>, Maybe<TCombine>, Func<TSource, TCombine, TResult>)`
 - `TryCombine<TSource, TCombine, TResult>(this Maybe<TSource>, Maybe<TCombine>, Func<TSource, TCombine, TResult>, Func<TResult> defaultValueFactory)`
-- `CombineDefer(...)`, `TryCombineDefer(...)` (todas las variantes en `Deferred` / `DeferredTask`)
+- `CombineDefer(...)`, `TryCombineDefer(...)` on `Deferred` / `DeferredTask`
 
 ```csharp
-Maybe<int> a = 2.Wrap();
-Maybe<int> b = 3.Wrap();
-Maybe<int> sum = a.Combine(b, (x, y) => x + y);
+using OtherMonad;
+
+Maybe<string> firstName = "Ada".Wrap();
+Maybe<string> lastName = "Lovelace".Wrap();
+Maybe<string> missingName = Maybe<string>.None;
+
+Maybe<string> fullName = firstName.Combine(lastName, (f, l) => $"{f} {l}");
+Maybe<string> fallbackName = firstName.TryCombine(missingName, (f, l) => $"{f} {l}", () => "Unknown User");
 ```
 
-## Escenarios avanzados
+## Advanced scenarios
 
-### Async/await (patrón BindAsync/MapAsync)
+### Async/await pipeline pattern (`Bind` + `Match`)
 
 ```csharp
-Maybe<int> value = 10.Wrap();
-Maybe<int> result = await value.Bind(async (v, ct) =>
+using OtherMonad;
+
+Maybe<string> maybeUserId = "42".Wrap();
+
+Maybe<int> maybeParsedId = await maybeUserId.Bind(async (text, ct) =>
 {
     await Task.Delay(5, ct);
-    return v * 2;
+    return int.TryParse(text, out var id) ? id : default;
 });
+
+string message = maybeParsedId.Match(
+    some: id => $"Valid user id: {id}",
+    none: () => "Invalid or missing user id");
 ```
 
-### Composición con Either
+### Compose with `Either`
 
 ```csharp
-Either<string, Maybe<int>> composed = Either<string, Maybe<int>>.Create.Right(10.Wrap());
+using OtherMonad;
+
+Either<string, Maybe<int>> maybeAgeFromApi = Either<string, Maybe<int>>.Create.Right(29.Wrap());
+
+string text = maybeAgeFromApi.Match(
+    left: err => $"Request failed: {err}",
+    right: maybeAge => maybeAge.Match(
+        some: age => $"Age={age}",
+        none: () => "Age not provided"));
 ```
 
-### Maybe -> Either
+### Convert `Maybe<T>` to `Either<TLeft, TRight>`
 
 ```csharp
-Maybe<int> maybe = Maybe<int>.None;
-Either<string, int> either = maybe.Match(
-    some: v => Either<string, int>.Create.Right(v),
-    none: () => Either<string, int>.Create.Left("No value"));
+using OtherMonad;
+
+Maybe<int> maybeTimeout = Maybe<int>.None;
+Either<string, int> timeout = maybeTimeout.Match(
+    some: value => value > 0
+        ? Either<string, int>.Create.Right(value)
+        : Either<string, int>.Create.Left("Timeout must be > 0"),
+    none: () => Either<string, int>.Create.Left("Timeout is missing"));
 ```
 
-## Nota sobre Cast
+## Note about `Cast` / `TryCast`
 
-Aunque versiones anteriores de documentación mencionaban `Cast/TryCast`, la API actual de `OtherMonad.Maybe` no expone esos métodos.
+The current `OtherMonad.Maybe` source code does not expose `Cast` / `TryCast` methods.

@@ -3,13 +3,13 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=piqueterron_OtherMonad&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=piqueterron_OtherMonad)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=piqueterron_OtherMonad&metric=coverage)](https://sonarcloud.io/summary/new_code?id=piqueterron_OtherMonad)
 
-Librería ligera de mónadas para .NET con tres tipos principales:
+A lightweight .NET functional library with three monadic types:
 
-- `Maybe<T>`: valor opcional (valor o ausencia)
-- `Either<TLeft, TRight>`: éxito/fracaso tipado (`Right = éxito`, `Left = error`)
-- `Result<T>`: especialización semántica de `Either<Exception, T>`
+- `Maybe<T>`: optional values (`Some` or `None`)
+- `Either<TLeft, TRight>`: typed failure/success (`Left = failure`, `Right = success`)
+- `Result<T>`: semantic specialization of `Either<Exception, T>`
 
-## Paquetes
+## Packages
 
 | Package | NuGet |
 |---|---|
@@ -17,7 +17,7 @@ Librería ligera de mónadas para .NET con tres tipos principales:
 | `OtherMonad.Either` | [![NuGet](https://img.shields.io/nuget/v/OtherMonad.Either)](https://www.nuget.org/packages/OtherMonad.Either) |
 | `OtherMonad.Result` | [![NuGet](https://img.shields.io/nuget/v/OtherMonad.Result)](https://www.nuget.org/packages/OtherMonad.Result) |
 
-## Instalación
+## Installation
 
 ```bash
 dotnet add package OtherMonad.Maybe
@@ -25,21 +25,23 @@ dotnet add package OtherMonad.Either
 dotnet add package OtherMonad.Result
 ```
 
-## Guía rápida de API
+## API Guide
 
-> Guía completa por paquete:
-> - [`src/OtherMonad.Maybe/README.md`](src/OtherMonad.Maybe/README.md)
-> - [`src/OtherMonad.Either/README.md`](src/OtherMonad.Either/README.md)
-> - [`src/OtherMonad.Result/README.md`](src/OtherMonad.Result/README.md)
+Full package guides:
+- [`src/OtherMonad.Maybe/README.md`](src/OtherMonad.Maybe/README.md)
+- [`src/OtherMonad.Either/README.md`](src/OtherMonad.Either/README.md)
+- [`src/OtherMonad.Result/README.md`](src/OtherMonad.Result/README.md)
+
+Quick overview:
 
 ### Maybe
 
 - `Wrap`, `Unwrap`
-- `Bind` (sync/async + defer)
-- `Map` (sobre secuencias, sync/async + defer)
-- `Match` (sync/async + defer)
-- `OrElse` (sync/async + defer)
-- `Combine`, `TryCombine` (+ variantes `Defer`)
+- `Bind` (sync/async + deferred variants)
+- `Map` (over sequences, sync/async + deferred variants)
+- `Match` (sync/async + deferred variants)
+- `OrElse` (sync/async + deferred variants)
+- `Combine`, `TryCombine` (+ `Defer` variants)
 
 ### Either
 
@@ -59,98 +61,106 @@ dotnet add package OtherMonad.Result
 - `Combine`
 - `Try` (sync/async)
 
-## Result vs Either: ¿por qué existen ambos?
+## Why both `Result` and `Either`?
 
-Usa **`Either<TLeft, TRight>`** cuando:
-- quieres modelar errores de dominio tipados (`ValidationError`, `ProblemDetails`, etc.)
-- `Left` no es necesariamente una excepción
+Use **`Either<TLeft, TRight>`** when:
+- your error side is a domain type (for example `ValidationError`, `ApiProblem`, `ErrorCode`)
+- the failure side is not necessarily an `Exception`
 
-Usa **`Result<T>`** cuando:
-- tu flujo de errores es por `Exception`
-- quieres API más expresiva para aplicaciones C# (`Ok` / `Err`)
-- quieres interoperar con APIs que ya lanzan excepciones (`Result.Try`)
+Use **`Result<T>`** when:
+- your error flow is exception-based
+- you prefer explicit `Ok` / `Err` terminology
+- you need to wrap exception-throwing code with `Result.Try(...)`
 
-`Result<T>` implementa `IEither<Exception, T>` y convierte implícitamente a/desde `Either<Exception, T>`.
+`Result<T>` implements `IEither<Exception, T>` and can convert implicitly to/from `Either<Exception, T>`.
 
-## Escenarios avanzados
+## Advanced scenarios
 
-### 1) Async/await (patrón BindAsync / MapAsync)
+### 1) Async/await pipelines (`Bind`/`Map` async overloads)
 
-No hay métodos llamados `BindAsync` o `MapAsync`; se usan las sobrecargas async de `Bind` y `Map`:
+`OtherMonad` does not expose methods named `BindAsync` or `MapAsync`; use async overloads of `Bind` and `Map`.
 
 ```csharp
 using OtherMonad;
 
-var either = Either<string, int>.Create.Right(10);
+var parseAge = await Either<string, string>.Create.Right("42")
+    .Bind(async (text, ct) =>
+    {
+        await Task.Delay(5, ct);
+        return int.TryParse(text, out var age)
+            ? Either<string, int>.Create.Right(age)
+            : Either<string, int>.Create.Left("Age is not numeric");
+    });
 
-var mapped = await either.Map(async (v, ct) =>
+var category = await parseAge.Map(async (age, ct) =>
 {
-    await Task.Delay(10, ct);
-    return v * 2;
+    await Task.Delay(5, ct);
+    return age >= 18 ? "adult" : "minor";
 });
 
-var chained = await either.Bind(async (v, ct) =>
-{
-    await Task.Delay(10, ct);
-    return v > 0
-        ? Either<string, string>.Create.Right($"ok:{v}")
-        : Either<string, string>.Create.Left("invalid");
-});
+string message = category.Match(
+    left: error => $"Cannot classify user: {error}",
+    right: value => $"User category: {value}");
 ```
 
-### 2) Composición de mónadas
+### 2) Monad composition (nested monads)
 
-Ejemplo: `Maybe<T>` dentro de `Either<TLeft, TRight>`:
+Example: `Either<string, Maybe<int>>` representing transport success/failure + optional payload.
 
 ```csharp
 using OtherMonad;
 
-Either<string, Maybe<int>> userAge = Either<string, Maybe<int>>.Create.Right(42.Wrap());
+Either<string, Maybe<int>> maybeDiscountFromService =
+    Either<string, Maybe<int>>.Create.Right(20.Wrap());
 
-string message = userAge.Match(
-    left: err => $"Error: {err}",
-    right: maybeAge => maybeAge.Match(
-        some: age => $"Edad: {age}",
-        none: () => "Sin edad"));
+string result = maybeDiscountFromService.Match(
+    left: serviceError => $"Service error: {serviceError}",
+    right: maybeDiscount => maybeDiscount.Match(
+        some: discount => $"Discount applied: {discount}%",
+        none: () => "Request succeeded but no discount is available"));
 ```
 
-### 3) Conversiones entre tipos
+### 3) Type conversions
 
-#### Maybe -> Either
+#### `Maybe<T>` -> `Either<TLeft, TRight>`
 
 ```csharp
 using OtherMonad;
 
-Maybe<int> maybe = 5.Wrap();
-Either<string, int> either = maybe.Match(
-    some: v => Either<string, int>.Create.Right(v),
-    none: () => Either<string, int>.Create.Left("No value"));
+Maybe<int> maybePort = 8080.Wrap();
+
+Either<string, int> validatedPort = maybePort.Match(
+    some: port => port > 0
+        ? Either<string, int>.Create.Right(port)
+        : Either<string, int>.Create.Left("Port must be greater than zero"),
+    none: () => Either<string, int>.Create.Left("Port value is missing"));
 ```
 
-#### Either<Exception, T> <-> Result<T>
+#### `Either<Exception, T>` <-> `Result<T>`
 
 ```csharp
 using OtherMonad;
 
 Either<Exception, int> either = Either<Exception, int>.Create.Right(7);
-Result<int> result = either;                 // implícita
-Either<Exception, int> again = result;       // implícita
+Result<int> result = either;                     // implicit conversion
+Either<Exception, int> roundTrip = result;       // implicit conversion
 ```
 
-#### Result -> Maybe
+#### `Result<T>` -> `Maybe<T>`
 
 ```csharp
 using OtherMonad;
 
-Result<int> result = Result<int>.Create.Ok(7);
-Maybe<int> maybe = result.Match(
+Result<int> parsed = Result.Try(() => int.Parse("42"));
+
+Maybe<int> maybeValue = parsed.Match(
     onErr: _ => Maybe<int>.None,
-    onOk: v => v.Wrap());
+    onOk: value => value.Wrap());
 ```
 
-## Nota sobre Cast
+## Notes about `Cast` / `TryCast`
 
-La API actual no expone `Cast` / `TryCast` en código fuente; para conversiones usa `Match`, fábricas (`Create.Left/Right`, `Create.Ok/Err`) y conversiones implícitas de `Result`/`Either`.
+Current source code does not expose `Cast` / `TryCast` extension methods. For conversions, use `Match`, `Create.Left/Right`, `Create.Ok/Err`, and implicit `Result`/`Either` conversions.
 
 ## License
 
