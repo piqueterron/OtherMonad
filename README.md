@@ -158,10 +158,6 @@ Maybe<int> maybeValue = parsed.Match(
     onOk: value => value.Wrap());
 ```
 
-## Notes about `Cast` / `TryCast`
-
-Current source code does not expose `Cast` / `TryCast` extension methods. For conversions, use `Match`, `Create.Left/Right`, `Create.Ok/Err`, and implicit `Result`/`Either` conversions.
-
 ## License
 
 This project is licensed under the [MIT License](LICENSE).

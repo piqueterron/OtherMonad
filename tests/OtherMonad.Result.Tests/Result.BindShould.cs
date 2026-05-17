@@ -1,10 +1,8 @@
-namespace OtherMonad.Tests;
+﻿namespace OtherMonad.Tests;
 
 [Trait("Result", "Bind/Map")]
 public class ResultBindShould
 {
-    // ── Bind ─────────────────────────────────────────────────────────────────
-
     [Fact]
     public void GivenResultOkWhenBindReturnsSelectorResult()
     {
@@ -127,8 +125,6 @@ public class ResultBindShould
         Assert.True(tokenPassed);
         Assert.True(output.IsOk);
     }
-
-    // ── Map ──────────────────────────────────────────────────────────────────
 
     [Fact]
     public void GivenResultOkWhenMapReturnsTransformedValue()

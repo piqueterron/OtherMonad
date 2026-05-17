@@ -1,4 +1,4 @@
-namespace OtherMonad;
+﻿namespace OtherMonad;
 
 /// <summary>
 /// Represents the result of an operation that either succeeded with a value of type
@@ -45,16 +45,12 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
         ? _either.Left
         : throw new InvalidOperationException("Result is in an Ok state. Access Value instead.");
 
-    // ── IEither<Exception, T> explicit implementation ────────────────────────
-
     bool IEither<Exception, T>.IsLeft => _either.IsLeft;
     bool IEither<Exception, T>.IsRight => _either.IsRight;
     Exception IEither<Exception, T>.Left => _either.Left;
     T IEither<Exception, T>.Right => _either.Right;
 
     private Result(Either<Exception, T> either) => _either = either;
-
-    // ── Implicit conversions ──────────────────────────────────────────────────
 
     /// <summary>
     /// Implicitly converts a <see cref="Result{T}"/> to the underlying
@@ -67,8 +63,6 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
     /// <c>TLeft = Exception</c>) to a <see cref="Result{T}"/>.
     /// </summary>
     public static implicit operator Result<T>(Either<Exception, T> either) => new(either);
-
-    // ── Factory ───────────────────────────────────────────────────────────────
 
     /// <summary>
     /// Explicit factory methods for creating <see cref="Result{T}"/> instances.
@@ -91,8 +85,6 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="exception"/> is <see langword="null"/>.</exception>
         public static Result<T> Err(Exception exception) => Either<Exception, T>.Create.Left(exception);
     }
-
-    // ── Equality ──────────────────────────────────────────────────────────────
 
     /// <inheritdoc/>
     public bool Equals(Result<T> other) => _either.Equals(other._either);
