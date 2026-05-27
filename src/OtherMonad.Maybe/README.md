@@ -204,7 +204,3 @@ Either<string, int> timeout = maybeTimeout.Match(
         : Either<string, int>.Create.Left("Timeout must be > 0"),
     none: () => Either<string, int>.Create.Left("Timeout is missing"));
 ```
-
-## Note about `Cast` / `TryCast`
-
-The current `OtherMonad.Maybe` source code does not expose `Cast` / `TryCast` methods.
