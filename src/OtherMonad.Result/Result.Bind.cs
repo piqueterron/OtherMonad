@@ -1,4 +1,4 @@
-namespace OtherMonad;
+﻿namespace OtherMonad;
 
 /// <summary>
 /// Extension methods for <see cref="Result{T}"/>.
@@ -6,11 +6,13 @@ namespace OtherMonad;
 public static partial class Result
 {
     /// <summary>
-    /// <para>If in the Ok (success) state, applies <paramref name="selector"/> to the value
-    /// to obtain a new <see cref="Result{TResult}"/>. If in the Err (failure) state, propagates
-    /// the exception unchanged.</para>
-    /// <para>Delegates to <see cref="Either.Bind{TLeft,TRight,TResult}(Either{TLeft,TRight},Func{TRight,Either{TLeft,TResult}})"/>.</para>
+    /// Applies a transformation function to the value if in the Ok (success) state,
+    /// obtaining a new <see cref="Result{TResult}"/>. If in the Err (failure) state,
+    /// propagates the exception unchanged.
     /// </summary>
+    /// <remarks>
+    /// Delegates to <see cref="Either.Bind{TLeft,TRight,TResult}(Either{TLeft,TRight},Func{TRight,Either{TLeft,TResult}})"/>.
+    /// </remarks>
     /// <typeparam name="T">The success type of the source.</typeparam>
     /// <typeparam name="TResult">The success type of the result.</typeparam>
     /// <param name="source">The Result instance to bind.</param>
@@ -27,16 +29,16 @@ public static partial class Result
     }
 
     /// <summary>
-    /// <para>If in the Ok (success) state, applies <paramref name="selector"/> asynchronously to the value
-    /// to obtain a new <see cref="Result{TResult}"/>. If in the Err (failure) state, propagates
-    /// the exception unchanged.</para>
+    /// Asynchronously applies a transformation function to the value if in the Ok (success) state,
+    /// obtaining a new <see cref="Result{TResult}"/>. If in the Err (failure) state,
+    /// propagates the exception unchanged.
     /// </summary>
     /// <typeparam name="T">The success type of the source.</typeparam>
     /// <typeparam name="TResult">The success type of the result.</typeparam>
     /// <param name="source">The Result instance to bind.</param>
     /// <param name="selector">An async function applied to the value when in the Ok state.</param>
     /// <param name="cancellation">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-    /// <returns><see cref="Task{T}"><![CDATA[Task<]]><see cref="Result{TResult}"/><![CDATA[>]]></see></returns>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the transformed <see cref="Result{TResult}"/>.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="selector"/> is <see langword="null"/>.</exception>
     public static async Task<Result<TResult>> Bind<T, TResult>(
         this Result<T> source,
@@ -53,11 +55,13 @@ public static partial class Result
     }
 
     /// <summary>
-    /// <para>If in the Ok (success) state, applies <paramref name="selector"/> to transform the value,
+    /// Applies a transformation function to the value if in the Ok (success) state,
     /// wrapping the result in a new <see cref="Result{TResult}"/>. If in the Err (failure) state,
-    /// propagates the exception unchanged.</para>
-    /// <para>Delegates to <see cref="Either.Map{TLeft,TRight,TResult}(Either{TLeft,TRight},Func{TRight,TResult})"/>.</para>
+    /// propagates the exception unchanged.
     /// </summary>
+    /// <remarks>
+    /// Delegates to <see cref="Either.Map{TLeft,TRight,TResult}(Either{TLeft,TRight},Func{TRight,TResult})"/>.
+    /// </remarks>
     /// <typeparam name="T">The success type of the source.</typeparam>
     /// <typeparam name="TResult">The success type of the result.</typeparam>
     /// <param name="source">The Result instance to map.</param>
@@ -74,16 +78,16 @@ public static partial class Result
     }
 
     /// <summary>
-    /// <para>If in the Ok (success) state, applies <paramref name="selector"/> asynchronously to transform
-    /// the value, wrapping the result in a new <see cref="Result{TResult}"/>. If in the Err (failure) state,
-    /// propagates the exception unchanged.</para>
+    /// Asynchronously applies a transformation function to the value if in the Ok (success) state,
+    /// wrapping the result in a new <see cref="Result{TResult}"/>. If in the Err (failure) state,
+    /// propagates the exception unchanged.
     /// </summary>
     /// <typeparam name="T">The success type of the source.</typeparam>
     /// <typeparam name="TResult">The success type of the result.</typeparam>
     /// <param name="source">The Result instance to map.</param>
     /// <param name="selector">An async function applied to the value when in the Ok state.</param>
     /// <param name="cancellation">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-    /// <returns><see cref="Task{T}"><![CDATA[Task<]]><see cref="Result{TResult}"/><![CDATA[>]]></see></returns>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the mapped <see cref="Result{TResult}"/>.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="selector"/> is <see langword="null"/>.</exception>
     public static async Task<Result<TResult>> Map<T, TResult>(
         this Result<T> source,

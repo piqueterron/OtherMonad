@@ -6,16 +6,16 @@
 public static partial class Maybe
 {
     /// <summary>
-    /// <para>Combine two <see cref="Maybe{TResult}"/> apply <see cref="Func{TSource, TResult}"/> to create new <see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[> ]]></see> otherwise default value</para>
+    /// Combines two <see cref="Maybe{T}"/> instances using a combining function. If the combination fails, returns a default value.
     /// </summary>
-    /// <typeparam name="TSource">The type of the element of source</typeparam>
-    /// <typeparam name="TCombine">The type of the element of combine</typeparam>
-    /// <typeparam name="TResult">The type of the value returned by selector</typeparam>
-    /// <param name="source">A left value to invoke a combine</param>
-    /// <param name="other">A right value to invoke a combine</param>
-    /// <param name="select">A combine function to apply to source element with other</param>
-    /// <param name="defaultValueFactory">Default value in case no match</param>
-    /// <returns><see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[> ]]></see> or default value</returns>
+    /// <typeparam name="TSource">The type of the first value.</typeparam>
+    /// <typeparam name="TCombine">The type of the second value.</typeparam>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
+    /// <param name="source">The first <see cref="Maybe{TSource}"/>.</param>
+    /// <param name="other">The second <see cref="Maybe{TCombine}"/>.</param>
+    /// <param name="select">A function to combine both values.</param>
+    /// <param name="defaultValueFactory">A function that produces a default value if combination fails.</param>
+    /// <returns>A <see cref="Maybe{TResult}"/> with the combined value, or the result of <paramref name="defaultValueFactory"/> if combination fails.</returns>
     public static Maybe<TResult> TryCombine<TSource, TCombine, TResult>(this Maybe<TSource> source, Maybe<TCombine> other, Func<TSource, TCombine, TResult> select, Func<TResult> defaultValueFactory)
     {
         try
@@ -29,15 +29,15 @@ public static partial class Maybe
     }
 
     /// <summary>
-    /// <para>Combine two <see cref="Maybe{TResult}"/> apply <see cref="Func{TSource, TResult}"/> to create new <see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[> ]]></see></para>
+    /// Combines two <see cref="Maybe{T}"/> instances using a combining function if both have values.
     /// </summary>
-    /// <typeparam name="TSource">The type of the element of source</typeparam>
-    /// <typeparam name="TCombine">The type of the element of combine</typeparam>
-    /// <typeparam name="TResult">The type of the value returned by selector</typeparam>
-    /// <param name="source">A left value to invoke a combine</param>
-    /// <param name="other">A right value to invoke a combine</param>
-    /// <param name="select">A combine function to apply to source element with other</param>
-    /// <returns><see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[> ]]></see> or <see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[>.None ]]></see></returns>
+    /// <typeparam name="TSource">The type of the first value.</typeparam>
+    /// <typeparam name="TCombine">The type of the second value.</typeparam>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
+    /// <param name="source">The first <see cref="Maybe{TSource}"/>.</param>
+    /// <param name="other">The second <see cref="Maybe{TCombine}"/>.</param>
+    /// <param name="select">A function to combine both values.</param>
+    /// <returns>A <see cref="Maybe{TResult}"/> with the combined value if both inputs have values; otherwise, <see cref="Maybe{TResult}.None"/>.</returns>
     public static Maybe<TResult> Combine<TSource, TCombine, TResult>(this Maybe<TSource> source, Maybe<TCombine> other, Func<TSource, TCombine, TResult> select)
     {
         if (!source.HasValue || !other.HasValue)

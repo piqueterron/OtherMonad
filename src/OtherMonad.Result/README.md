@@ -171,9 +171,9 @@ Result<string> downloaded = await Result.Try(async ct =>
 });
 ```
 
-## Advanced scenarios
+## Advanced Scenarios
 
-### Async/await processing pipeline
+### Async/await Processing Pipeline
 
 ```csharp
 using OtherMonad;
@@ -213,7 +213,7 @@ string text = maybeQuota.Match(
         none: () => "No quota configured"));
 ```
 
-### Type conversions
+### Type Conversions
 
 #### `Either<Exception, T>` <-> `Result<T>`
 

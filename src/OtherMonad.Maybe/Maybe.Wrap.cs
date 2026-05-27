@@ -6,22 +6,22 @@
 public static partial class Maybe
 {
     /// <summary> 
-    /// <para>Wraps an object of type <typeparamref name="TSource"/> in a struct of type <see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>]]></see></para>
+    /// Wraps a value of type <typeparamref name="TSource"/> into a <see cref="Maybe{TSource}"/>.
     /// </summary>
-    /// <typeparam name="TSource">The type of the element of source</typeparam>
-    /// <param name="source">A value to wrap</param>
-    /// <returns><see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>]]></see></returns>
+    /// <typeparam name="TSource">The type of the value to wrap.</typeparam>
+    /// <param name="source">The value to wrap. If <see langword="null"/>, returns <see cref="Maybe{TSource}.None"/>.</param>
+    /// <returns>A <see cref="Maybe{TSource}"/> containing the value.</returns>
     public static Maybe<TSource> Wrap<TSource>(this TSource source)
     {
         return source;
     }
 
     /// <summary>
-    /// <para>Unwraps the <see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>]]></see> type struct to an object of type <typeparamref name="TSource"/></para>
+    /// Unwraps a <see cref="Maybe{TSource}"/> and returns its value.
     /// </summary>
-    /// <typeparam name="TSource">The type of the element of source</typeparam>
-    /// <param name="source">A value to unwrap</param>
-    /// <returns><typeparamref name="TSource"/></returns>
+    /// <typeparam name="TSource">The type of the contained value.</typeparam>
+    /// <param name="source">The <see cref="Maybe{TSource}"/> to unwrap.</param>
+    /// <returns>The contained value.</returns>
     /// <exception cref="InvalidOperationException">Thrown when <paramref name="source"/> has no value (<see cref="Maybe{TSource}.HasValue"/> is <see langword="false"/>). Use <see cref="Unwrap{TSource}(Maybe{TSource}, TSource)"/> to provide a fallback value.</exception>
     public static TSource Unwrap<TSource>(this Maybe<TSource> source)
     {
@@ -32,12 +32,12 @@ public static partial class Maybe
     }
 
     /// <summary>
-    /// <para>Unwraps the <see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>]]></see> type structure to an object of type <typeparamref name="TSource"/> otherwise return default <typeparamref name="TSource"/></para>
+    /// Unwraps a <see cref="Maybe{TSource}"/> and returns its value, or a default value if empty.
     /// </summary>
-    /// <typeparam name="TSource">The type of the element of source</typeparam>
-    /// <param name="source">A value to unwrap</param>
-    /// <param name="default">Default value to return if dont has value</param>
-    /// <returns><typeparamref name="TSource"/></returns>
+    /// <typeparam name="TSource">The type of the contained value.</typeparam>
+    /// <param name="source">The <see cref="Maybe{TSource}"/> to unwrap.</param>
+    /// <param name="default">The default value to return if the <see cref="Maybe{TSource}"/> has no value.</param>
+    /// <returns>The contained value if present; otherwise, <paramref name="default"/>.</returns>
     public static TSource Unwrap<TSource>(this Maybe<TSource> source, TSource @default)
     {
         if (source.HasValue)

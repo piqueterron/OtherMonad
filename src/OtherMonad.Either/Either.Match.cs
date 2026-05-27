@@ -6,9 +6,9 @@
 public static partial class Either
 {
     /// <summary>
-    /// <para>Evaluates the Either and returns a result by applying the corresponding function.
+    /// Evaluates the Either and returns a result by applying the corresponding function.
     /// Executes <paramref name="right"/> when in the Right (success) state,
-    /// or <paramref name="left"/> when in the Left (failure) state.</para>
+    /// or <paramref name="left"/> when in the Left (failure) state.
     /// </summary>
     /// <typeparam name="TLeft">The failure/error type.</typeparam>
     /// <typeparam name="TRight">The success type.</typeparam>
@@ -27,9 +27,9 @@ public static partial class Either
     }
 
     /// <summary>
-    /// <para>Evaluates the Either asynchronously and returns a result by applying the corresponding function.
+    /// Asynchronously evaluates the Either and returns a result by applying the corresponding function.
     /// Executes <paramref name="right"/> when in the Right (success) state,
-    /// or <paramref name="left"/> when in the Left (failure) state.</para>
+    /// or <paramref name="left"/> when in the Left (failure) state.
     /// </summary>
     /// <typeparam name="TLeft">The failure/error type.</typeparam>
     /// <typeparam name="TRight">The success type.</typeparam>
@@ -38,7 +38,7 @@ public static partial class Either
     /// <param name="left">Async function invoked when in the Left (failure) state.</param>
     /// <param name="right">Async function invoked when in the Right (success) state.</param>
     /// <param name="cancellation">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-    /// <returns><see cref="Task{TResult}"><![CDATA[Task<]]><typeparamref name="TResult"/><![CDATA[>]]></see></returns>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the value returned by the invoked function.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="left"/> or <paramref name="right"/> is <see langword="null"/>.</exception>
     public static async Task<TResult> Match<TLeft, TRight, TResult>(this IEither<TLeft, TRight> source, Func<TLeft, CancellationToken, Task<TResult>> left, Func<TRight, CancellationToken, Task<TResult>> right, CancellationToken cancellation = default)
     {
@@ -49,8 +49,8 @@ public static partial class Either
     }
 
     /// <summary>
-    /// <para>Same as <see cref="Match{TLeft,TRight,TResult}(IEither{TLeft,TRight},Func{TLeft,CancellationToken,Task{TResult}},Func{TRight,CancellationToken,Task{TResult}},CancellationToken)"/>
-    /// but silently returns <paramref name="default"/> if either function is <see langword="null"/> or throws.</para>
+    /// Asynchronously evaluates the Either and returns a result by applying the corresponding function.
+    /// Returns <paramref name="default"/> if either function is <see langword="null"/> or throws an exception.
     /// </summary>
     /// <typeparam name="TLeft">The failure/error type.</typeparam>
     /// <typeparam name="TRight">The success type.</typeparam>
@@ -60,7 +60,7 @@ public static partial class Either
     /// <param name="right">Async function invoked when in the Right (success) state.</param>
     /// <param name="default">Value returned when a function is <see langword="null"/> or throws.</param>
     /// <param name="cancellation">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-    /// <returns><see cref="Task{TResult}"><![CDATA[Task<]]><typeparamref name="TResult"/><![CDATA[>]]></see></returns>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the value returned by the invoked function, or <paramref name="default"/> if an error occurs.</returns>
     public static async Task<TResult> TryMatch<TLeft, TRight, TResult>(this IEither<TLeft, TRight> source, Func<TLeft, CancellationToken, Task<TResult>> left, Func<TRight, CancellationToken, Task<TResult>> right, TResult @default = default!, CancellationToken cancellation = default)
     {
         if (left is null || right is null)

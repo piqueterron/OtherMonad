@@ -6,12 +6,12 @@
 public static partial class Maybe
 {
     /// <summary>
-    /// <para>Check if has value and return value otherwise return default <typeparamref name="TSource"/></para>
+    /// Returns the current <see cref="Maybe{TSource}"/> if it has a value, otherwise returns a <see cref="Maybe{TSource}"/> containing the specified default value.
     /// </summary>
-    /// <typeparam name="TSource">The type of the element of source</typeparam>
-    /// <param name="source">A value to invoke to check if has value</param>
-    /// <param name="default">Default value to return if dont has value</param>
-    /// <returns><see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>]]></see></returns>
+    /// <typeparam name="TSource">The type of the contained value.</typeparam>
+    /// <param name="source">The <see cref="Maybe{TSource}"/> to check.</param>
+    /// <param name="default">The default value to return if the source has no value.</param>
+    /// <returns>The original <see cref="Maybe{TSource}"/> if it has a value; otherwise, a <see cref="Maybe{TSource}"/> containing <paramref name="default"/>.</returns>
     public static Maybe<TSource> OrElse<TSource>(this Maybe<TSource> source, TSource @default)
     {
         if (source.HasValue)
@@ -23,12 +23,12 @@ public static partial class Maybe
     }
 
     /// <summary>
-    /// <para>Check if has value and return value otherwise return default <typeparamref name="TSource"/></para>
+    /// Asynchronously waits for the <see cref="Maybe{TSource}"/> and returns it if it has a value, otherwise returns a <see cref="Maybe{TSource}"/> containing the specified default value.
     /// </summary>
-    /// <typeparam name="TSource">The type of the element of source</typeparam>
-    /// <param name="source">A value to invoke to check if has value</param>
-    /// <param name="default">Default value to return if dont has value</param>
-    /// <returns><see cref="Maybe{TSource}"><![CDATA[Task<Maybe<]]><typeparamref name="TSource"/><![CDATA[>>]]></see></returns>
+    /// <typeparam name="TSource">The type of the contained value.</typeparam>
+    /// <param name="source">A task that produces a <see cref="Maybe{TSource}"/>.</param>
+    /// <param name="default">The default value to return if the resolved source has no value.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the resolved <see cref="Maybe{TSource}"/> if it has a value; otherwise, a <see cref="Maybe{TSource}"/> containing <paramref name="default"/>.</returns>
     public static async Task<Maybe<TSource>> OrElse<TSource>(this Task<Maybe<TSource>> source, TSource @default)
     {
         var maybe = await source;

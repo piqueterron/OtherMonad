@@ -158,7 +158,7 @@ Maybe<string> fullName = firstName.Combine(lastName, (f, l) => $"{f} {l}");
 Maybe<string> fallbackName = firstName.TryCombine(missingName, (f, l) => $"{f} {l}", () => "Unknown User");
 ```
 
-## Advanced scenarios
+## Advanced Scenarios
 
 ### Async/await pipeline pattern (`Bind` + `Match`)
 

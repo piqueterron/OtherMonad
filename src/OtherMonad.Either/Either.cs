@@ -122,16 +122,22 @@ public readonly struct Either<TLeft, TRight> : IEither<TLeft, TRight>, IEquatabl
     }
 
     /// <summary>
-    /// Equality operator for two <see cref="Either{TLeft,TRight}"/> instances.
+    /// Determines whether two <see cref="Either{TLeft,TRight}"/> instances are equal.
     /// </summary>
+    /// <param name="left">The first instance to compare.</param>
+    /// <param name="right">The second instance to compare.</param>
+    /// <returns><see langword="true"/> if the instances are equal; otherwise, <see langword="false"/>.</returns>
     public static bool operator ==(Either<TLeft, TRight> left, Either<TLeft, TRight> right)
     {
         return left.Equals(right);
     }
 
     /// <summary>
-    /// Inequality operator for two <see cref="Either{TLeft,TRight}"/> instances.
+    /// Determines whether two <see cref="Either{TLeft,TRight}"/> instances are not equal.
     /// </summary>
+    /// <param name="left">The first instance to compare.</param>
+    /// <param name="right">The second instance to compare.</param>
+    /// <returns><see langword="true"/> if the instances are not equal; otherwise, <see langword="false"/>.</returns>
     public static bool operator !=(Either<TLeft, TRight> left, Either<TLeft, TRight> right)
     {
         return !(left == right);
