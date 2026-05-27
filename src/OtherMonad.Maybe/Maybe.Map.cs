@@ -8,14 +8,14 @@ using System.Runtime.CompilerServices;
 public static partial class Maybe
 {
     /// <summary>
-    /// <para>Projects each element of a sequence with value into a new <see cref="Maybe{TResult}"><![CDATA[ IEnumerable<Maybe<]]><typeparamref name="TResult"/><![CDATA[>> ]]></see></para>
+    /// Applies a transformation function to each <see cref="Maybe{TSource}"/> in the sequence that has a value.
     /// </summary>
-    /// <typeparam name="TSource">The type of the elements of source</typeparam>
-    /// <typeparam name="TResult">The type of the value returned by selector</typeparam>
-    /// <param name="sources">A sequence of values to invoke a transform function on</param>
-    /// <param name="selector">A transform function to apply to each source element</param>
-    /// <returns>The type of the value returned <see cref="Maybe{TSource}"><![CDATA[IEnumerable<Maybe<]]><typeparamref name="TResult"/><![CDATA[>>]]></see></returns>
-    /// <exception cref="ArgumentNullException">selector is null</exception>
+    /// <typeparam name="TSource">The type of the source values.</typeparam>
+    /// <typeparam name="TResult">The type of the result values.</typeparam>
+    /// <param name="sources">A sequence of <see cref="Maybe{TSource}"/> values to transform.</param>
+    /// <param name="selector">A transformation function to apply to each contained value.</param>
+    /// <returns>A sequence of <see cref="Maybe{TResult}"/> with transformed values, or <see cref="Maybe{TResult}.None"/> for empty sources.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="selector"/> is <see langword="null"/>.</exception>
     public static IEnumerable<Maybe<TResult>> Map<TSource, TResult>(this IEnumerable<Maybe<TSource>> sources, Func<TSource, TResult> selector)
     {
         ArgumentNullException.ThrowIfNull(selector);
@@ -27,15 +27,15 @@ public static partial class Maybe
     }
 
     /// <summary>
-    /// <para>Projects each element of a sequence with value into a new <see cref="Maybe{TResult}"><![CDATA[ IEnumerable<Maybe<]]><typeparamref name="TResult"/><![CDATA[>> ]]></see></para>
+    /// Asynchronously applies a transformation function to each <see cref="Maybe{TSource}"/> in the sequence that has a value.
     /// </summary>
-    /// <typeparam name="TSource">The type of the elements of source</typeparam>
-    /// <typeparam name="TResult">The type of the value returned by selector</typeparam>
-    /// <param name="sources">A sequence of values to invoke a transform function on</param>
-    /// <param name="selector">A transform function to apply to each source element</param>
-    /// <param name="cancellation">A CancellationToken enables cooperative cancellation between threads, thread pool work items, or Task objects</param>
-    /// <returns>The type of the value returned <see cref="Maybe{TSource}"><![CDATA[IAsyncEnumerable<Maybe<]]><typeparamref name="TResult"/><![CDATA[>>]]></see></returns>
-    /// <exception cref="ArgumentNullException">selector is null</exception>
+    /// <typeparam name="TSource">The type of the source values.</typeparam>
+    /// <typeparam name="TResult">The type of the result values.</typeparam>
+    /// <param name="sources">A sequence of <see cref="Maybe{TSource}"/> values to transform.</param>
+    /// <param name="selector">An asynchronous transformation function to apply to each contained value.</param>
+    /// <param name="cancellation">A <see cref="CancellationToken"/> to observe while waiting for each task to complete.</param>
+    /// <returns>An asynchronous sequence of <see cref="Maybe{TResult}"/> with transformed values, or <see cref="Maybe{TResult}.None"/> for empty sources.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="selector"/> is <see langword="null"/>.</exception>
     public static async IAsyncEnumerable<Maybe<TResult>> Map<TSource, TResult>(this IEnumerable<Maybe<TSource>> sources, Func<TSource, CancellationToken, Task<TResult>> selector, [EnumeratorCancellation] CancellationToken cancellation = default)
     {
         ArgumentNullException.ThrowIfNull(selector);
@@ -47,15 +47,15 @@ public static partial class Maybe
     }
 
     /// <summary>
-    /// <para>Projects each element of a sequence with value into a new <see cref="Maybe{TResult}"><![CDATA[ IEnumerable<Maybe<]]><typeparamref name="TResult"/><![CDATA[>> ]]></see></para>
+    /// Asynchronously applies a transformation function to each <see cref="Maybe{TSource}"/> in the asynchronous sequence that has a value.
     /// </summary>
-    /// <typeparam name="TSource">The type of the elements of source</typeparam>
-    /// <typeparam name="TResult">The type of the value returned by selector</typeparam>
-    /// <param name="sources">A sequence of values to invoke a transform function on</param>
-    /// <param name="selector">A transform function to apply to each source element</param>
-    /// <param name="cancellation">A CancellationToken enables cooperative cancellation between threads, thread pool work items, or Task objects</param>
-    /// <returns>The type of the value returned <see cref="Maybe{TSource}"><![CDATA[IAsyncEnumerable<Maybe<]]><typeparamref name="TResult"/><![CDATA[>>]]></see></returns>
-    /// <exception cref="ArgumentNullException">selector is null</exception>
+    /// <typeparam name="TSource">The type of the source values.</typeparam>
+    /// <typeparam name="TResult">The type of the result values.</typeparam>
+    /// <param name="sources">An asynchronous sequence of <see cref="Maybe{TSource}"/> values to transform.</param>
+    /// <param name="selector">An asynchronous transformation function to apply to each contained value.</param>
+    /// <param name="cancellation">A <see cref="CancellationToken"/> to observe while waiting for each task to complete.</param>
+    /// <returns>An asynchronous sequence of <see cref="Maybe{TResult}"/> with transformed values, or <see cref="Maybe{TResult}.None"/> for empty sources.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="selector"/> is <see langword="null"/>.</exception>
     public static async IAsyncEnumerable<Maybe<TResult>> Map<TSource, TResult>(this IAsyncEnumerable<Maybe<TSource>> sources, Func<TSource, CancellationToken, Task<TResult>> selector, [EnumeratorCancellation] CancellationToken cancellation = default)
     {
         ArgumentNullException.ThrowIfNull(selector);

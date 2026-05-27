@@ -127,9 +127,9 @@ Either<string, int> total = serviceA.Combine(
     selectorRight: (a, b) => a + b);
 ```
 
-## Advanced scenarios
+## Advanced Scenarios
 
-### Async/await flow (`Bind` + `Map`)
+### Async/await Flow (`Bind` + `Map`)
 
 ```csharp
 using OtherMonad;

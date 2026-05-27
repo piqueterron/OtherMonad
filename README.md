@@ -74,11 +74,11 @@ Use **`Result<T>`** when:
 
 `Result<T>` implements `IEither<Exception, T>` and can convert implicitly to/from `Either<Exception, T>`.
 
-## Advanced scenarios
+## Advanced Scenarios
 
-### 1) Async/await pipelines (`Bind`/`Map` async overloads)
+### 1) Async/await Pipelines (`Bind`/`Map` async overloads)
 
-`OtherMonad` does not expose methods named `BindAsync` or `MapAsync`; use async overloads of `Bind` and `Map`.
+`OtherMonad` does not expose methods named `BindAsync` or `MapAsync`; instead, use the async overloads of `Bind` and `Map`.
 
 ```csharp
 using OtherMonad;
@@ -103,9 +103,9 @@ string message = category.Match(
     right: value => $"User category: {value}");
 ```
 
-### 2) Monad composition (nested monads)
+### 2) Monad Composition (nested monads)
 
-Example: `Either<string, Maybe<int>>` representing transport success/failure + optional payload.
+Example: `Either<string, Maybe<int>>` representing transport success/failure with an optional payload.
 
 ```csharp
 using OtherMonad;
@@ -120,7 +120,7 @@ string result = maybeDiscountFromService.Match(
         none: () => "Request succeeded but no discount is available"));
 ```
 
-### 3) Type conversions
+### 3) Type Conversions
 
 #### `Maybe<T>` -> `Either<TLeft, TRight>`
 

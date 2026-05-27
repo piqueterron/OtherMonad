@@ -6,14 +6,14 @@
 public static partial class Maybe
 {
     /// <summary>
-    /// <para>If element has value apply <see cref="Func{TSource, TResult}"/> to create new <see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[> ]]></see> otherwise <see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[>.None ]]></see></para>
+    /// Applies a transformation function to the value if present, otherwise returns <see cref="Maybe{TResult}.None"/>.
     /// </summary>
-    /// <typeparam name="TSource">The type of the element of source</typeparam>
-    /// <typeparam name="TResult">The type of the value returned by selector</typeparam>
-    /// <param name="source">A value to invoke a transform function on</param>
-    /// <param name="selector">A transform function to apply to source element</param>
-    /// <returns><see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[> ]]></see> or <see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[>.None ]]></see></returns>
-    /// <exception cref="ArgumentNullException">selector is null</exception>
+    /// <typeparam name="TSource">The type of the source value.</typeparam>
+    /// <typeparam name="TResult">The type of the result value.</typeparam>
+    /// <param name="source">The <see cref="Maybe{TSource}"/> to transform.</param>
+    /// <param name="selector">A transformation function to apply to the contained value.</param>
+    /// <returns>A new <see cref="Maybe{TResult}"/> containing the transformation result, or <see cref="Maybe{TResult}.None"/> if the source has no value.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="selector"/> is <see langword="null"/>.</exception>
     public static Maybe<TResult> Bind<TSource, TResult>(this Maybe<TSource> source, Func<TSource, TResult> selector)
     {
         ArgumentNullException.ThrowIfNull(selector);
@@ -22,15 +22,15 @@ public static partial class Maybe
     }
 
     /// <summary>
-    /// <para>If element has value apply <see cref="Func{TSource, CancellationToken, TResult}"/> to create new <see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[> ]]></see> otherwise <see cref="Maybe{TResult}"><![CDATA[ Maybe<]]><typeparamref name="TResult"/><![CDATA[>.None ]]></see></para>
+    /// Applies an asynchronous transformation function to the value if present, otherwise returns <see cref="Maybe{TResult}.None"/>.
     /// </summary>
-    /// <typeparam name="TSource">The type of the element of source</typeparam>
-    /// <typeparam name="TResult">The type of the value returned by selector</typeparam>
-    /// <param name="source">A value to invoke a transform function on</param>
-    /// <param name="selector">A transform function to apply to source element</param>
-    /// <param name="cancellation">A CancellationToken enables cooperative cancellation between threads, thread pool work items, or Task objects</param>
-    /// <returns><see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TResult"/><![CDATA[>]]></see> or <see cref="Maybe{TResult}"><![CDATA[Maybe<]]><typeparamref name="TResult"/><![CDATA[>.None]]></see></returns>
-    /// <exception cref="ArgumentNullException">selector is null</exception>
+    /// <typeparam name="TSource">The type of the source value.</typeparam>
+    /// <typeparam name="TResult">The type of the result value.</typeparam>
+    /// <param name="source">The <see cref="Maybe{TSource}"/> to transform.</param>
+    /// <param name="selector">An asynchronous transformation function to apply to the contained value.</param>
+    /// <param name="cancellation">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a new <see cref="Maybe{TResult}"/> with the transformation result, or <see cref="Maybe{TResult}.None"/> if the source has no value.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="selector"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<TResult>> Bind<TSource, TResult>(this Maybe<TSource> source, Func<TSource, CancellationToken, Task<TResult>> selector, CancellationToken cancellation = default)
     {
         ArgumentNullException.ThrowIfNull(selector);

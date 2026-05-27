@@ -6,18 +6,23 @@ public delegate TResult Deferred<out TResult>();
 public delegate Task<TResult> DeferredTask<TResult>();
 
 /// <summary>
-/// <para>The Maybe monad encapsulates an optional value. An instance of Maybe either has a value of the encapsulated type or it doesn't in which case it is a <see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>.None]]></see>. This type is meant to be used in cases where your method might or might not return a value.</para>
+/// Represents an optional value. An instance either contains a value of type <typeparamref name="TSource"/>
+/// or is <see cref="None"/>. Use this type to model optional data and avoid null checks.
 /// </summary>
-/// <typeparam name="TSource"></typeparam>
+/// <typeparam name="TSource">The type of the value when present.</typeparam>
 public readonly struct Maybe<TSource> : IEquatable<Maybe<TSource>>
 {
     /// <summary>
-    /// Current value of type <typeparamref name="TSource"/>, otherwise <see cref="Nullable{TSource}"/>
+    /// Gets the contained value.
     /// </summary>
+    /// <remarks>
+    /// Only valid when <see cref="HasValue"/> is <see langword="true"/>.
+    /// Accessing this property when <see cref="HasValue"/> is <see langword="false"/> yields the default value of <typeparamref name="TSource"/>.
+    /// </remarks>
     public TSource Value { get; }
 
     /// <summary>
-    /// Flag indicates whether it contains value or not
+    /// Gets a value indicating whether this instance contains a value.
     /// </summary>
     public bool HasValue { get; }
 
@@ -73,14 +78,14 @@ public readonly struct Maybe<TSource> : IEquatable<Maybe<TSource>>
     }
 
     /// <summary>
-    /// Nullable <see cref="Maybe{TSource}"><![CDATA[Maybe<]]><typeparamref name="TSource"/><![CDATA[>]]></see>
+    /// Represents the absence of a value (empty <see cref="Maybe{TSource}"/>).
     /// </summary>
     public static readonly Maybe<TSource> None = new();
 
     /// <summary>
-    /// Implicit operators are used when the conversion is guaranteed to succeed without data loss.
+    /// Implicitly converts a value of type <typeparamref name="TSource"/> to <see cref="Maybe{TSource}"/>.
     /// </summary>
-    /// <param name="value"></param>
+    /// <param name="value">The value to wrap. If <see langword="null"/>, returns <see cref="None"/>.</param>
     public static implicit operator Maybe<TSource>(TSource value)
     {
         if (Equals(value, null))
@@ -90,22 +95,22 @@ public readonly struct Maybe<TSource> : IEquatable<Maybe<TSource>>
     }
 
     /// <summary>
-    /// Implicit operators compare two instances of <typeparamref name="TSource"/> if equals.
+    /// Determines whether two <see cref="Maybe{TSource}"/> instances are equal.
     /// </summary>
-    /// <param name="left"></param>
-    /// <param name="right"></param>
-    /// <returns></returns>
+    /// <param name="left">The first instance to compare.</param>
+    /// <param name="right">The second instance to compare.</param>
+    /// <returns><see langword="true"/> if the instances are equal; otherwise, <see langword="false"/>.</returns>
     public static bool operator ==(Maybe<TSource> left, Maybe<TSource> right)
     {
         return left.Equals(right);
     }
 
     /// <summary>
-    /// Implicit operators compare two instances of <typeparamref name="TSource"/> if distinct.
+    /// Determines whether two <see cref="Maybe{TSource}"/> instances are not equal.
     /// </summary>
-    /// <param name="left"></param>
-    /// <param name="right"></param>
-    /// <returns></returns>
+    /// <param name="left">The first instance to compare.</param>
+    /// <param name="right">The second instance to compare.</param>
+    /// <returns><see langword="true"/> if the instances are not equal; otherwise, <see langword="false"/>.</returns>
     public static bool operator !=(Maybe<TSource> left, Maybe<TSource> right)
     {
         return !(left == right);

@@ -96,13 +96,19 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
     public override int GetHashCode() => _either.GetHashCode();
 
     /// <summary>
-    /// Equality operator for two <see cref="Result{T}"/> instances.
+    /// Determines whether two <see cref="Result{T}"/> instances are equal.
     /// </summary>
+    /// <param name="left">The first instance to compare.</param>
+    /// <param name="right">The second instance to compare.</param>
+    /// <returns><see langword="true"/> if the instances are equal; otherwise, <see langword="false"/>.</returns>
     public static bool operator ==(Result<T> left, Result<T> right) => left.Equals(right);
 
     /// <summary>
-    /// Inequality operator for two <see cref="Result{T}"/> instances.
+    /// Determines whether two <see cref="Result{T}"/> instances are not equal.
     /// </summary>
+    /// <param name="left">The first instance to compare.</param>
+    /// <param name="right">The second instance to compare.</param>
+    /// <returns><see langword="true"/> if the instances are not equal; otherwise, <see langword="false"/>.</returns>
     public static bool operator !=(Result<T> left, Result<T> right) => !(left == right);
 
     /// <summary>

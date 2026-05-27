@@ -1,4 +1,4 @@
-namespace OtherMonad;
+﻿namespace OtherMonad;
 
 /// <summary>
 /// Extension methods for <see cref="Result{T}"/>.
@@ -6,10 +6,12 @@ namespace OtherMonad;
 public static partial class Result
 {
     /// <summary>
-    /// <para>If in the Err (failure) state, returns the provided <paramref name="fallback"/> Result.
-    /// If in the Ok (success) state, returns the current instance unchanged.</para>
-    /// <para>Delegates to <see cref="Either.OrElse{TLeft,TRight}(Either{TLeft,TRight},Either{TLeft,TRight})"/>.</para>
+    /// Returns the provided fallback <see cref="Result{T}"/> if in the Err (failure) state.
+    /// If in the Ok (success) state, returns the current instance unchanged.
     /// </summary>
+    /// <remarks>
+    /// Delegates to <see cref="Either.OrElse{TLeft,TRight}(Either{TLeft,TRight},Either{TLeft,TRight})"/>.
+    /// </remarks>
     /// <typeparam name="T">The success type.</typeparam>
     /// <param name="source">The Result instance to evaluate.</param>
     /// <param name="fallback">The fallback Result returned when in the Err (failure) state.</param>
@@ -22,14 +24,14 @@ public static partial class Result
     }
 
     /// <summary>
-    /// <para>If in the Err (failure) state, invokes <paramref name="fallbackFactory"/> to obtain a fallback Result.
-    /// If in the Ok (success) state, returns the current instance unchanged.</para>
+    /// Asynchronously obtains a fallback <see cref="Result{T}"/> if in the Err (failure) state.
+    /// If in the Ok (success) state, returns the current instance unchanged.
     /// </summary>
     /// <typeparam name="T">The success type.</typeparam>
     /// <param name="source">The Result instance to evaluate.</param>
     /// <param name="fallbackFactory">An async factory invoked when in the Err (failure) state.</param>
     /// <param name="cancellation">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-    /// <returns><see cref="Task{T}"><![CDATA[Task<]]><see cref="Result{T}"/><![CDATA[>]]></see></returns>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the current instance or the fallback.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="fallbackFactory"/> is <see langword="null"/>.</exception>
     public static async Task<Result<T>> OrElse<T>(
         this Result<T> source,

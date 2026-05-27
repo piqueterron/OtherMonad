@@ -6,9 +6,9 @@
 public static partial class Either
 {
     /// <summary>
-    /// <para>If in the Right (success) state, applies <paramref name="selector"/> to the Right value
-    /// to obtain a new <see cref="Either{TLeft,TResult}"/>. If in the Left (failure) state, propagates
-    /// the Left value unchanged.</para>
+    /// Applies a transformation function to the Right value if in the Right (success) state,
+    /// obtaining a new <see cref="Either{TLeft,TResult}"/>. If in the Left (failure) state,
+    /// propagates the Left value unchanged.
     /// </summary>
     /// <typeparam name="TLeft">The failure/error type.</typeparam>
     /// <typeparam name="TRight">The success type of the source.</typeparam>
@@ -29,9 +29,9 @@ public static partial class Either
     }
 
     /// <summary>
-    /// <para>If in the Right (success) state, applies <paramref name="selector"/> asynchronously to the Right value
-    /// to obtain a new <see cref="Either{TLeft,TResult}"/>. If in the Left (failure) state, propagates
-    /// the Left value unchanged.</para>
+    /// Asynchronously applies a transformation function to the Right value if in the Right (success) state,
+    /// obtaining a new <see cref="Either{TLeft,TResult}"/>. If in the Left (failure) state,
+    /// propagates the Left value unchanged.
     /// </summary>
     /// <typeparam name="TLeft">The failure/error type.</typeparam>
     /// <typeparam name="TRight">The success type of the source.</typeparam>
@@ -39,7 +39,7 @@ public static partial class Either
     /// <param name="source">The Either instance to bind.</param>
     /// <param name="selector">An async function applied to the Right value when in the Right state.</param>
     /// <param name="cancellation">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-    /// <returns><see cref="Task{T}"><![CDATA[Task<]]><see cref="Either{TLeft,TResult}"/><![CDATA[>]]></see></returns>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the transformed <see cref="Either{TLeft,TResult}"/>.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="selector"/> is <see langword="null"/>.</exception>
     public static async Task<Either<TLeft, TResult>> Bind<TLeft, TRight, TResult>(
         this Either<TLeft, TRight> source,
@@ -54,9 +54,9 @@ public static partial class Either
     }
 
     /// <summary>
-    /// <para>If in the Right (success) state, applies <paramref name="selector"/> to transform the Right value,
+    /// Applies a transformation function to the Right value if in the Right (success) state,
     /// wrapping the result in a new <see cref="Either{TLeft,TResult}"/>. If in the Left (failure) state,
-    /// propagates the Left value unchanged.</para>
+    /// propagates the Left value unchanged.
     /// </summary>
     /// <typeparam name="TLeft">The failure/error type.</typeparam>
     /// <typeparam name="TRight">The success type of the source.</typeparam>
@@ -77,9 +77,9 @@ public static partial class Either
     }
 
     /// <summary>
-    /// <para>If in the Right (success) state, applies <paramref name="selector"/> asynchronously to transform the Right value,
+    /// Asynchronously applies a transformation function to the Right value if in the Right (success) state,
     /// wrapping the result in a new <see cref="Either{TLeft,TResult}"/>. If in the Left (failure) state,
-    /// propagates the Left value unchanged.</para>
+    /// propagates the Left value unchanged.
     /// </summary>
     /// <typeparam name="TLeft">The failure/error type.</typeparam>
     /// <typeparam name="TRight">The success type of the source.</typeparam>
@@ -87,7 +87,7 @@ public static partial class Either
     /// <param name="source">The Either instance to map.</param>
     /// <param name="selector">An async function applied to the Right value when in the Right state.</param>
     /// <param name="cancellation">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-    /// <returns><see cref="Task{T}"><![CDATA[Task<]]><see cref="Either{TLeft,TResult}"/><![CDATA[>]]></see></returns>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the mapped <see cref="Either{TLeft,TResult}"/>.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="selector"/> is <see langword="null"/>.</exception>
     public static async Task<Either<TLeft, TResult>> Map<TLeft, TRight, TResult>(
         this Either<TLeft, TRight> source,
@@ -102,8 +102,8 @@ public static partial class Either
     }
 
     /// <summary>
-    /// <para>If in the Left (failure) state, returns the provided <paramref name="fallback"/> Either.
-    /// If in the Right (success) state, returns the current instance unchanged.</para>
+    /// Returns the provided fallback <see cref="Either{TLeft,TRight}"/> if in the Left (failure) state.
+    /// If in the Right (success) state, returns the current instance unchanged.
     /// </summary>
     /// <typeparam name="TLeft">The failure/error type.</typeparam>
     /// <typeparam name="TRight">The success type.</typeparam>
@@ -118,15 +118,15 @@ public static partial class Either
     }
 
     /// <summary>
-    /// <para>If in the Left (failure) state, invokes <paramref name="fallbackFactory"/> to obtain a fallback Either.
-    /// If in the Right (success) state, returns the current instance unchanged.</para>
+    /// Asynchronously obtains a fallback <see cref="Either{TLeft,TRight}"/> if in the Left (failure) state.
+    /// If in the Right (success) state, returns the current instance unchanged.
     /// </summary>
     /// <typeparam name="TLeft">The failure/error type.</typeparam>
     /// <typeparam name="TRight">The success type.</typeparam>
     /// <param name="source">The Either instance to evaluate.</param>
     /// <param name="fallbackFactory">A factory invoked when in the Left (failure) state.</param>
     /// <param name="cancellation">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-    /// <returns><see cref="Task{T}"><![CDATA[Task<]]><see cref="Either{TLeft,TRight}"/><![CDATA[>]]></see></returns>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the current instance or the fallback.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="fallbackFactory"/> is <see langword="null"/>.</exception>
     public static async Task<Either<TLeft, TRight>> OrElse<TLeft, TRight>(
         this Either<TLeft, TRight> source,
