@@ -11,7 +11,7 @@ public class MaybeIfShould
         var expected = "default";
         Maybe<string> @object = "test";
 
-        var result = @object.Bind<string, string>(e => null)
+        var result = @object.Bind<string, string>(e => Maybe<string>.None)
             .OrElse(expected);
 
         Assert.True(result.HasValue);
@@ -23,7 +23,7 @@ public class MaybeIfShould
     {
         Maybe<string> @object = "test";
 
-        var result = @object.Bind(e => "test").OrElse("default");
+        var result = @object.Map(e => "test").OrElse("default");
 
         Assert.True(result.HasValue);
         Assert.Equal(@object, result);
@@ -35,7 +35,7 @@ public class MaybeIfShould
         Maybe<string> @object = null!;
         var expected = "default";
 
-        var result = await @object.Bind((e, ct) => Task.FromResult($"{e}-1"), TestContext.Current.CancellationToken)
+        var result = await @object.Map((e, ct) => Task.FromResult($"{e}-1"), TestContext.Current.CancellationToken)
             .OrElse(expected);
 
         Assert.True(result.HasValue);
@@ -47,7 +47,7 @@ public class MaybeIfShould
     {
         Maybe<string> @object = "test";
 
-        var result = await @object.Bind((e, ct) => Task.FromResult($"{e}-1"), TestContext.Current.CancellationToken)
+        var result = await @object.Map((e, ct) => Task.FromResult($"{e}-1"), TestContext.Current.CancellationToken)
             .OrElse("default");
 
         Assert.True(result.HasValue);
@@ -60,7 +60,7 @@ public class MaybeIfShould
         var expected = "default";
         Maybe<string> @object = "test";
 
-        var deferred = @object.BindDefer<string, string>(e => null!)
+        var deferred = @object.BindDefer<string, string>(e => Maybe<string>.None)
             .OrElseDefer(expected);
 
         var result = deferred();
@@ -74,7 +74,7 @@ public class MaybeIfShould
     {
         Maybe<string> @object = "test";
 
-        var deferred = @object.BindDefer(e => "test").OrElseDefer("default");
+        var deferred = @object.MapDefer(e => "test").OrElseDefer("default");
         var result = deferred();
 
         Assert.True(result.HasValue);
@@ -87,7 +87,7 @@ public class MaybeIfShould
         Maybe<string> @object = null;
         var expected = "default";
 
-        var deferred = @object.BindDefer((e, ct) => Task.FromResult($"{e}-1"),  TestContext.Current.CancellationToken)
+        var deferred = @object.MapDefer((e, ct) => Task.FromResult($"{e}-1"),  TestContext.Current.CancellationToken)
             .OrElseDefer(expected);
 
         var result = await deferred();
@@ -101,7 +101,7 @@ public class MaybeIfShould
     {
         Maybe<string> @object = "test";
 
-        var deferred = @object.BindDefer((e, ct) => Task.FromResult($"{e}-1"), TestContext.Current.CancellationToken)
+        var deferred = @object.MapDefer((e, ct) => Task.FromResult($"{e}-1"), TestContext.Current.CancellationToken)
             .OrElseDefer("default");
 
         var result = await deferred();
@@ -251,7 +251,7 @@ public class MaybeIfShould
     public void GivenDeferredMaybeWithValueWhenApplyOrElseDeferReturnOriginalValue()
     {
         Maybe<int> @object = 42;
-        var deferred = @object.BindDefer(x => x * 2);
+        var deferred = @object.MapDefer(x => x * 2);
 
         var result = deferred.OrElseDefer(100)();
 
@@ -263,7 +263,7 @@ public class MaybeIfShould
     public void GivenDeferredMaybeNoneWhenApplyOrElseDeferReturnDefault()
     {
         var @object = Maybe<int>.None;
-        var deferred = @object.BindDefer(x => x * 2);
+        var deferred = @object.MapDefer(x => x * 2);
 
         var result = deferred.OrElseDefer(100)();
 
@@ -275,7 +275,7 @@ public class MaybeIfShould
     public async Task GivenDeferredTaskMaybeWithValueWhenApplyOrElseDeferReturnOriginalValue()
     {
         Maybe<int> @object = 5;
-        var deferred = @object.BindDefer((x, ct) => Task.FromResult(x * 10), TestContext.Current.CancellationToken);
+        var deferred = @object.MapDefer((x, ct) => Task.FromResult(x * 10), TestContext.Current.CancellationToken);
 
         var result = await deferred.OrElseDefer(999)();
 
@@ -287,7 +287,7 @@ public class MaybeIfShould
     public async Task GivenDeferredTaskMaybeNoneWhenApplyOrElseDeferReturnDefault()
     {
         var @object = Maybe<int>.None;
-        var deferred = @object.BindDefer((x, ct) => Task.FromResult(x * 10), TestContext.Current.CancellationToken);
+        var deferred = @object.MapDefer((x, ct) => Task.FromResult(x * 10), TestContext.Current.CancellationToken);
 
         var result = await deferred.OrElseDefer(999)();
 
@@ -312,9 +312,9 @@ public class MaybeIfShould
         Maybe<int> @object = 5;
 
         var result = @object
-            .Bind(x => x > 10 ? (int?)x * 2 : null)
+            .Bind(x => x > 10 ? (Maybe<int>)(x * 2) : Maybe<int>.None)
             .OrElse(100)
-            .Bind(x => x + 50);
+            .Map(x => x + 50);
 
         Assert.True(result.HasValue);
         Assert.Equal(150, result.Value);

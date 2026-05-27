@@ -11,7 +11,7 @@ public class MaybeBindShould
         var expected = "test-1";
         Maybe<string> @object = "test";
 
-        var result = @object.Bind(e => $"{e}-1");
+        var result = @object.Bind(e => $"{e}-1".Wrap());
 
         Assert.True(result.HasValue);
         Assert.Equal(expected, result.Value);
@@ -23,10 +23,10 @@ public class MaybeBindShould
         var expected = 10;
         Maybe<int> @object = 2;
 
-        var result = @object.Bind(e => e + 2)
-            .Bind(e => e + 2)
-            .Bind(e => e + 2)
-            .Bind(e => e + 2);
+        var result = @object.Bind(e => (e + 2).Wrap())
+            .Bind(e => (e + 2).Wrap())
+            .Bind(e => (e + 2).Wrap())
+            .Bind(e => (e + 2).Wrap());
 
         Assert.True(result.HasValue);
         Assert.Equal(expected, result.Value);
@@ -38,7 +38,7 @@ public class MaybeBindShould
         var expected = "test-1";
         Maybe<string> @object = "test";
 
-        var result = @object.Bind(e => new Dummy { Value = $"{e}-1" });
+        var result = @object.Bind(e => new Dummy { Value = $"{e}-1" }.Wrap());
 
         Assert.True(result.HasValue);
         Assert.Equal(expected, result.Value.Value);
@@ -49,7 +49,7 @@ public class MaybeBindShould
     {
         Maybe<string> @object = null;
 
-        var result = @object.Bind(e => new Dummy { Value = $"{e}-1" });
+        var result = @object.Bind(e => new Dummy { Value = $"{e}-1" }.Wrap());
 
         Assert.False(result.HasValue);
         Assert.Equal(Maybe<Dummy>.None, result);
@@ -60,7 +60,7 @@ public class MaybeBindShould
     {
         Maybe<string> @object = null;
 
-        var result = @object.Bind(e => $"{e}-1");
+        var result = @object.Bind(e => $"{e}-1".Wrap());
 
         Assert.False(result.HasValue);
         Assert.Equal(Maybe<string>.None, result);
@@ -72,7 +72,7 @@ public class MaybeBindShould
         var expected = "test-1";
         Maybe<string> @object = "test";
 
-        var result = await @object.Bind((e, ct) => Task.FromResult($"{e}-1"), CancellationToken.None);
+        var result = await @object.Bind((e, ct) => Task.FromResult<Maybe<string>>($"{e}-1"), CancellationToken.None);
 
         Assert.True(result.HasValue);
         Assert.Equal(expected, result);
@@ -83,7 +83,7 @@ public class MaybeBindShould
     {
         Maybe<string> @object = null;
 
-        var result = await @object.Bind((e, ct) => Task.FromResult($"{e}-1"), CancellationToken.None);
+        var result = await @object.Bind((e, ct) => Task.FromResult<Maybe<string>>($"{e}-1"), CancellationToken.None);
 
         Assert.False(result.HasValue);
         Assert.Equal(Maybe<string>.None, result);
@@ -95,7 +95,7 @@ public class MaybeBindShould
         var expected = "test-1";
         Maybe<string> @object = "test";
 
-        var result = await @object.Bind((e, ct) => Task.FromResult(new Dummy { Value = $"{e}-1" }), CancellationToken.None);
+        var result = await @object.Bind((e, ct) => Task.FromResult<Maybe<Dummy>>(new Dummy { Value = $"{e}-1" }), CancellationToken.None);
 
         Assert.True(result.HasValue);
         Assert.Equal(expected, result.Value.Value);
@@ -106,7 +106,7 @@ public class MaybeBindShould
     {
         Maybe<string> @object = null!;
 
-        var result = await @object.Bind((e, ct) => Task.FromResult(new Dummy { Value = $"{e}-1" }), CancellationToken.None);
+        var result = await @object.Bind((e, ct) => Task.FromResult<Maybe<Dummy>>(new Dummy { Value = $"{e}-1" }), CancellationToken.None);
 
         Assert.False(result.HasValue);
         Assert.Equal(Maybe<Dummy>.None, result);
@@ -117,7 +117,7 @@ public class MaybeBindShould
     {
         Maybe<string> @object = "test";
 
-        var result = await @object.Bind((e, ct) => Task.FromResult(default(Dummy)), CancellationToken.None);
+        var result = await @object.Bind((e, ct) => Task.FromResult(Maybe<Dummy?>.None), CancellationToken.None);
 
         Assert.False(result.HasValue);
         Assert.Equal(Maybe<Dummy?>.None, result);
@@ -129,8 +129,8 @@ public class MaybeBindShould
         var expected = "test-1-1";
         Maybe<string> @object = "test";
 
-        var deferred = @object.BindDefer(e => $"{e}-1")
-            .BindDefer(e => $"{e}-1");
+        var deferred = @object.BindDefer(e => $"{e}-1".Wrap())
+            .BindDefer(e => $"{e}-1".Wrap());
 
         var result = deferred();
 
@@ -144,8 +144,8 @@ public class MaybeBindShould
         var expected = "test-1-1";
         Maybe<string> @object = "test";
 
-        var deferred = @object.BindDefer((e, ct) => Task.FromResult(new Dummy { Value = $"{e}-1" }), CancellationToken.None)
-            .BindDefer((e, ct) => Task.FromResult(new Dummy { Value = $"{e.Value}-1" }), CancellationToken.None);
+        var deferred = @object.BindDefer((e, ct) => Task.FromResult<Maybe<Dummy>>(new Dummy { Value = $"{e}-1" }), CancellationToken.None)
+            .BindDefer((e, ct) => Task.FromResult<Maybe<Dummy>>(new Dummy { Value = $"{e.Value}-1" }), CancellationToken.None);
 
         var result = await deferred();
 
@@ -193,7 +193,7 @@ public class MaybeBindShould
         var expected = 10;
         Maybe<int> @object = 5;
 
-        var result = @object.Bind(e => e * 2);
+        var result = @object.Bind(e => (e * 2).Wrap());
 
         Assert.True(result.HasValue);
         Assert.Equal(expected, result.Value);
@@ -204,7 +204,7 @@ public class MaybeBindShould
     {
         Maybe<int> @object = Maybe<int>.None;
 
-        var result = @object.Bind(e => e * 2);
+        var result = @object.Bind(e => (e * 2).Wrap());
 
         Assert.False(result.HasValue);
         Assert.Equal(Maybe<int>.None, result);
@@ -216,7 +216,7 @@ public class MaybeBindShould
         var expected = new DummyStruct { Id = 1, Name = "test" };
         Maybe<int> @object = 1;
 
-        var result = @object.Bind(e => new DummyStruct { Id = e, Name = "test" });
+        var result = @object.Bind(e => new DummyStruct { Id = e, Name = "test" }.Wrap());
 
         Assert.True(result.HasValue);
         Assert.Equal(expected, result.Value);
@@ -227,9 +227,9 @@ public class MaybeBindShould
     {
         Maybe<int> @object = 2;
 
-        var result = @object.Bind(e => e + 2)
-            .Bind(e => e * 2)
-            .Bind(e => e + 2);
+        var result = @object.Bind(e => (e + 2).Wrap())
+            .Bind(e => (e * 2).Wrap())
+            .Bind(e => (e + 2).Wrap());
 
         Assert.True(result.HasValue);
         Assert.Equal(10, result.Value);
@@ -240,9 +240,9 @@ public class MaybeBindShould
     {
         Maybe<string> @object = "test";
 
-        var result = @object.Bind(e => e + "-1")
-            .Bind(e => e.Length < 10 ? null : e + "-2")
-            .Bind(e => e + "-3");
+        var result = @object.Bind(e => $"{e}-1".Wrap())
+            .Bind(e => e.Length < 10 ? Maybe<string>.None : $"{e}-2".Wrap())
+            .Bind(e => $"{e}-3".Wrap());
 
         Assert.False(result.HasValue);
         Assert.Equal(Maybe<string>.None, result);
@@ -253,7 +253,7 @@ public class MaybeBindShould
     {
         Maybe<string> @object = "test";
 
-        var result = @object.Bind(e => (string?)null);
+        var result = @object.Bind(_ => Maybe<string?>.None);
 
         Assert.False(result.HasValue);
         Assert.Equal(Maybe<string>.None, result);
@@ -264,7 +264,7 @@ public class MaybeBindShould
     {
         Maybe<string> @object = "test";
 
-        var result = await @object.Bind((e, ct) => Task.FromResult((string?)null), CancellationToken.None);
+        var result = await @object.Bind((e, ct) => Task.FromResult(Maybe<string?>.None), CancellationToken.None);
 
         Assert.False(result.HasValue);
         Assert.Equal(Maybe<string>.None, result);
@@ -275,7 +275,7 @@ public class MaybeBindShould
     {
         Maybe<string> @object = null;
 
-        var deferred = @object.BindDefer(e => $"{e}-1");
+        var deferred = @object.BindDefer(e => $"{e}-1".Wrap());
         var result = deferred();
 
         Assert.False(result.HasValue);
@@ -287,7 +287,7 @@ public class MaybeBindShould
     {
         Maybe<string> @object = null;
 
-        var deferred = @object.BindDefer((e, ct) => Task.FromResult($"{e}-1"), CancellationToken.None);
+        var deferred = @object.BindDefer((e, ct) => Task.FromResult<Maybe<string>>($"{e}-1"), CancellationToken.None);
         var result = await deferred();
 
         Assert.False(result.HasValue);
@@ -304,7 +304,7 @@ public class MaybeBindShould
         var result = await @object.Bind((e, ct) =>
         {
             tokenPassed = ct == cts.Token;
-            return Task.FromResult($"{e}-1");
+            return Task.FromResult<Maybe<string>>($"{e}-1");
         }, cts.Token);
 
         Assert.True(tokenPassed);
@@ -321,7 +321,7 @@ public class MaybeBindShould
         var deferred = @object.BindDefer((e, ct) =>
         {
             tokenPassed = ct == cts.Token;
-            return Task.FromResult($"{e}-1");
+            return Task.FromResult<Maybe<string>>($"{e}-1");
         }, cts.Token);
 
         var result = await deferred();
@@ -336,7 +336,7 @@ public class MaybeBindShould
         var expected = "-suffix";
         Maybe<string> @object = "";
 
-        var result = @object.Bind(e => $"{e}-suffix");
+        var result = @object.Bind(e => $"{e}-suffix".Wrap());
 
         Assert.True(result.HasValue);
         Assert.Equal(expected, result.Value);
@@ -348,7 +348,7 @@ public class MaybeBindShould
         var expected = 0;
         Maybe<int> @object = 0;
 
-        var result = @object.Bind(e => e);
+        var result = @object.Bind(e => e.Wrap());
 
         Assert.True(result.HasValue);
         Assert.Equal(expected, result.Value);
@@ -359,7 +359,7 @@ public class MaybeBindShould
     {
         Maybe<bool> @object = true;
 
-        var result = @object.Bind(e => !e);
+        var result = @object.Bind(e => (!e).Wrap());
 
         Assert.True(result.HasValue);
         Assert.False(result.Value);
@@ -374,7 +374,7 @@ public class MaybeBindShould
         var result = await @object.Bind(async (e, ct) =>
         {
             await Task.Delay(10, ct);
-            return $"{e}-delayed";
+            return (Maybe<string>)$"{e}-delayed";
         }, CancellationToken.None);
 
         Assert.True(result.HasValue);
@@ -388,10 +388,10 @@ public class MaybeBindShould
         Maybe<int> @object = 2;
 
         var result = @object
-            .Bind(x => x * 2)
-            .Bind(x => x + 1)
-            .Bind(x => x * 2)
-            .Bind(x => $"RESULT: {x}");
+            .Bind(x => (x * 2).Wrap())
+            .Bind(x => (x + 1).Wrap())
+            .Bind(x => (x * 2).Wrap())
+            .Bind(x => $"RESULT: {x}".Wrap());
 
         Assert.True(result.HasValue);
         Assert.Equal(expected, result.Value);
@@ -403,7 +403,7 @@ public class MaybeBindShould
         var expected = "TEST";
         Maybe<string> @object = "test";
 
-        var result = @object.Bind(e => e.ToUpperInvariant());
+        var result = @object.Bind(e => e.ToUpperInvariant().Wrap());
 
         Assert.True(result.HasValue);
         Assert.Equal(expected, result.Value);

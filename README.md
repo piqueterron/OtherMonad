@@ -37,8 +37,8 @@ Quick overview:
 ### Maybe
 
 - `Wrap`, `Unwrap`
-- `Bind` (sync/async + deferred variants)
-- `Map` (over sequences, sync/async + deferred variants)
+- `Map` (single `Maybe` + sequence overloads, sync/async + deferred variants)
+- `Bind` (sync/async + deferred variants that return `Maybe`)
 - `Match` (sync/async + deferred variants)
 - `OrElse` (sync/async + deferred variants)
 - `Combine`, `TryCombine` (+ `Defer` variants)
