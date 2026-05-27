@@ -192,7 +192,7 @@ public class MaybeMatchShould
     public void GivenDeferredMaybeWithValueWhenApplyMatchExecuteSomeBranch()
     {
         Maybe<string> @object = "deferred";
-        var deferred = @object.BindDefer(x => x.ToUpperInvariant());
+        var deferred = @object.MapDefer(x => x.ToUpperInvariant());
 
         var result = deferred.Match(
             c => $"Got: {c}",
@@ -205,7 +205,7 @@ public class MaybeMatchShould
     public void GivenDeferredMaybeNoneWhenApplyMatchExecuteNoneBranch()
     {
         var @object = Maybe<string>.None;
-        var deferred = @object.BindDefer(x => x.ToUpperInvariant());
+        var deferred = @object.MapDefer(x => x.ToUpperInvariant());
 
         var result = deferred.Match(
             c => $"Got: {c}",
@@ -218,7 +218,7 @@ public class MaybeMatchShould
     public async Task GivenDeferredTaskMaybeWithValueWhenApplyMatchExecuteSomeBranch()
     {
         Maybe<int> @object = 5;
-        var deferred = @object.BindDefer((x, ct) => Task.FromResult(x * 10), TestContext.Current.CancellationToken);
+        var deferred = @object.MapDefer((x, ct) => Task.FromResult(x * 10), TestContext.Current.CancellationToken);
 
         var result = await deferred.Match(
             c => c + 5,
@@ -231,7 +231,7 @@ public class MaybeMatchShould
     public async Task GivenDeferredTaskMaybeNoneWhenApplyMatchExecuteNoneBranch()
     {
         var @object = Maybe<int>.None;
-        var deferred = @object.BindDefer((x, ct) => Task.FromResult(x * 10), TestContext.Current.CancellationToken);
+        var deferred = @object.MapDefer((x, ct) => Task.FromResult(x * 10), TestContext.Current.CancellationToken);
 
         var result = await deferred.Match(
             c => c + 5,

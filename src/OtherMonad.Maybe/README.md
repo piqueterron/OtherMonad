@@ -47,10 +47,12 @@ string required = userName.Unwrap();
 string withFallback = emptyName.Unwrap("guest");
 ```
 
-### Bind (sync/async)
+### Map (sync/async + deferred)
 
-- `Bind<TSource, TResult>(this Maybe<TSource>, Func<TSource, TResult>)`
-- `Bind<TSource, TResult>(this Maybe<TSource>, Func<TSource, CancellationToken, Task<TResult>>, CancellationToken)`
+- `Map<TSource, TResult>(this Maybe<TSource>, Func<TSource, TResult>)`
+- `Map<TSource, TResult>(this Maybe<TSource>, Func<TSource, CancellationToken, Task<TResult>>, CancellationToken)`
+- `MapDefer<TSource, TResult>(this Maybe<TSource>, Func<TSource, TResult>)`
+- `MapDefer<TSource, TResult>(this Maybe<TSource>, Func<TSource, CancellationToken, Task<TResult>>, CancellationToken)`
 
 ```csharp
 using OtherMonad;
@@ -58,13 +60,39 @@ using OtherMonad;
 Maybe<string> rawEmail = "  user@example.com  ".Wrap();
 
 Maybe<string> normalized = rawEmail
-    .Bind(email => email.Trim())
-    .Bind(email => email.ToLowerInvariant());
+    .Map(email => email.Trim())
+    .Map(email => email.ToLowerInvariant());
 
-Maybe<bool> isCompanyEmail = await normalized.Bind(async (email, ct) =>
+Maybe<bool> isCompanyEmail = await normalized.Map(async (email, ct) =>
 {
     await Task.Delay(5, ct);
     return email.EndsWith("@example.com", StringComparison.OrdinalIgnoreCase);
+});
+```
+
+### Bind (sync/async + deferred)
+
+- `Bind<TSource, TResult>(this Maybe<TSource>, Func<TSource, Maybe<TResult>>)`
+- `Bind<TSource, TResult>(this Maybe<TSource>, Func<TSource, CancellationToken, Task<Maybe<TResult>>>, CancellationToken)`
+- `BindDefer<TSource, TResult>(this Maybe<TSource>, Func<TSource, Maybe<TResult>>)`
+- `BindDefer<TSource, TResult>(this Maybe<TSource>, Func<TSource, CancellationToken, Task<Maybe<TResult>>>, CancellationToken)`
+
+```csharp
+using OtherMonad;
+
+Maybe<string> rawDiscount = "15".Wrap();
+
+Maybe<int> parsedDiscount = rawDiscount.Bind(text =>
+    int.TryParse(text, out var value)
+        ? value.Wrap()
+        : Maybe<int>.None);
+
+Maybe<decimal> finalDiscount = await parsedDiscount.Bind(async (value, ct) =>
+{
+    await Task.Delay(5, ct);
+    return value > 0
+        ? ((decimal)value / 100m).Wrap()
+        : Maybe<decimal>.None;
 });
 ```
 
@@ -170,7 +198,7 @@ Maybe<string> maybeUserId = "42".Wrap();
 Maybe<int> maybeParsedId = await maybeUserId.Bind(async (text, ct) =>
 {
     await Task.Delay(5, ct);
-    return int.TryParse(text, out var id) ? id : default;
+    return int.TryParse(text, out var id) ? id.Wrap() : Maybe<int>.None;
 });
 
 string message = maybeParsedId.Match(

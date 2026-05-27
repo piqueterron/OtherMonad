@@ -66,7 +66,7 @@ public class MaybeCombineShould
         Maybe<int> @object1 = 2;
         Maybe<int> @object2 = 3;
 
-        var defer1 = @object1.BindDefer(x => x + 1);
+        var defer1 = @object1.MapDefer(x => x + 1);
 
         var comb = defer1.CombineDefer(@object2, (obj1, obj2) => obj1 + obj2);
 
@@ -84,8 +84,8 @@ public class MaybeCombineShould
         Maybe<int> @object1 = 2;
         Maybe<int> @object2 = 3;
 
-        var defer1 = @object1.BindDefer(x => x + 1);
-        var defer2 = @object2.BindDefer(x => x + 1);
+        var defer1 = @object1.MapDefer(x => x + 1);
+        var defer2 = @object2.MapDefer(x => x + 1);
 
         var comb = defer1.CombineDefer(defer2, (obj1, obj2) => obj1 + obj2);
 
@@ -103,8 +103,8 @@ public class MaybeCombineShould
         Maybe<int> @object1 = 2;
         Maybe<int> @object2 = 3;
 
-        var defer1 = @object1.BindDefer((x, ct) => Task.FromResult(x + 1), TestContext.Current.CancellationToken);
-        var defer2 = @object2.BindDefer((x, ct) => Task.FromResult(x + 1), TestContext.Current.CancellationToken);
+        var defer1 = @object1.MapDefer((x, ct) => Task.FromResult(x + 1), TestContext.Current.CancellationToken);
+        var defer2 = @object2.MapDefer((x, ct) => Task.FromResult(x + 1), TestContext.Current.CancellationToken);
 
         var comb = defer1.CombineDefer(defer2, (obj1, obj2, ct) => Task.FromResult(obj1 + obj2), TestContext.Current.CancellationToken);
 
@@ -123,7 +123,7 @@ public class MaybeCombineShould
         Maybe<int> @object1 = 2;
         Maybe<int> @object2 = 3;
 
-        var defer1 = @object1.BindDefer((x, ct) => Task.FromResult(x + 1), TestContext.Current.CancellationToken);
+        var defer1 = @object1.MapDefer((x, ct) => Task.FromResult(x + 1), TestContext.Current.CancellationToken);
 
         var comb = defer1.CombineDefer(@object2, (obj1, obj2, ct) => Task.FromResult(obj1 + obj2), TestContext.Current.CancellationToken);
 
@@ -142,7 +142,7 @@ public class MaybeCombineShould
         Maybe<int> @object1 = 2;
         Maybe<int> @object2 = 3;
 
-        var defer1 = @object1.BindDefer(x => x + 1);
+        var defer1 = @object1.MapDefer(x => x + 1);
 
         var comb = defer1.TryCombineDefer(@object2, (obj1, obj2) => obj1 + obj2, () => 0);
 
@@ -160,8 +160,8 @@ public class MaybeCombineShould
         Maybe<int> @object1 = 2;
         Maybe<int> @object2 = 3;
 
-        var defer1 = @object1.BindDefer(x => x + 1);
-        var defer2 = @object2.BindDefer(x => x + 1);
+        var defer1 = @object1.MapDefer(x => x + 1);
+        var defer2 = @object2.MapDefer(x => x + 1);
 
         var comb = defer1.TryCombineDefer(defer2, (obj1, obj2) => obj1 + obj2, () => 0);
 
@@ -179,7 +179,7 @@ public class MaybeCombineShould
         Maybe<int> @object1 = 2;
         Maybe<string> @object2 = "test";
 
-        var defer1 = @object1.BindDefer(x => x + 1);
+        var defer1 = @object1.MapDefer(x => x + 1);
 
         var comb = defer1.TryCombineDefer(@object2, (obj1, obj2) => throw new ApplicationException(), () => expected);
 
@@ -197,8 +197,8 @@ public class MaybeCombineShould
         Maybe<int> @object1 = 2;
         Maybe<string> @object2 = "test";
 
-        var defer1 = @object1.BindDefer(x => x + 1);
-        var defer2 = @object2.BindDefer(x => x + "1");
+        var defer1 = @object1.MapDefer(x => x + 1);
+        var defer2 = @object2.MapDefer(x => x + "1");
 
         var comb = defer1.TryCombineDefer(defer2, (obj1, obj2) => throw new ApplicationException(), () => expected);
 
@@ -216,7 +216,7 @@ public class MaybeCombineShould
         Maybe<int> @object1 = 2;
         Maybe<int> @object2 = 3;
 
-        var defer1 = @object1.BindDefer((x, ct) => Task.FromResult(x + 1), TestContext.Current.CancellationToken);
+        var defer1 = @object1.MapDefer((x, ct) => Task.FromResult(x + 1), TestContext.Current.CancellationToken);
 
         var comb = defer1.TryCombineDefer(@object2, (obj1, obj2, ctx) => Task.FromResult(obj1 + obj2), () => Task.FromResult(0), TestContext.Current.CancellationToken);
 
@@ -236,7 +236,7 @@ public class MaybeCombineShould
         Maybe<int> @object1 = 2;
         Maybe<int> @object2 = 3;
 
-        var defer1 = @object1.BindDefer((x, ct) => Task.FromResult(x + 1), TestContext.Current.CancellationToken);
+        var defer1 = @object1.MapDefer((x, ct) => Task.FromResult(x + 1), TestContext.Current.CancellationToken);
 
         var comb = defer1.TryCombineDefer(@object2, (obj1, obj2, ctx) => throw new ApplicationException(), () => Task.FromResult(0), TestContext.Current.CancellationToken);
 
@@ -256,8 +256,8 @@ public class MaybeCombineShould
         Maybe<int> @object1 = 2;
         Maybe<int> @object2 = 3;
 
-        var defer1 = @object1.BindDefer((x, ct) => Task.FromResult(x + 1), TestContext.Current.CancellationToken);
-        var defer2 = @object2.BindDefer((x, ct) => Task.FromResult(x + 1), TestContext.Current.CancellationToken);
+        var defer1 = @object1.MapDefer((x, ct) => Task.FromResult(x + 1), TestContext.Current.CancellationToken);
+        var defer2 = @object2.MapDefer((x, ct) => Task.FromResult(x + 1), TestContext.Current.CancellationToken);
 
         var comb = defer1.TryCombineDefer(defer2, (obj1, obj2, ctx) => Task.FromResult(obj1 + obj2), () => Task.FromResult(0), TestContext.Current.CancellationToken);
 
@@ -277,8 +277,8 @@ public class MaybeCombineShould
         Maybe<int> @object1 = 2;
         Maybe<int> @object2 = 3;
 
-        var defer1 = @object1.BindDefer((x, ct) => Task.FromResult(x + 1), TestContext.Current.CancellationToken);
-        var defer2 = @object2.BindDefer((x, ct) => Task.FromResult(x + 1), TestContext.Current.CancellationToken);
+        var defer1 = @object1.MapDefer((x, ct) => Task.FromResult(x + 1), TestContext.Current.CancellationToken);
+        var defer2 = @object2.MapDefer((x, ct) => Task.FromResult(x + 1), TestContext.Current.CancellationToken);
 
         var comb = defer1.TryCombineDefer(defer2, (obj1, obj2, ctx) => throw new ApplicationException(), () => Task.FromResult(0), TestContext.Current.CancellationToken);
 
@@ -440,7 +440,7 @@ public class MaybeCombineShould
         Maybe<int> @object2 = 3;
         var tokenPassed = false;
 
-        var defer = @object1.BindDefer((x, ct) => Task.FromResult(x + 1), TestContext.Current.CancellationToken);
+        var defer = @object1.MapDefer((x, ct) => Task.FromResult(x + 1), TestContext.Current.CancellationToken);
         var comb = defer.CombineDefer(@object2, (obj1, obj2, ct) =>
         {
             tokenPassed = ct == TestContext.Current.CancellationToken;
@@ -460,9 +460,9 @@ public class MaybeCombineShould
         Maybe<int> @object2 = 3;
         Maybe<int> @object3 = 10;
 
-        var defer1 = @object1.BindDefer(x => x * 2);
+        var defer1 = @object1.MapDefer(x => x * 2);
         var comb1 = defer1.CombineDefer(@object2, (a, b) => a + b);
-        var defer2 = comb1.BindDefer(x => x + @object3.Value);
+        var defer2 = comb1.MapDefer(x => x + @object3.Value);
 
         var result = defer2();
 
@@ -476,7 +476,7 @@ public class MaybeCombineShould
         var @object1 = Maybe<int>.None;
         Maybe<int> @object2 = 3;
 
-        var defer = @object1.BindDefer(x => x + 1);
+        var defer = @object1.MapDefer(x => x + 1);
         var comb = defer.CombineDefer(@object2, (obj1, obj2) => obj1 + obj2);
 
         var result = comb();
@@ -492,7 +492,7 @@ public class MaybeCombineShould
         Maybe<int> @object1 = 2;
         Maybe<int> @object2 = 3;
 
-        var defer1 = @object1.BindDefer((x, ct) => Task.FromResult(x + 1), TestContext.Current.CancellationToken);
+        var defer1 = @object1.MapDefer((x, ct) => Task.FromResult(x + 1), TestContext.Current.CancellationToken);
         var comb = defer1.TryCombineDefer(@object2, 
             (obj1, obj2, ct) => throw new InvalidOperationException(), 
             () => Task.FromResult(expected), 

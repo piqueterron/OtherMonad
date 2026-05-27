@@ -6,6 +6,51 @@ using OtherMonad;
 public class MaybeMapShould
 {
     [Fact]
+    public void GivenMaybeOfStringWhenApplyMapReturnExpectedMaybe()
+    {
+        Maybe<string> @object = "test";
+
+        var result = @object.Map(e => $"{e}-1");
+
+        Assert.True(result.HasValue);
+        Assert.Equal("test-1", result.Value);
+    }
+
+    [Fact]
+    public void GivenMaybeOfNoneWhenApplyMapReturnMaybeNone()
+    {
+        Maybe<string> @object = null;
+
+        var result = @object.Map(e => $"{e}-1");
+
+        Assert.False(result.HasValue);
+        Assert.Equal(Maybe<string>.None, result);
+    }
+
+    [Fact]
+    public async Task GivenMaybeOfStringWhenApplyMapAsyncReturnExpectedMaybe()
+    {
+        Maybe<string> @object = "test";
+
+        var result = await @object.Map((e, ct) => Task.FromResult($"{e}-1"), TestContext.Current.CancellationToken);
+
+        Assert.True(result.HasValue);
+        Assert.Equal("test-1", result.Value);
+    }
+
+    [Fact]
+    public void GivenMaybeOfStringWhenApplyMapDeferReturnExpectedMaybe()
+    {
+        Maybe<string> @object = "test";
+
+        var deferred = @object.MapDefer(e => $"{e}-1");
+        var result = deferred();
+
+        Assert.True(result.HasValue);
+        Assert.Equal("test-1", result.Value);
+    }
+
+    [Fact]
     public void GivenListOfMaybesWhenApplyMapReturnExpectedListOfMaybes()
     {
         var maybes = new List<Maybe<int>>
