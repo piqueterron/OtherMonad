@@ -96,6 +96,25 @@ Maybe<decimal> finalDiscount = await parsedDiscount.Bind(async (value, ct) =>
 });
 ```
 
+### LINQ query syntax (Select / SelectMany)
+
+`Maybe<T>` supports the C# query comprehension syntax. `Select` maps the value (like `Map`) and
+`SelectMany` flattens nested options (like `Bind`). A `None` anywhere short-circuits the whole query.
+
+```csharp
+using OtherMonad;
+
+var sum =
+    from a in 2.Wrap()
+    from b in 3.Wrap()
+    select a + b; // Maybe<int> = 5
+
+var missing =
+    from a in 2.Wrap()
+    from b in Maybe<int>.None
+    select a + b; // Maybe<int>.None
+```
+
 ### Map (over sequences)
 
 - `Map<TSource, TResult>(this IEnumerable<Maybe<TSource>>, Func<TSource, TResult>)`
