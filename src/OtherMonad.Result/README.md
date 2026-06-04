@@ -109,6 +109,25 @@ Result<string> mappedAsync = await baseValue.Map(async (v, ct) =>
 });
 ```
 
+### LINQ query syntax (Select / SelectMany)
+
+`Result<T>` supports the C# query comprehension syntax. `Select` maps the `Ok` value and `SelectMany`
+flattens nested results. An `Err` value short-circuits the whole query and propagates the exception unchanged.
+
+```csharp
+using OtherMonad;
+
+var total =
+    from a in Result<int>.Create.Ok(2)
+    from b in Result<int>.Create.Ok(3)
+    select a + b; // Result<int> Ok = 5
+
+var shortCircuit =
+    from a in Result<int>.Create.Ok(2)
+    from b in Result<int>.Create.Err(new InvalidOperationException("boom"))
+    select a + b; // Result<int> Err = InvalidOperationException("boom")
+```
+
 ### OrElse (sync/async)
 
 - `OrElse<T>(this Result<T>, Result<T> fallback)`
