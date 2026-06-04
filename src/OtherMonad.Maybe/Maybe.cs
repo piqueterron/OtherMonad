@@ -1,4 +1,4 @@
-﻿namespace OtherMonad;
+namespace OtherMonad;
 
 using System;
 
@@ -53,14 +53,9 @@ public readonly struct Maybe<TSource> : IEquatable<Maybe<TSource>>
     /// <inheritdoc/>
     public override int GetHashCode()
     {
-        unchecked
-        {
-            var hash = 13;
-            hash = hash * 7 ^ HasValue.GetHashCode();
-            hash = hash * 7 ^ (Value?.GetHashCode() ?? 0);
-
-            return hash;
-        }
+        return HasValue
+            ? HashCode.Combine(true, Value)
+            : HashCode.Combine(false);
     }
 
     /// <summary>
