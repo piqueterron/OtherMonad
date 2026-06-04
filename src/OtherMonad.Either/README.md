@@ -93,6 +93,26 @@ Either<string, string> asyncMapped = await length.Map(async (value, ct) =>
 });
 ```
 
+### LINQ query syntax (Select / SelectMany)
+
+`Either<TLeft, TRight>` supports the C# query comprehension syntax over the `Right` (success) value.
+`Select` maps the Right value and `SelectMany` flattens nested eithers. A `Left` short-circuits the
+whole query and is propagated unchanged.
+
+```csharp
+using OtherMonad;
+
+var total =
+    from a in Either<string, int>.Create.Right(2)
+    from b in Either<string, int>.Create.Right(3)
+    select a + b; // Either<string, int> Right = 5
+
+var shortCircuit =
+    from a in Either<string, int>.Create.Right(2)
+    from b in Either<string, int>.Create.Left("boom")
+    select a + b; // Either<string, int> Left = "boom"
+```
+
 ### OrElse (sync/async)
 
 - `OrElse<TLeft, TRight>(this Either<TLeft, TRight>, Either<TLeft, TRight> fallback)`
@@ -113,7 +133,7 @@ Either<string, int> recoveredAsync = await failing.OrElse(async ct =>
 
 ### Combine
 
-- `Combine<TSourceLeft, TSourceRight, TOtherLeft, TOtherRight, TLeft, TRight>(this IEither<TSourceLeft, TSourceRight>, IEither<TOtherLeft, TOtherRight>, Func<TSourceLeft?, TOtherLeft?, TLeft> selectorLeft, Func<TSourceRight, TOtherRight, TRight> selectorRight)`
+- `Combine<TSourceLeft, TSourceRight, TOtherLeft, TOtherRight, TLeft, TRight>(this IEither<TSourceLeft, TSourceRight>, IEither<TOtherLeft, TOtherRight>, Func<TSourceLeft?, TOtherLeft?, TLeft> sel...
 
 ```csharp
 using OtherMonad;
