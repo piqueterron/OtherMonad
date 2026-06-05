@@ -42,6 +42,7 @@ Quick overview:
 - `Match` (sync/async + deferred variants)
 - `OrElse` (sync/async + deferred variants)
 - `Combine`, `TryCombine` (+ `Defer` variants)
+- `Select`, `SelectMany` (LINQ query syntax)
 
 ### Either
 
@@ -50,6 +51,7 @@ Quick overview:
 - `Map` (sync/async)
 - `OrElse` (sync/async)
 - `Combine`
+- `Select`, `SelectMany` (LINQ query syntax)
 
 ### Result
 
@@ -60,6 +62,7 @@ Quick overview:
 - `GetValueOrDefault`
 - `Combine`
 - `Try` (sync/async)
+- `Select`, `SelectMany` (LINQ query syntax)
 
 ## Why both `Result` and `Either`?
 
@@ -103,7 +106,26 @@ string message = category.Match(
     right: value => $"User category: {value}");
 ```
 
-### 2) Monad Composition (nested monads)
+### 2) LINQ query syntax (`Select`/`SelectMany`)
+
+All three types support C# query comprehension. `Select` maps the success value and `SelectMany`
+flattens nested monads. A `None` / `Left` / `Err` short-circuits the whole query.
+
+```csharp
+using OtherMonad;
+
+var total =
+    from a in 2.Wrap()
+    from b in 3.Wrap()
+    select a + b; // Maybe<int> = 5
+
+var either =
+    from a in Either<string, int>.Create.Right(10)
+    from b in Either<string, int>.Create.Right(5)
+    select a - b; // Either<string, int> Right = 5
+```
+
+### 3) Monad Composition (nested monads)
 
 Example: `Either<string, Maybe<int>>` representing transport success/failure with an optional payload.
 
@@ -120,7 +142,7 @@ string result = maybeDiscountFromService.Match(
         none: () => "Request succeeded but no discount is available"));
 ```
 
-### 3) Type Conversions
+### 4) Type Conversions
 
 #### `Maybe<T>` -> `Either<TLeft, TRight>`
 
