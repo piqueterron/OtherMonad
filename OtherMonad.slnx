@@ -9,4 +9,7 @@
     <Project Path="tests/OtherMonad.Either.Tests/OtherMonad.Either.Tests.csproj" />
     <Project Path="tests/OtherMonad.Result.Tests/OtherMonad.Result.Tests.csproj" />
   </Folder>
+  <Folder Name="/benchmarks/">
+    <Project Path="benchmarks/OtherMonad.Benchmarks/OtherMonad.Benchmarks.csproj" />
+  </Folder>
 </Solution>
