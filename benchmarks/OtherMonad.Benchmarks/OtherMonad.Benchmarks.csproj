@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <IsPackable>false</IsPackable>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <IsAotCompatible>false</IsAotCompatible>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" />
+    <PackageReference Include="LanguageExt.Core" />
+    <PackageReference Include="CSharpFunctionalExtensions" />
+    <PackageReference Include="Optional" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\OtherMonad.Maybe\OtherMonad.Maybe.csproj" />
+    <ProjectReference Include="..\..\src\OtherMonad.Either\OtherMonad.Either.csproj" />
+    <ProjectReference Include="..\..\src\OtherMonad.Result\OtherMonad.Result.csproj" />
+  </ItemGroup>
+
+</Project>
