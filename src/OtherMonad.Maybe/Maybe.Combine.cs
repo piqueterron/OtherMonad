@@ -1,5 +1,7 @@
 ﻿namespace OtherMonad;
 
+using System.Runtime.CompilerServices;
+
 /// <summary>
 /// Extension methods to Maybe Monad
 /// </summary>
@@ -16,6 +18,7 @@ public static partial class Maybe
     /// <param name="select">A function to combine both values.</param>
     /// <param name="defaultValueFactory">A function that produces a default value if combination fails.</param>
     /// <returns>A <see cref="Maybe{TResult}"/> with the combined value, or the result of <paramref name="defaultValueFactory"/> if combination fails.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Maybe<TResult> TryCombine<TSource, TCombine, TResult>(this Maybe<TSource> source, Maybe<TCombine> other, Func<TSource, TCombine, TResult> select, Func<TResult> defaultValueFactory)
     {
         try
@@ -38,6 +41,7 @@ public static partial class Maybe
     /// <param name="other">The second <see cref="Maybe{TCombine}"/>.</param>
     /// <param name="select">A function to combine both values.</param>
     /// <returns>A <see cref="Maybe{TResult}"/> with the combined value if both inputs have values; otherwise, <see cref="Maybe{TResult}.None"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Maybe<TResult> Combine<TSource, TCombine, TResult>(this Maybe<TSource> source, Maybe<TCombine> other, Func<TSource, TCombine, TResult> select)
     {
         if (!source.HasValue || !other.HasValue)

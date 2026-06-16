@@ -47,11 +47,9 @@ public static partial class Result
     {
         ArgumentNullException.ThrowIfNull(selector);
 
-        Either<Exception, TResult> result = await ((Either<Exception, T>)source).Bind(
+        return await ((Either<Exception, T>)source).Bind(
             async (v, ct) => (Either<Exception, TResult>)await selector(v, ct).ConfigureAwait(false),
             cancellation).ConfigureAwait(false);
-
-        return result;
     }
 
     /// <summary>
@@ -96,9 +94,7 @@ public static partial class Result
     {
         ArgumentNullException.ThrowIfNull(selector);
 
-        Either<Exception, TResult> result = await ((Either<Exception, T>)source)
+        return await ((Either<Exception, T>)source)
             .Map(selector, cancellation).ConfigureAwait(false);
-
-        return result;
     }
 }
