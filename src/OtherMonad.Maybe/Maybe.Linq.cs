@@ -1,4 +1,6 @@
-namespace OtherMonad;
+﻿namespace OtherMonad;
+
+using System.Runtime.CompilerServices;
 
 /// <summary>
 /// LINQ query-comprehension support for <see cref="Maybe{TSource}"/>.
@@ -16,6 +18,7 @@ public static partial class Maybe
     /// <param name="selector">A projection function applied to the contained value.</param>
     /// <returns>A <see cref="Maybe{TResult}"/> containing the projected value, or <see cref="Maybe{TResult}.None"/> if the source has no value.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="selector"/> is <see langword="null"/>.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Maybe<TResult> Select<TSource, TResult>(this Maybe<TSource> source, Func<TSource, TResult> selector)
     {
         ArgumentNullException.ThrowIfNull(selector);
@@ -33,6 +36,7 @@ public static partial class Maybe
     /// <param name="selector">A projection function that returns a <see cref="Maybe{TResult}"/>.</param>
     /// <returns>The <see cref="Maybe{TResult}"/> returned by <paramref name="selector"/>, or <see cref="Maybe{TResult}.None"/> if the source has no value.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="selector"/> is <see langword="null"/>.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Maybe<TResult> SelectMany<TSource, TResult>(this Maybe<TSource> source, Func<TSource, Maybe<TResult>> selector)
     {
         ArgumentNullException.ThrowIfNull(selector);
@@ -53,6 +57,7 @@ public static partial class Maybe
     /// <param name="resultSelector">A function that combines the source and intermediate values into the final result.</param>
     /// <returns>A <see cref="Maybe{TResult}"/> containing the combined value, or <see cref="Maybe{TResult}.None"/> if any step has no value.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="collectionSelector"/> or <paramref name="resultSelector"/> is <see langword="null"/>.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Maybe<TResult> SelectMany<TSource, TCollection, TResult>(
         this Maybe<TSource> source,
         Func<TSource, Maybe<TCollection>> collectionSelector,

@@ -1,5 +1,7 @@
 ﻿namespace OtherMonad;
 
+using System.Runtime.CompilerServices;
+
 /// <summary>
 /// Extension methods to Maybe Monad
 /// </summary>
@@ -16,6 +18,7 @@ public static partial class Maybe
     /// <param name="none">A function to execute when no value is present.</param>
     /// <returns>The value returned by the invoked function.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="some"/> or <paramref name="none"/> is <see langword="null"/>.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TResult Match<TSource, TResult>(this Maybe<TSource> source, Func<TSource, TResult> some, Func<TResult> none)
     {
         ArgumentNullException.ThrowIfNull(some);
@@ -41,6 +44,7 @@ public static partial class Maybe
     /// <param name="cancellation">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the value returned by the invoked function.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="some"/> or <paramref name="none"/> is <see langword="null"/>.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static async Task<TResult> Match<TSource, TResult>(this Maybe<TSource> source, Func<TSource, CancellationToken, Task<TResult>> some, Func<CancellationToken, Task<TResult>> none, CancellationToken cancellation = default)
     {
         ArgumentNullException.ThrowIfNull(some);
@@ -65,6 +69,7 @@ public static partial class Maybe
     /// <param name="none">A function to execute when the resolved value is absent.</param>
     /// <returns>The value returned by the invoked function.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="some"/> or <paramref name="none"/> is <see langword="null"/>.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TResult Match<TSource, TResult>(this Deferred<Maybe<TSource>> source, Func<TSource, TResult> some, Func<TResult> none)
     {
         ArgumentNullException.ThrowIfNull(some);
@@ -91,6 +96,7 @@ public static partial class Maybe
     /// <param name="none">A function to execute when the resolved value is absent.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the value returned by the invoked function.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="some"/> or <paramref name="none"/> is <see langword="null"/>.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static async Task<TResult> Match<TSource, TResult>(this DeferredTask<Maybe<TSource>> source, Func<TSource, TResult> some, Func<TResult> none)
     {
         ArgumentNullException.ThrowIfNull(some);
