@@ -1,4 +1,4 @@
-namespace OtherMonad;
+﻿namespace OtherMonad;
 
 using System;
 
@@ -75,7 +75,7 @@ public readonly struct Maybe<TSource> : IEquatable<Maybe<TSource>>
     /// <summary>
     /// Represents the absence of a value (empty <see cref="Maybe{TSource}"/>).
     /// </summary>
-    public static readonly Maybe<TSource> None = new();
+    public static readonly Maybe<TSource> None = default;
 
     /// <summary>
     /// Implicitly converts a value of type <typeparamref name="TSource"/> to <see cref="Maybe{TSource}"/>.
@@ -84,7 +84,7 @@ public readonly struct Maybe<TSource> : IEquatable<Maybe<TSource>>
     public static implicit operator Maybe<TSource>(TSource value)
     {
         if (Equals(value, null))
-            return new();
+            return default;
 
         return new(value);
     }

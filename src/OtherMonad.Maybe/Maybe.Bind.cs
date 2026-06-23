@@ -20,9 +20,13 @@ public static partial class Maybe
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Maybe<TResult> Bind<TSource, TResult>(this Maybe<TSource> source, Func<TSource, Maybe<TResult>> selector)
     {
+        if(!source.HasValue)
+        {
+            return default;
+        }
         ArgumentNullException.ThrowIfNull(selector);
 
-        return source.HasValue ? selector(source.Value) : Maybe<TResult>.None;
+        return selector(source.Value);
     }
 
     /// <summary>
@@ -39,8 +43,12 @@ public static partial class Maybe
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static async Task<Maybe<TResult>> Bind<TSource, TResult>(this Maybe<TSource> source, Func<TSource, CancellationToken, Task<Maybe<TResult>>> selector, CancellationToken cancellation = default)
     {
+        if (!source.HasValue)
+        {
+            return default;
+        }
         ArgumentNullException.ThrowIfNull(selector);
 
-        return source.HasValue ? await selector(source.Value, cancellation).ConfigureAwait(false) : Maybe<TResult>.None;
+        return await selector(source.Value, cancellation).ConfigureAwait(false);
     }
 }

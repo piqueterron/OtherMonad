@@ -12,6 +12,11 @@ using Optional;
 [MemoryDiagnoser]
 [Orderer(SummaryOrderPolicy.FastestToSlowest)]
 [RankColumn]
+[DisassemblyDiagnoser(
+    maxDepth: 4,
+    exportCombinedDisassemblyReport: true,
+    printSource: true,
+    printInstructionAddresses: true)]
 public class AllocationMaybeChainedBenchmarks
 {
     private const int VALUE = 42;
