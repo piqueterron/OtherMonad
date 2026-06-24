@@ -17,7 +17,8 @@ public static partial class Maybe
     /// <returns>A new <see cref="Maybe{TResult}"/> containing the transformation result, or <see cref="Maybe{TResult}.None"/> if the source has no value.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="selector"/> is <see langword="null"/>.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Maybe<TResult> Map<TSource, TResult>(this Maybe<TSource> source, Func<TSource, TResult> selector)
+    [SkipLocalsInit]
+    public static Maybe<TResult> Map<TSource, TResult>(this in Maybe<TSource> source, Func<TSource, TResult> selector)
     {
         if (!source.HasValue)
         {
@@ -39,6 +40,7 @@ public static partial class Maybe
     /// <returns>A task that represents the asynchronous operation. The task result contains a new <see cref="Maybe{TResult}"/> with the transformation result, or <see cref="Maybe{TResult}.None"/> if the source has no value.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="selector"/> is <see langword="null"/>.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [SkipLocalsInit]
     public static async Task<Maybe<TResult>> Map<TSource, TResult>(this Maybe<TSource> source, Func<TSource, CancellationToken, Task<TResult>> selector, CancellationToken cancellation = default)
     {
         if(!source.HasValue)
@@ -60,6 +62,7 @@ public static partial class Maybe
     /// <returns>A sequence of <see cref="Maybe{TResult}"/> with transformed values, or <see cref="Maybe{TResult}.None"/> for empty sources.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="selector"/> is <see langword="null"/>.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [SkipLocalsInit]
     public static IEnumerable<Maybe<TResult>> Map<TSource, TResult>(this IEnumerable<Maybe<TSource>> sources, Func<TSource, TResult> selector)
     {
         ArgumentNullException.ThrowIfNull(selector);
@@ -81,6 +84,7 @@ public static partial class Maybe
     /// <returns>An asynchronous sequence of <see cref="Maybe{TResult}"/> with transformed values, or <see cref="Maybe{TResult}.None"/> for empty sources.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="selector"/> is <see langword="null"/>.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [SkipLocalsInit]
     public static async IAsyncEnumerable<Maybe<TResult>> Map<TSource, TResult>(this IEnumerable<Maybe<TSource>> sources, Func<TSource, CancellationToken, Task<TResult>> selector, [EnumeratorCancellation] CancellationToken cancellation = default)
     {
         ArgumentNullException.ThrowIfNull(selector);
@@ -102,6 +106,7 @@ public static partial class Maybe
     /// <returns>An asynchronous sequence of <see cref="Maybe{TResult}"/> with transformed values, or <see cref="Maybe{TResult}.None"/> for empty sources.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="selector"/> is <see langword="null"/>.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [SkipLocalsInit]
     public static async IAsyncEnumerable<Maybe<TResult>> Map<TSource, TResult>(this IAsyncEnumerable<Maybe<TSource>> sources, Func<TSource, CancellationToken, Task<TResult>> selector, [EnumeratorCancellation] CancellationToken cancellation = default)
     {
         ArgumentNullException.ThrowIfNull(selector);

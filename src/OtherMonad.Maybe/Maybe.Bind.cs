@@ -18,7 +18,8 @@ public static partial class Maybe
     /// <returns>The <see cref="Maybe{TResult}"/> returned by <paramref name="selector"/>, or <see cref="Maybe{TResult}.None"/> if the source has no value.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="selector"/> is <see langword="null"/>.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Maybe<TResult> Bind<TSource, TResult>(this Maybe<TSource> source, Func<TSource, Maybe<TResult>> selector)
+    [SkipLocalsInit]
+    public static Maybe<TResult> Bind<TSource, TResult>(this in Maybe<TSource> source, Func<TSource, Maybe<TResult>> selector)
     {
         if(!source.HasValue)
         {
@@ -41,6 +42,7 @@ public static partial class Maybe
     /// <returns>A task that represents the asynchronous operation. The task result contains the <see cref="Maybe{TResult}"/> returned by <paramref name="selector"/>, or <see cref="Maybe{TResult}.None"/> if the source has no value.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="selector"/> is <see langword="null"/>.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [SkipLocalsInit]
     public static async Task<Maybe<TResult>> Bind<TSource, TResult>(this Maybe<TSource> source, Func<TSource, CancellationToken, Task<Maybe<TResult>>> selector, CancellationToken cancellation = default)
     {
         if (!source.HasValue)

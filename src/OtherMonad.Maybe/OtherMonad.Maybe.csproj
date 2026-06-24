@@ -12,6 +12,7 @@
     <PackageTags>Monads;Functional;Maybe</PackageTags>
     <PackageIcon>OtherMonad.256x256.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>

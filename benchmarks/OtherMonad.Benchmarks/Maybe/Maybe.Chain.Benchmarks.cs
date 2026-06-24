@@ -12,13 +12,24 @@ using Optional;
 [MemoryDiagnoser]
 [Orderer(SummaryOrderPolicy.FastestToSlowest)]
 [RankColumn]
+[DisassemblyDiagnoser(
+    maxDepth: 4,
+    exportCombinedDisassemblyReport: true,
+    printSource: true,
+    printInstructionAddresses: true)]
 public class MaybeChainBenchmarks
 {
-    private const int VALUE = 42;
+    private Maybe<int> _otherMonadSome;
+    private LanguageExt.Option<int> _langExtSome;
+    private global::Optional.Option<int> _optionalSome;
 
-    private static readonly Maybe<int> _otherMonadSome = VALUE;
-    private static readonly LanguageExt.Option<int> _langExtSome = Prelude.Some(VALUE);
-    private static readonly global::Optional.Option<int> _optionalSome = VALUE.Some();
+    [GlobalSetup]
+    public void Setup()
+    {
+        _otherMonadSome = 42;
+        _langExtSome = Prelude.Some(42);
+        _optionalSome = 42.Some();
+    }
 
     [BenchmarkCategory("Chain"), Benchmark(Baseline = true)]
     public Maybe<string> OtherMonad_Maybe_Chain()

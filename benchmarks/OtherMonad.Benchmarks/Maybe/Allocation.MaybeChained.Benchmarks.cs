@@ -19,13 +19,22 @@ using Optional;
     printInstructionAddresses: true)]
 public class AllocationMaybeChainedBenchmarks
 {
-    private const int VALUE = 42;
+    private Maybe<int> _otherMonadSome;
+    private LanguageExt.Option<int> _langExtSome;
+    private global::Optional.Option<int> _optionalSome;
+
+    [GlobalSetup]
+    public void Setup()
+    {
+        _otherMonadSome = 42;
+        _langExtSome = Prelude.Some(42);
+        _optionalSome = 42.Some();
+    }
 
     [BenchmarkCategory("ChainedMap"), Benchmark(Baseline = true)]
     public Maybe<int> OtherMonad_Maybe_ChainedMap()
     {
-        Maybe<int> maybe = VALUE;
-        return maybe
+        return _otherMonadSome
             .Map(x => x + 1)
             .Map(x => x * 2)
             .Map(x => x - 3)
@@ -35,8 +44,7 @@ public class AllocationMaybeChainedBenchmarks
     [BenchmarkCategory("ChainedMap"), Benchmark]
     public LanguageExt.Option<int> LanguageExt_Option_ChainedMap()
     {
-        var option = Prelude.Some(VALUE);
-        return option
+        return _langExtSome
             .Map(x => x + 1)
             .Map(x => x * 2)
             .Map(x => x - 3)
@@ -46,8 +54,7 @@ public class AllocationMaybeChainedBenchmarks
     [BenchmarkCategory("ChainedMap"), Benchmark]
     public global::Optional.Option<int> Optional_Option_ChainedMap()
     {
-        var option = VALUE.Some();
-        return option
+        return _optionalSome
             .Map(x => x + 1)
             .Map(x => x * 2)
             .Map(x => x - 3)
